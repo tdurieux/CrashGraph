@@ -1,0 +1,271 @@
+{
+  "comments": [
+    "JGS (10/10/01 11:49:58 AM)\n\tUnder 203:\n\tSet breakpoint inside some loop (e.g. InfiniteLoop).\n\tDebug.\n\tWhen stopped at breakpoint, use property sheet to change enabled to \u0027false\u0027.\n\tClick Resume, notice workbench dies with following walkback:\n\norg.eclipse.swt.SWTError: Widget is disposed\n\tat org.eclipse.swt.custom.TableTreeItem.getDisplay(TableTreeItem.java:180)\n\tat org.eclipse.swt.widgets.Widget.isValidThread(Widget.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Widget.checkWidget(Widget.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Widget.getData(Widget.java:405)\n\tat org.eclipse.ui.views.properties.PropertySheetViewer.applyEditorValue(PropertySheetViewer.java:193)\n\tat org.eclipse.ui.views.properties.PropertySheetViewer.setInput(PropertySheetViewer.java:696)\n\tat org.eclipse.ui.views.properties.PropertySheetPage.selectionChanged(PropertySheetPage.java:229)\n\tat org.eclipse.ui.views.properties.PropertySheet.selectionChanged(PropertySheet.java:199)\n\tat org.eclipse.ui.internal.SelectionService$2.run(SelectionService.java:48)\n\tat org.eclipse.core.internal.runtime.InternalPlatform.run(InternalPlatform.java:814)\n\tat org.eclipse.core.runtime.Platform.run(Platform.java:395)\n\tat org.eclipse.ui.internal.SelectionService.fireSelection(SelectionService.java:46)\n\tat org.eclipse.ui.internal.SelectionService.partActivated(SelectionService.java:87)\n\tat org.eclipse.ui.internal.WorkbenchPage.firePartActivated(WorkbenchPage.java:579)\n\tat org.eclipse.ui.internal.WorkbenchPage.setActivePart(WorkbenchPage.java:1275)\n\tat org.eclipse.ui.internal.WorkbenchPage.requestActivation(WorkbenchPage.java:1097)\n\tat org.eclipse.ui.internal.PartPane.requestActivation(PartPane.java:216)\n\tat org.eclipse.ui.internal.PartPane.handleEvent(PartPane.java:174)\n\tat org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:840)\n\tat org.eclipse.swt.widgets.Widget.sendEvent(Widget.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Shell.setActiveControl(Shell.java:660)\n\tat org.eclipse.swt.widgets.Shell.WM_MOUSEACTIVATE(Shell.java:899)\n\tat org.eclipse.swt.widgets.Control.windowProc(Control.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Decorations.windowProc(Decorations.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Display.windowProc(Display.java(Compiled Code))\n\tat org.eclipse.swt.internal.win32.OS.DefWindowProc(Native Method)\n\tat org.eclipse.swt.widgets.Scrollable.callWindowProc(Scrollable.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Control.windowProc(Control.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Display.windowProc(Display.java(Compiled Code))\n\tat org.eclipse.swt.internal.win32.OS.DefWindowProc(Native Method)\n\tat org.eclipse.swt.widgets.Scrollable.callWindowProc(Scrollable.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Control.windowProc(Control.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Display.windowProc(Display.java(Compiled Code))\n\tat org.eclipse.swt.internal.win32.OS.DefWindowProc(Native Method)\n\tat org.eclipse.swt.widgets.Scrollable.callWindowProc(Scrollable.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Control.windowProc(Control.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Display.windowProc(Display.java(Compiled Code))\n\tat org.eclipse.swt.internal.win32.OS.DefWindowProc(Native Method)\n\tat org.eclipse.swt.widgets.Scrollable.callWindowProc(Scrollable.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Control.windowProc(Control.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Display.windowProc(Display.java(Compiled Code))\n\tat org.eclipse.swt.internal.win32.OS.CallWindowProc(Native Method)\n\tat org.eclipse.swt.widgets.Table.callWindowProc(Table.java:119)\n\tat org.eclipse.swt.widgets.Control.windowProc(Control.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Display.windowProc(Display.java(Compiled Code))\n\tat org.eclipse.swt.internal.win32.OS.PeekMessage(Native Method)\n\tat org.eclipse.swt.widgets.Display.readAndDispatch(Display.java(Compiled Code))\n\tat org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java(Compiled Code))\n\tat org.eclipse.ui.internal.Workbench.run(Workbench.java:658)\n\tat org.eclipse.core.internal.boot.InternalBootLoader.run(InternalBootLoader.java:820)\n\tat org.eclipse.core.boot.BootLoader.run(BootLoader.java:285)\n\tat java.lang.reflect.Method.invoke(Native Method)\n\tat org.eclipse.core.launcher.Main.basicRun(Main.java:151)\n\tat org.eclipse.core.launcher.Main.run(Main.java:502)\n\tat org.eclipse.core.launcher.UIMain.main(UIMain.java:52)\n\nJGS (10/10/01 1:17:55 PM)\n\tProblem appears to occur any time an editable widget is given focus in the property sheet,\n\tthen some other object is selected in the workbench so that the contents of the property\n\tsheet changes.\n\nRG (10/10/01 3:35:44 PM)\n\tSee 1GL4ZQA: ITPUI:WINNT - Workbench crash",
+    "This bug is claimed to be fixed in 204 build. Needs verification.",
+    "*** Bug 1755 has been marked as a duplicate of this bug. ***",
+    "*** Bug 1754 has been marked as a duplicate of this bug. ***",
+    "This problem is still present, reproduceable as originally documented.",
+    "Re-opening.",
+    "I could not reproduce this in 204\nHere is what I tried\n\n1. Created the following class\npublic class Loop {\n\tpublic static void main(String[] args) {\n\t\tboolean t \u003d true;\n\t\twhile(t) {\n\t\t\tSystem.out.println(\"asd\");\n\t\t}\n\t}\n}\n2. Set a breakpoint on the println\n3. Ran (Debug) the class\n4. When stopped I selected the breakpoint and in the property sheet set enabled\nto false (leaving the cell editor active).\n5. Pressed resume\n\n",
+    "Perhaps this is because we are using a different version of the workbench\nfrom the ZRH team stream.",
+    "When I use the 205 workbench code, I have no problem.",
+    "Verified."
+  ],
+  "commentCreationDates": [
+    "2001-10-11T04:18:51+02:00",
+    "2001-10-11T18:29:16+02:00",
+    "2001-10-11T18:30:00+02:00",
+    "2001-10-11T18:30:30+02:00",
+    "2001-10-17T18:36:16+02:00",
+    "2001-10-17T19:52:06+02:00",
+    "2001-10-17T20:05:27+02:00",
+    "2001-10-17T21:06:47+02:00",
+    "2001-10-19T22:21:39+02:00",
+    "2001-10-19T22:22:32+02:00"
+  ],
+  "traces": [
+    {
+      "exceptionType": "org.eclipse.swt.SWTError",
+      "message": "Widget is disposed",
+      "elements": [
+        {
+          "method": "org.eclipse.swt.custom.TableTreeItem.getDisplay",
+          "source": "TableTreeItem.java:180"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Widget.isValidThread",
+          "source": "Widget.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Widget.checkWidget",
+          "source": "Widget.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Widget.getData",
+          "source": "Widget.java:405"
+        },
+        {
+          "method": "org.eclipse.ui.views.properties.PropertySheetViewer.applyEditorValue",
+          "source": "PropertySheetViewer.java:193"
+        },
+        {
+          "method": "org.eclipse.ui.views.properties.PropertySheetViewer.setInput",
+          "source": "PropertySheetViewer.java:696"
+        },
+        {
+          "method": "org.eclipse.ui.views.properties.PropertySheetPage.selectionChanged",
+          "source": "PropertySheetPage.java:229"
+        },
+        {
+          "method": "org.eclipse.ui.views.properties.PropertySheet.selectionChanged",
+          "source": "PropertySheet.java:199"
+        },
+        {
+          "method": "org.eclipse.ui.internal.SelectionService$2.run",
+          "source": "SelectionService.java:48"
+        },
+        {
+          "method": "org.eclipse.core.internal.runtime.InternalPlatform.run",
+          "source": "InternalPlatform.java:814"
+        },
+        {
+          "method": "org.eclipse.core.runtime.Platform.run",
+          "source": "Platform.java:395"
+        },
+        {
+          "method": "org.eclipse.ui.internal.SelectionService.fireSelection",
+          "source": "SelectionService.java:46"
+        },
+        {
+          "method": "org.eclipse.ui.internal.SelectionService.partActivated",
+          "source": "SelectionService.java:87"
+        },
+        {
+          "method": "org.eclipse.ui.internal.WorkbenchPage.firePartActivated",
+          "source": "WorkbenchPage.java:579"
+        },
+        {
+          "method": "org.eclipse.ui.internal.WorkbenchPage.setActivePart",
+          "source": "WorkbenchPage.java:1275"
+        },
+        {
+          "method": "org.eclipse.ui.internal.WorkbenchPage.requestActivation",
+          "source": "WorkbenchPage.java:1097"
+        },
+        {
+          "method": "org.eclipse.ui.internal.PartPane.requestActivation",
+          "source": "PartPane.java:216"
+        },
+        {
+          "method": "org.eclipse.ui.internal.PartPane.handleEvent",
+          "source": "PartPane.java:174"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.EventTable.sendEvent",
+          "source": "EventTable.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Widget.sendEvent",
+          "source": "Widget.java:840"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Widget.sendEvent",
+          "source": "Widget.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Shell.setActiveControl",
+          "source": "Shell.java:660"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Shell.WM_MOUSEACTIVATE",
+          "source": "Shell.java:899"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Control.windowProc",
+          "source": "Control.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Decorations.windowProc",
+          "source": "Decorations.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.windowProc",
+          "source": "Display.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.internal.win32.OS.DefWindowProc",
+          "source": "Native Method"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Scrollable.callWindowProc",
+          "source": "Scrollable.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Control.windowProc",
+          "source": "Control.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.windowProc",
+          "source": "Display.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.internal.win32.OS.DefWindowProc",
+          "source": "Native Method"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Scrollable.callWindowProc",
+          "source": "Scrollable.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Control.windowProc",
+          "source": "Control.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.windowProc",
+          "source": "Display.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.internal.win32.OS.DefWindowProc",
+          "source": "Native Method"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Scrollable.callWindowProc",
+          "source": "Scrollable.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Control.windowProc",
+          "source": "Control.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.windowProc",
+          "source": "Display.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.internal.win32.OS.DefWindowProc",
+          "source": "Native Method"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Scrollable.callWindowProc",
+          "source": "Scrollable.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Control.windowProc",
+          "source": "Control.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.windowProc",
+          "source": "Display.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.internal.win32.OS.CallWindowProc",
+          "source": "Native Method"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Table.callWindowProc",
+          "source": "Table.java:119"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Control.windowProc",
+          "source": "Control.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.windowProc",
+          "source": "Display.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.internal.win32.OS.PeekMessage",
+          "source": "Native Method"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.readAndDispatch",
+          "source": "Display.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.runEventLoop",
+          "source": "Workbench.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.run",
+          "source": "Workbench.java:658"
+        },
+        {
+          "method": "org.eclipse.core.internal.boot.InternalBootLoader.run",
+          "source": "InternalBootLoader.java:820"
+        },
+        {
+          "method": "org.eclipse.core.boot.BootLoader.run",
+          "source": "BootLoader.java:285"
+        },
+        {
+          "method": "java.lang.reflect.Method.invoke",
+          "source": "Native Method"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.basicRun",
+          "source": "Main.java:151"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.run",
+          "source": "Main.java:502"
+        },
+        {
+          "method": "org.eclipse.core.launcher.UIMain.main",
+          "source": "UIMain.java:52"
+        }
+      ],
+      "number": 0,
+      "commentIndex": 0,
+      "bugId": "1759",
+      "date": "2001-10-11T04:18:51+02:00",
+      "product": "JDT",
+      "component": "Debug",
+      "severity": "critical"
+    }
+  ],
+  "groupId": "1759",
+  "bugId": "1759",
+  "date": "2001-10-11T04:18:51+02:00",
+  "product": "JDT",
+  "component": "Debug",
+  "severity": "critical"
+}

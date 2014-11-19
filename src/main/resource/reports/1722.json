@@ -1,0 +1,97 @@
+{
+  "comments": [
+    "DW (10/10/2001 10:37:33 AM)\n\tKnown problem for demo:\n\t\tCannot perform an evaluation in a binary that is in a system package.\n\t\tThis causes a \"ClassNotFoundException\".\n\n\tFor example, in the debugger, stopped in \"java.util.Vector.removeElement(Object)\"\n\tand evaluating \"size\" causes something like:\n\n.java.lang.ClassNotFoundException: java/util/CodeSnippet_15\n\tat java.lang.Class.forName1(Native Method)\n\tat java.lang.Class.forName(Class.java:134)\n\tat java.util.Vector.removeElement(Vector.java:601)\n\tat junit.samples.VectorTest.testRemoveElement(VectorTest.java:64)\n\tat java.lang.reflect.Method.invoke(Native Method)\n\tat junit.framework.TestCase.runTest(TestCase.java:166)\n\tat junit.framework.TestCase.runBare(TestCase.java:140)\n\tat junit.framework.TestResult$1.protect(TestResult.java:106)\n\tat junit.framework.TestResult.runProtected(TestResult.java:124)\n\tat junit.framework.TestResult.run(TestResult.java:109)\n\tat junit.framework.TestCase.run(TestCase.java:131)\n\tat junit.framework.TestSuite.runTest(TestSuite.java:173)\n\tat junit.framework.TestSuite.run(TestSuite.java:168)\n\tat junit.textui.TestRunner.doRun(TestRunner.java:74)\n\tat junit.textui.TestRunner.run(TestRunner.java:200)\n\tat junit.samples.VectorTest.main(VectorTest.java:19)",
+    "\n\n*** This bug has been marked as a duplicate of 1546 ***"
+  ],
+  "commentCreationDates": [
+    "2001-10-11T04:18:13+02:00",
+    "2002-02-26T19:55:49+01:00"
+  ],
+  "traces": [
+    {
+      "exceptionType": "java.lang.ClassNotFoundException",
+      "message": "java/util/CodeSnippet_15",
+      "elements": [
+        {
+          "method": "java.lang.Class.forName1",
+          "source": "Native Method"
+        },
+        {
+          "method": "java.lang.Class.forName",
+          "source": "Class.java:134"
+        },
+        {
+          "method": "java.util.Vector.removeElement",
+          "source": "Vector.java:601"
+        },
+        {
+          "method": "junit.samples.VectorTest.testRemoveElement",
+          "source": "VectorTest.java:64"
+        },
+        {
+          "method": "java.lang.reflect.Method.invoke",
+          "source": "Native Method"
+        },
+        {
+          "method": "junit.framework.TestCase.runTest",
+          "source": "TestCase.java:166"
+        },
+        {
+          "method": "junit.framework.TestCase.runBare",
+          "source": "TestCase.java:140"
+        },
+        {
+          "method": "junit.framework.TestResult$1.protect",
+          "source": "TestResult.java:106"
+        },
+        {
+          "method": "junit.framework.TestResult.runProtected",
+          "source": "TestResult.java:124"
+        },
+        {
+          "method": "junit.framework.TestResult.run",
+          "source": "TestResult.java:109"
+        },
+        {
+          "method": "junit.framework.TestCase.run",
+          "source": "TestCase.java:131"
+        },
+        {
+          "method": "junit.framework.TestSuite.runTest",
+          "source": "TestSuite.java:173"
+        },
+        {
+          "method": "junit.framework.TestSuite.run",
+          "source": "TestSuite.java:168"
+        },
+        {
+          "method": "junit.textui.TestRunner.doRun",
+          "source": "TestRunner.java:74"
+        },
+        {
+          "method": "junit.textui.TestRunner.run",
+          "source": "TestRunner.java:200"
+        },
+        {
+          "method": "junit.samples.VectorTest.main",
+          "source": "VectorTest.java:19"
+        }
+      ],
+      "number": 0,
+      "commentIndex": 0,
+      "bugId": "1722",
+      "duplicateId": "1546",
+      "date": "2001-10-11T04:18:13+02:00",
+      "product": "JDT",
+      "component": "Debug",
+      "severity": "normal"
+    }
+  ],
+  "groupId": "1546",
+  "bugId": "1722",
+  "duplicateId": "1546",
+  "date": "2001-10-11T04:18:13+02:00",
+  "product": "JDT",
+  "component": "Debug",
+  "severity": "normal"
+}

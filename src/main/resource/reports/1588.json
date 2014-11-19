@@ -1,0 +1,42 @@
+{
+  "comments": [
+    "DW (5/24/01 9:58:51 AM)\n\nI evaluated \"VectorTests.main(new String[]{})\"\n\n\njava.lang.NullPointerException\n\tat org.eclipse.jdt.internal.ui.snippeteditor.JavaSnippetEditor.evaluationComplete(JavaSnippetEditor.java, Compiled Code)\n\tat org.eclipse.jdt.internal.debug.core.ThreadEvaluationContext.run(ThreadEvaluationContext.java:115)\n\tat java.lang.Thread.run(Thread.java:479)\n\n\nI think the thread died after the eval because the program does a \"system.exit(0)\".\nThe page remained disabled and I could not do anymore evals.\t\nHad to close/re-open page.\n\nDW (5/24/01 10:01:32 AM)\n\tSystem.exit kills us because the target dies, and we have no more access to the\n\tvalue (result).\n\nDW (5/24/01 11:36:43 AM)\n\tA call to #evaluationEnds should be made when the VM terminates.\n\nDW (5/24/01 3:56:26 PM)\n\tAdded call to #evaluationEnds when VM Terminates. \n\tRemaining problem is System.exit(0) \u0026 NPE.\n\nDW (5/25/01 2:18:19 PM)\n\tFixed NPE. The user now sees a \"VMDisconnect\u0027 stack dump in the snippet editor\n\tshowing that the target disconnected. Could fix (with Security Manager?) or\n\tleave as a README note.\n\nDW (6/15/01 9:59:56 AM)\n\tAdded to README.",
+    "Not a bug. Evaluating System.exit(0) does just that."
+  ],
+  "commentCreationDates": [
+    "2001-10-11T04:15:51+02:00",
+    "2001-11-28T18:55:33+01:00"
+  ],
+  "traces": [
+    {
+      "exceptionType": "java.lang.NullPointerException",
+      "elements": [
+        {
+          "method": "org.eclipse.jdt.internal.ui.snippeteditor.JavaSnippetEditor.evaluationComplete",
+          "source": "JavaSnippetEditor.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.ThreadEvaluationContext.run",
+          "source": "ThreadEvaluationContext.java:115"
+        },
+        {
+          "method": "java.lang.Thread.run",
+          "source": "Thread.java:479"
+        }
+      ],
+      "number": 0,
+      "commentIndex": 0,
+      "bugId": "1588",
+      "date": "2001-10-11T04:15:51+02:00",
+      "product": "JDT",
+      "component": "Debug",
+      "severity": "critical"
+    }
+  ],
+  "groupId": "1588",
+  "bugId": "1588",
+  "date": "2001-10-11T04:15:51+02:00",
+  "product": "JDT",
+  "component": "Debug",
+  "severity": "critical"
+}

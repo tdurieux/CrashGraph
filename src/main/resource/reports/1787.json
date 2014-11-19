@@ -1,0 +1,145 @@
+{
+  "comments": [
+    "0. Create a simple project.\n1. In your project create a file called text.xhtml with default contents.\n2. Modify contents then save.\n3. Create an action script from the Workbench prefs page which refers to the\nscript file you just created ( wizard interface ).\n4. Shutdown workbench.\n5. Restart workbench.\n6. Make action visible through Perspective | Customize ..\n6. Invoke action.\n\nExpected Result: some sort of dialog appears with script interface.\n\n7. Delete the text.xhtml file from your project.\n8. Invoke the action again.\n\nResult: RandomAccessFile error ( see below )\n\nThis seems like an error to me for the following reasons ..\n\nWhile creating the script action, the \"add\" dialog in the script preference page prompts \nme to select a file in the workspace.  This seems to imply that it is OK to create a script from\nmy workspace.  Note however that my workspace is temporary at best.  I may create, open \nor delete things from the workspace.  In contrast, the workbench is persistant beyond the \nlifetime of anything in the workspace.  If I add a script to the workbench I expect it to take\non the same lifecycle. \n\nTherefore, it seems strange that my script will only work while I have a copy of the source\nin my local workspace.  The scripting plugin should copy the script into its own\nmetadata directory where it may live beyond the lifetime of any project I have loaded.\n\nIf you turn source into a script I\u0027d say it is no longer a project.  It is now part of your\ninstalled base.\n\n--- Mon Jun 11 14:58:07 EDT 2001 ---\njava.io.FileNotFoundException: file:D:/Eclipse122/eclipse/workspace/ScriptProject/Calc2.xhtml (The filename, directory name, or volume label syntax is incorrect)\njava.io.FileNotFoundException: file:D:/Eclipse122/eclipse/workspace/ScriptProject/Calc2.xhtml (The filename, directory name, or volume label syntax is incorrect)\n\tat java.io.RandomAccessFile.open(Native Method)\n\tat java.io.RandomAccessFile.\u003cinit\u003e(RandomAccessFile.java:104)\n\tat org.eclipse.scripting.internal.ScriptReaderFileSystemFile.\u003cinit\u003e(ScriptReaderFileSystemFile.java:34)\n\tat org.eclipse.scripting.internal.uirenderer.XGRXmlParser.setFilename(XGRXmlParser.java:830)\n\tat org.eclipse.scripting.internal.uirenderer.XGR.parsePresentationModel(XGR.java:404)\n\tat org.eclipse.scripting.internal.uirenderer.XGR.executeElement(XGR.java:215)\n\tat org.eclipse.scripting.internal.uirenderer.XGR.execute(XGR.java:91)\n\tat org.eclipse.scripting.ScriptRunner.executeScriptUI(ScriptRunner.java:333)\n\tat org.eclipse.scripting.internal.ScriptRunnerExtended.run(ScriptRunnerExtended.java:42)\n\tat org.eclipse.scripting.internal.Script.run(Script.java:105)\n\tat org.eclipse.scripting.ScriptAdapterWorkbenchAction.run(ScriptAdapterWorkbenchAction.java:65)\n\tat org.eclipse.ui.internal.PluginAction.run(PluginAction.java:125)\n\tat org.eclipse.jface.action.ActionContributionItem.handleWidgetSelection(ActionContributionItem.java:408)\n\tat org.eclipse.jface.action.ActionContributionItem.handleWidgetEvent(ActionContributionItem.java:362)\n\tat org.eclipse.jface.action.ActionContributionItem.access$0(ActionContributionItem.java:353)\n\tat org.eclipse.jface.action.ActionContributionItem$ActionListener.handleEvent(ActionContributionItem.java:47)\n\tat org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java:622)\n\tat org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:963)\n\tat org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:637)\n\tat org.eclipse.ui.internal.Workbench.run(Workbench.java:620)\n\tat org.eclipse.core.internal.boot.InternalBootLoader.run(InternalBootLoader.java:815)\n\tat org.eclipse.core.boot.BootLoader.run(BootLoader.java:285)\n\tat java.lang.reflect.Method.invoke(Native Method)\n\tat org.eclipse.core.launcher.Main.basicRun(Main.java:126)\n\tat org.eclipse.core.launcher.Main.run(Main.java:408)\n\tat org.eclipse.core.launcher.Main.main(Main.java:281)\n\n\n\nNOTES:",
+    "PRODUCT VERSION:\n\neclipse 0.122 on jdk\n\n",
+    "Invalid defect. Scripting support has been removed. "
+  ],
+  "commentCreationDates": [
+    "2001-10-11T04:19:19+02:00",
+    "2001-10-24T13:06:43+02:00",
+    "2002-10-21T17:21:37+02:00"
+  ],
+  "traces": [
+    {
+      "exceptionType": "java.io.FileNotFoundException",
+      "message": "file:D:/Eclipse122/eclipse/workspace/ScriptProject/Calc2.xhtml (The filename, directory name, or volume label syntax is incorrect)",
+      "elements": [
+        {
+          "method": "java.io.RandomAccessFile.open",
+          "source": "Native Method"
+        },
+        {
+          "method": "java.io.RandomAccessFile.\u003cinit\u003e",
+          "source": "RandomAccessFile.java:104"
+        },
+        {
+          "method": "org.eclipse.scripting.internal.ScriptReaderFileSystemFile.\u003cinit\u003e",
+          "source": "ScriptReaderFileSystemFile.java:34"
+        },
+        {
+          "method": "org.eclipse.scripting.internal.uirenderer.XGRXmlParser.setFilename",
+          "source": "XGRXmlParser.java:830"
+        },
+        {
+          "method": "org.eclipse.scripting.internal.uirenderer.XGR.parsePresentationModel",
+          "source": "XGR.java:404"
+        },
+        {
+          "method": "org.eclipse.scripting.internal.uirenderer.XGR.executeElement",
+          "source": "XGR.java:215"
+        },
+        {
+          "method": "org.eclipse.scripting.internal.uirenderer.XGR.execute",
+          "source": "XGR.java:91"
+        },
+        {
+          "method": "org.eclipse.scripting.ScriptRunner.executeScriptUI",
+          "source": "ScriptRunner.java:333"
+        },
+        {
+          "method": "org.eclipse.scripting.internal.ScriptRunnerExtended.run",
+          "source": "ScriptRunnerExtended.java:42"
+        },
+        {
+          "method": "org.eclipse.scripting.internal.Script.run",
+          "source": "Script.java:105"
+        },
+        {
+          "method": "org.eclipse.scripting.ScriptAdapterWorkbenchAction.run",
+          "source": "ScriptAdapterWorkbenchAction.java:65"
+        },
+        {
+          "method": "org.eclipse.ui.internal.PluginAction.run",
+          "source": "PluginAction.java:125"
+        },
+        {
+          "method": "org.eclipse.jface.action.ActionContributionItem.handleWidgetSelection",
+          "source": "ActionContributionItem.java:408"
+        },
+        {
+          "method": "org.eclipse.jface.action.ActionContributionItem.handleWidgetEvent",
+          "source": "ActionContributionItem.java:362"
+        },
+        {
+          "method": "org.eclipse.jface.action.ActionContributionItem.access$0",
+          "source": "ActionContributionItem.java:353"
+        },
+        {
+          "method": "org.eclipse.jface.action.ActionContributionItem$ActionListener.handleEvent",
+          "source": "ActionContributionItem.java:47"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.EventTable.sendEvent",
+          "source": "EventTable.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Widget.notifyListeners",
+          "source": "Widget.java:622"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.runDeferredEvents",
+          "source": "Display.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.readAndDispatch",
+          "source": "Display.java:963"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.runEventLoop",
+          "source": "Workbench.java:637"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.run",
+          "source": "Workbench.java:620"
+        },
+        {
+          "method": "org.eclipse.core.internal.boot.InternalBootLoader.run",
+          "source": "InternalBootLoader.java:815"
+        },
+        {
+          "method": "org.eclipse.core.boot.BootLoader.run",
+          "source": "BootLoader.java:285"
+        },
+        {
+          "method": "java.lang.reflect.Method.invoke",
+          "source": "Native Method"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.basicRun",
+          "source": "Main.java:126"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.run",
+          "source": "Main.java:408"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.main",
+          "source": "Main.java:281"
+        }
+      ],
+      "number": 0,
+      "commentIndex": 0,
+      "bugId": "1787",
+      "date": "2001-10-11T04:19:19+02:00",
+      "product": "Platform",
+      "component": "Scripting",
+      "severity": "normal"
+    }
+  ],
+  "groupId": "1787",
+  "bugId": "1787",
+  "date": "2001-10-11T04:19:19+02:00",
+  "product": "Platform",
+  "component": "Scripting",
+  "severity": "normal"
+}

@@ -1,0 +1,151 @@
+{
+  "comments": [
+    "DW (10/10/2001 10:58:04 AM)\n\t* Junit project setup with junit.framework in a jar, and junit.samples\n\tas source\n\t* Evaluate \"junit.samples.VectorTest.main(null)\" from the scrapbook\n\t* The following exception occurrs\n\n\tNOTE: if I do the same evaluation with source for all of junit, the problem\n\t\tdoes not happen.\n\njava.lang.NoClassDefFoundError: junit/framework/TestCase\n\tat java.lang.ClassLoader.defineClass0(Native Method)\n\tat java.lang.ClassLoader.defineClass(ClassLoader.java:496)\n\tat java.security.SecureClassLoader.defineClass(SecureClassLoader.java:117)\n\tat java.net.URLClassLoader.defineClass(URLClassLoader.java:251)\n\tat java.net.URLClassLoader.access$300(URLClassLoader.java:69)\n\tat java.net.URLClassLoader$ClassFinder.run(URLClassLoader.java:544)\n\tat java.security.AccessController.doPrivileged(Native Method)\n\tat java.net.URLClassLoader.findClass(URLClassLoader.java:203)\n\tat java.lang.ClassLoader.loadClass(ClassLoader.java:325)\n\tat java.lang.ClassLoader.loadClass(ClassLoader.java:257)\n\tat CodeSnippet_20.run(CodeSnippet_20.java:3)\n\tat org.eclipse.jdt.internal.ui.snippeteditor.ScrapbookMain1.eval(ScrapbookMain1.java:9)\n\tat java.lang.reflect.Method.invoke(Native Method)\n\tat org.eclipse.jdt.internal.ui.snippeteditor.ScrapbookMain.evalLoop(ScrapbookMain.java:46)\n\tat org.eclipse.jdt.internal.ui.snippeteditor.ScrapbookMain.main(ScrapbookMain.java:27)\n\n\nDW (10/10/2001 11:38:36 AM)\n\tIt looks like the classpath for the scrapbook class loader is constrained to the\n\toutput location of a project.",
+    "The classpath for the scrabook class loader needs to look at the classpath of \nthe current project and the output directory of the current project.",
+    "Fixed but not released. Fix is in the new java debug ui plug-in (which is not \nyet released).",
+    "The new java debug ui plug-in has been released. This problem should now be \nfixed.",
+    "Please verify.",
+    "*** Bug 6161 has been marked as a duplicate of this bug. ***",
+    "*** Bug 1657 has been marked as a duplicate of this bug. ***",
+    "I get the following exception in my host console the first time I try the\nevaluation as described.\n\n\njava.lang.NullPointerException\n\tat\norg.eclipse.jdt.internal.eval.EvaluationContext.evaluate(EvaluationContext.java:224)\n\tat\norg.eclipse.jdt.internal.eval.EvaluationContext.evaluate(EvaluationContext.java:239)\n\tat\norg.eclipse.jdt.internal.core.eval.EvaluationContextWrapper.evaluateCodeSnippet(EvaluationContextWrapper.java:186)\n\tat\norg.eclipse.jdt.internal.debug.eval.LocalEvaluationEngine$1.run(LocalEvaluationEngine.java:395)\n\tat java.lang.Thread.run(Thread.java:498)\n\n",
+    "This is an intermittent bug.\n\nFor a while, scrapbook evaluations were completely busted (System.out wasn\u0027t\nworking) on most VMs. Then it started working again.\n\nAfter debugging, I traced this problem to a VMDisconnectedException occurring\nduring evaluation in LocationEvaluationEngine#acceptClassFiles(). Our\nDebugException calls getResult().setException(e). getResult() was returning null.\n\nRecommend:\n- Fixing the setting of fResult to null and exception handling in\nLocationEvaluationEngine- Giving the JDI packet managers some serious review.\nThe VMDisconnectedExceptions they throw are adding serious instability to our\ncode base.",
+    "The is a problem where the eval VM termiantes during an evaluation. In this \ncase we dispose the VM from the evaluation manager, and then try to update the \nresult of the evaluation which causes an NPE (since we have disposed the \nresult).\n\nNeed better dispose handling when in an evaluation.",
+    "Fixed dispose handling when dispose call occurrs during an evaluation. The \nevaluation engine now maintains a state such that it knows when it is \nperforming an evaluation. When a call to dispose occurrs during an evaluation, \nthe dipose is delayed until after the evaluation is complete.\n\nReassigning for verification.\n\nbug# 6211 serves as a reminder to improve VMDiconnect handling at the JDI layer.",
+    "please verify.",
+    "Still happens. The LocalEvaluationEngine is being told that the evaluation is\nfinished too early.",
+    "Fixed. \n",
+    "Please verify.",
+    "Verified."
+  ],
+  "commentCreationDates": [
+    "2001-10-11T04:18:44+02:00",
+    "2001-11-16T17:26:03+01:00",
+    "2001-11-16T17:53:34+01:00",
+    "2001-11-18T17:38:31+01:00",
+    "2001-11-18T17:38:55+01:00",
+    "2001-11-21T15:04:55+01:00",
+    "2001-11-28T20:49:22+01:00",
+    "2001-12-03T21:48:54+01:00",
+    "2001-12-04T01:02:19+01:00",
+    "2001-12-04T02:15:55+01:00",
+    "2001-12-04T21:47:55+01:00",
+    "2001-12-04T21:48:12+01:00",
+    "2001-12-05T16:12:15+01:00",
+    "2001-12-05T16:53:55+01:00",
+    "2001-12-05T16:54:13+01:00",
+    "2001-12-05T22:54:33+01:00"
+  ],
+  "traces": [
+    {
+      "exceptionType": "java.lang.NoClassDefFoundError",
+      "message": "junit/framework/TestCase",
+      "elements": [
+        {
+          "method": "java.lang.ClassLoader.defineClass0",
+          "source": "Native Method"
+        },
+        {
+          "method": "java.lang.ClassLoader.defineClass",
+          "source": "ClassLoader.java:496"
+        },
+        {
+          "method": "java.security.SecureClassLoader.defineClass",
+          "source": "SecureClassLoader.java:117"
+        },
+        {
+          "method": "java.net.URLClassLoader.defineClass",
+          "source": "URLClassLoader.java:251"
+        },
+        {
+          "method": "java.net.URLClassLoader.access$300",
+          "source": "URLClassLoader.java:69"
+        },
+        {
+          "method": "java.net.URLClassLoader$ClassFinder.run",
+          "source": "URLClassLoader.java:544"
+        },
+        {
+          "method": "java.security.AccessController.doPrivileged",
+          "source": "Native Method"
+        },
+        {
+          "method": "java.net.URLClassLoader.findClass",
+          "source": "URLClassLoader.java:203"
+        },
+        {
+          "method": "java.lang.ClassLoader.loadClass",
+          "source": "ClassLoader.java:325"
+        },
+        {
+          "method": "java.lang.ClassLoader.loadClass",
+          "source": "ClassLoader.java:257"
+        },
+        {
+          "method": "CodeSnippet_20.run",
+          "source": "CodeSnippet_20.java:3"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.ui.snippeteditor.ScrapbookMain1.eval",
+          "source": "ScrapbookMain1.java:9"
+        },
+        {
+          "method": "java.lang.reflect.Method.invoke",
+          "source": "Native Method"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.ui.snippeteditor.ScrapbookMain.evalLoop",
+          "source": "ScrapbookMain.java:46"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.ui.snippeteditor.ScrapbookMain.main",
+          "source": "ScrapbookMain.java:27"
+        }
+      ],
+      "number": 0,
+      "commentIndex": 0,
+      "bugId": "1753",
+      "date": "2001-10-11T04:18:44+02:00",
+      "product": "JDT",
+      "component": "Debug",
+      "severity": "critical"
+    },
+    {
+      "exceptionType": "java.lang.NullPointerException",
+      "elements": [
+        {
+          "method": "org.eclipse.jdt.internal.eval.EvaluationContext.evaluate",
+          "source": "EvaluationContext.java:224"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.eval.EvaluationContext.evaluate",
+          "source": "EvaluationContext.java:239"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.core.eval.EvaluationContextWrapper.evaluateCodeSnippet",
+          "source": "EvaluationContextWrapper.java:186"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.eval.LocalEvaluationEngine$1.run",
+          "source": "LocalEvaluationEngine.java:395"
+        },
+        {
+          "method": "java.lang.Thread.run",
+          "source": "Thread.java:498"
+        }
+      ],
+      "number": 1,
+      "commentIndex": 7,
+      "bugId": "1753",
+      "date": "2001-12-03T21:48:54+01:00",
+      "product": "JDT",
+      "component": "Debug",
+      "severity": "critical"
+    }
+  ],
+  "groupId": "1753",
+  "bugId": "1753",
+  "date": "2001-10-11T04:18:44+02:00",
+  "product": "JDT",
+  "component": "Debug",
+  "severity": "critical"
+}

@@ -1,0 +1,193 @@
+{
+  "comments": [
+    "DW (10/9/2001 1:44:37 PM)\n\tFollow the debug smoke test using latest 2.0 stream\n\tI launch the debug target (VectorTest), and when execution suspends, my IDE disappears,\n\twith this stack dump in the console:\n\n\norg.eclipse.swt.SWTError: Widget is disposed\n\tat org.eclipse.swt.custom.TableTreeItem.getDisplay(TableTreeItem.java:180)\n\tat org.eclipse.swt.widgets.Widget.isValidThread(Widget.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Widget.checkWidget(Widget.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Widget.getData(Widget.java(Compiled Code))\n\tat org.eclipse.ui.views.properties.PropertySheetViewer.applyEditorValue(PropertySheetViewer.java:193)\n\tat org.eclipse.ui.views.properties.PropertySheetViewer.setInput(PropertySheetViewer.java:696)\n\tat org.eclipse.ui.views.properties.PropertySheetPage.selectionChanged(PropertySheetPage.java:229)\n\tat org.eclipse.ui.views.properties.PropertySheet.selectionChanged(PropertySheet.java:199)\n\tat org.eclipse.ui.internal.SelectionService$2.run(SelectionService.java:48)\n\tat org.eclipse.core.internal.runtime.InternalPlatform.run(InternalPlatform.java(Compiled Code))\n\tat org.eclipse.core.runtime.Platform.run(Platform.java(Compiled Code))\n\tat org.eclipse.ui.internal.SelectionService.fireSelection(SelectionService.java:46)\n\tat org.eclipse.ui.internal.SelectionService.partActivated(SelectionService.java:87)\n\tat org.eclipse.ui.internal.WorkbenchPage.firePartActivated(WorkbenchPage.java:579)\n\tat org.eclipse.ui.internal.WorkbenchPage.setActivePart(WorkbenchPage.java:1275)\n\tat org.eclipse.ui.internal.WorkbenchPage.activate(WorkbenchPage.java:98)\n\tat org.eclipse.debug.internal.ui.DebugView.openEditorAndSetMarker(DebugView.java:292)\n\tat org.eclipse.debug.internal.ui.DebugView.showMarkerForCurrentSelection(DebugView.java:240)\n\tat org.eclipse.debug.internal.ui.DebugView.selectionChanged(DebugView.java:178)\n\tat org.eclipse.jface.viewers.Viewer.fireSelectionChanged(Viewer.java:147)\n\tat org.eclipse.jface.viewers.StructuredViewer.updateSelection(StructuredViewer.java:907)\n\tat org.eclipse.jface.viewers.StructuredViewer.setSelection(StructuredViewer.java:687)\n\tat org.eclipse.debug.internal.ui.LaunchesViewer.setSelection(LaunchesViewer.java:81)\n\tat org.eclipse.debug.internal.ui.DebugView.autoExpand(DebugView.java:473)\n\tat org.eclipse.debug.internal.ui.LaunchesViewer.autoExpand(LaunchesViewer.java:47)\n\tat org.eclipse.debug.internal.ui.DebugContentProvider.doHandleSuspendEvent(DebugContentProvider.java:142)\n\tat org.eclipse.debug.internal.ui.DebugContentProvider.doHandleDebugEvent(DebugContentProvider.java:111)\n\tat org.eclipse.debug.internal.ui.BasicContentProvider$1.run(BasicContentProvider.java:95)\n\tat org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:29)\n\tat org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Display.readAndDispatch(Display.java(Compiled Code))\n\tat org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java(Compiled Code))\n\tat org.eclipse.ui.internal.Workbench.run(Workbench.java:658)\n\tat org.eclipse.core.internal.boot.InternalBootLoader.run(InternalBootLoader.java:820)\n\tat org.eclipse.core.boot.BootLoader.run(BootLoader.java:285)\n\tat java.lang.reflect.Method.invoke(Native Method)\n\tat org.eclipse.core.launcher.Main.basicRun(Main.java:151)\n\tat org.eclipse.core.launcher.Main.run(Main.java:502)\n\tat org.eclipse.core.launcher.UIMain.main(UIMain.java:52)\n\nDS (10/9/01 2:11:13 PM)\n\tDuplicate of 1GLC7KS: ITPDUI:ALL - SWTError changing breakpoint attributes using property sheet",
+    "\n\n*** This bug has been marked as a duplicate of 1759 ***"
+  ],
+  "commentCreationDates": [
+    "2001-10-11T04:18:46+02:00",
+    "2001-10-11T18:30:00+02:00"
+  ],
+  "traces": [
+    {
+      "exceptionType": "org.eclipse.swt.SWTError",
+      "message": "Widget is disposed",
+      "elements": [
+        {
+          "method": "org.eclipse.swt.custom.TableTreeItem.getDisplay",
+          "source": "TableTreeItem.java:180"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Widget.isValidThread",
+          "source": "Widget.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Widget.checkWidget",
+          "source": "Widget.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Widget.getData",
+          "source": "Widget.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.ui.views.properties.PropertySheetViewer.applyEditorValue",
+          "source": "PropertySheetViewer.java:193"
+        },
+        {
+          "method": "org.eclipse.ui.views.properties.PropertySheetViewer.setInput",
+          "source": "PropertySheetViewer.java:696"
+        },
+        {
+          "method": "org.eclipse.ui.views.properties.PropertySheetPage.selectionChanged",
+          "source": "PropertySheetPage.java:229"
+        },
+        {
+          "method": "org.eclipse.ui.views.properties.PropertySheet.selectionChanged",
+          "source": "PropertySheet.java:199"
+        },
+        {
+          "method": "org.eclipse.ui.internal.SelectionService$2.run",
+          "source": "SelectionService.java:48"
+        },
+        {
+          "method": "org.eclipse.core.internal.runtime.InternalPlatform.run",
+          "source": "InternalPlatform.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.core.runtime.Platform.run",
+          "source": "Platform.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.ui.internal.SelectionService.fireSelection",
+          "source": "SelectionService.java:46"
+        },
+        {
+          "method": "org.eclipse.ui.internal.SelectionService.partActivated",
+          "source": "SelectionService.java:87"
+        },
+        {
+          "method": "org.eclipse.ui.internal.WorkbenchPage.firePartActivated",
+          "source": "WorkbenchPage.java:579"
+        },
+        {
+          "method": "org.eclipse.ui.internal.WorkbenchPage.setActivePart",
+          "source": "WorkbenchPage.java:1275"
+        },
+        {
+          "method": "org.eclipse.ui.internal.WorkbenchPage.activate",
+          "source": "WorkbenchPage.java:98"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.DebugView.openEditorAndSetMarker",
+          "source": "DebugView.java:292"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.DebugView.showMarkerForCurrentSelection",
+          "source": "DebugView.java:240"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.DebugView.selectionChanged",
+          "source": "DebugView.java:178"
+        },
+        {
+          "method": "org.eclipse.jface.viewers.Viewer.fireSelectionChanged",
+          "source": "Viewer.java:147"
+        },
+        {
+          "method": "org.eclipse.jface.viewers.StructuredViewer.updateSelection",
+          "source": "StructuredViewer.java:907"
+        },
+        {
+          "method": "org.eclipse.jface.viewers.StructuredViewer.setSelection",
+          "source": "StructuredViewer.java:687"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.LaunchesViewer.setSelection",
+          "source": "LaunchesViewer.java:81"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.DebugView.autoExpand",
+          "source": "DebugView.java:473"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.LaunchesViewer.autoExpand",
+          "source": "LaunchesViewer.java:47"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.DebugContentProvider.doHandleSuspendEvent",
+          "source": "DebugContentProvider.java:142"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.DebugContentProvider.doHandleDebugEvent",
+          "source": "DebugContentProvider.java:111"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.BasicContentProvider$1.run",
+          "source": "BasicContentProvider.java:95"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.RunnableLock.run",
+          "source": "RunnableLock.java:29"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Synchronizer.runAsyncMessages",
+          "source": "Synchronizer.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.runAsyncMessages",
+          "source": "Display.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.readAndDispatch",
+          "source": "Display.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.runEventLoop",
+          "source": "Workbench.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.run",
+          "source": "Workbench.java:658"
+        },
+        {
+          "method": "org.eclipse.core.internal.boot.InternalBootLoader.run",
+          "source": "InternalBootLoader.java:820"
+        },
+        {
+          "method": "org.eclipse.core.boot.BootLoader.run",
+          "source": "BootLoader.java:285"
+        },
+        {
+          "method": "java.lang.reflect.Method.invoke",
+          "source": "Native Method"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.basicRun",
+          "source": "Main.java:151"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.run",
+          "source": "Main.java:502"
+        },
+        {
+          "method": "org.eclipse.core.launcher.UIMain.main",
+          "source": "UIMain.java:52"
+        }
+      ],
+      "number": 0,
+      "commentIndex": 0,
+      "bugId": "1755",
+      "duplicateId": "1759",
+      "date": "2001-10-11T04:18:46+02:00",
+      "product": "JDT",
+      "component": "Debug",
+      "severity": "critical"
+    }
+  ],
+  "groupId": "1759",
+  "bugId": "1755",
+  "duplicateId": "1759",
+  "date": "2001-10-11T04:18:46+02:00",
+  "product": "JDT",
+  "component": "Debug",
+  "severity": "critical"
+}

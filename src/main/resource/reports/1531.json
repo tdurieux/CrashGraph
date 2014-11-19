@@ -1,0 +1,59 @@
+{
+  "comments": [
+    "EG (1/24/01 9:46:25 AM)\n\t\"Open on Selection\" support in Console View. The console can show \nreferences to resources in the\n\tcase of a walkback. An open on selection command would allow to open \nthe referenced resource.\n\njava.util.MissingResourceException: Can\u0027t find resource for bundle \njava.util.PropertyResourceBundle, key Editor.GotoLine.dialog.title\n\tat com.ibm.eclipse.ui.editors.text.GotoLineAction.actionPerformed\n(\u003e\u003e\u003e\u003e\u003eGotoLineAction.java:69\u003c\u003c\u003c\u003c\u003c\u003c)\n\n\tOpen On Selection with \"GotoLineAction.java:69\" will open an editor on \nGotoLineAction.\n\nNOTES:\nEG (1/24/01 9:57:02 AM)\t\n\tlow priority\n\nDW (3/15/01 10:50:59 AM)\n\tCould be done with an #editorAction that is dynamically contributed by \nJava Debug UI.\n\nJGS (9/25/01 1:51:22 PM)\n\tThe implementation of OpenOnSelectionAction depends on internal classes \nin JDT core\n\tvia the ICodeAssist interface (which only ClassFile \u0026 CompilationUnit \nimplement).  Thus\n\tthere is no obvious path to add this functionality to the ConsoleViewer.\n\nJGS (10/4/01 10:38:46 AM)\n\tResponse from EG:\n\n\t\tI wouldn\u0027t stick to the OpenOnSelectionAction it is based on \ncode select\n\t\tand code select is only helpful inside Java code.\n\n\t\tLet\u0027s assume that this is the output in the console:\n\t\t\tpackage.SomeType.someMethod(SomeType.java:89).\n\t\twhat does the user have to select to do a Go To (file)?\n\t\tIs it enough to put the cursor on the line and you parse \nthe \"SomeType:89\" or do\n\t\tyou want to use the qualifed method name for navigation.\n\n\t\tIf you go for the file name then you can use the workspace API \nto find the\n\t\tresource with the name. If the file name is ambigous show a \ndialog and\n\t\topen the editor via the workbench API. Finally use the \nITextEditor API\n\t\tto reveal the line.\n\n\t\tIf you go via the fully qualified type name you can use the \nsearch engine\n\t\tand look for a type with the given name (see \nAllTypesSearchEngine for an example) find\n\t\tthe matching package and open the IJavaElement. You can give \nthe search engine\n\t\tthe package as a scope to constrain the search.",
+    "Have experimented with both approaches outlined, and decided using the java \nSearchEngine is prefereable to hunting for resources.  Within this choice there \nare several options on how to use the SearchEngine.  Decided to use \nthe \u0027searchAllTypeNames()\u0027 method, as this had somewhat better performance than \nthe others.  ",
+    "Implemented.  If there is an explicit selection in the console, this is parsed \nfor a package, type and line number.  If no selection, the entire line in the \nconsole where the cursor is located is parsed.  In either case, the package \nname and line number are optional, the type name is required.  In ambiguous \nsituations (e.g., \"List\" is selected), a selection dialog is opened.  ",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "Verified that open on type works in positive cases.\n\nProblem I noticed is that if the\nselection cannot be resolved to a type, then nothing happens, and\nthere is no warning/message. Options are to pop up a dialog, or\nopen an \"open on type\" dialog (a la toolbar), with an initial\nselection of whatever was selected.\n\nFor example, I selected \"main\" in the conosle and did an open on type\nand nothing happenned. Instead, could open the \"open on type\" dialog, and \npopulate the text field with \"main\".\n\nThoughts?",
+    "My thought was that the normal use of this action was with NO selection.  I.e., \nsimply place the cursor on a line of output in the console and then \nchoose \u0027Open on Type\u0027 from the context menu.  The action will parse the entire \nline and in the case of a standard Java walkback (and a few other cases), it \nwill \u0027do the right thing\u0027 and open an editor on the referenced type.  I only \nincluded an option to look at explicit selections because it seemed somewhat \nuseful in the case where a programmer outputs a class name as a debugging aid, \nand then decides to open that class.  99% of the time, I think such a selection \nwill be done as a double-click, which should select the type correctly, if \nthere are separators around the name.  I do see the potential for confusion \nthough and will investigate the suggested fix.",
+    "After thinking about it a bit, I\u0027m not sure that bringing up a dialog in the \ncase that no type can be resolved for the \u0027open on type\u0027 action is a good \nidea.  There are two cases: (1) An explicit selection was made, but it was a \nbad selection that didn\u0027t actually get the desired type name.  The selection \nprobably missed the desired type name by one or two characters on the beginning \nor end.  If it differs on the end, then bringing up a dialog seeded with the \nselection probably would save the user a few keystrokes, but if it differs on \nthe beginning, then using the selection as a seed for the dialog is actually \nnot at all what the user wants, and will cause them to have backspace out the \ninitial value, or start over.  (2) There is no explicit selection, so the \naction attempts to parse the entire line.  If it cannot parse a valid type out \nof the line, then the line is not part of a standard Java walkback, in which \ncase we have no idea what it is.  In this case, seeding the dialog with the \nentire line would probably result in nonsense.  In general, we could avoid \nseeding the dialog, but then this is just the same as invoking the standard \ntoolbar action to open a type.  I can see that there might be some benefit in \nhaving the action try its best to parse a type name and open it, but in case of \nfailure default to asking the user to choose a type from ALL of the types in \nthe workspace.  But, is this desireable behavior?  ",
+    "Will leave action as is for now.  Fixed.",
+    "Verified."
+  ],
+  "commentCreationDates": [
+    "2001-10-11T04:14:54+02:00",
+    "2001-10-11T23:54:36+02:00",
+    "2001-10-12T23:04:42+02:00",
+    "2001-10-12T23:06:05+02:00",
+    "2001-10-12T23:06:43+02:00",
+    "2001-10-12T23:09:12+02:00",
+    "2001-10-16T21:17:22+02:00",
+    "2001-10-16T21:20:10+02:00",
+    "2001-10-16T21:20:37+02:00",
+    "2001-10-16T22:40:48+02:00",
+    "2001-10-16T22:56:42+02:00",
+    "2001-10-18T17:04:30+02:00",
+    "2001-10-18T17:05:46+02:00",
+    "2001-10-18T17:09:09+02:00"
+  ],
+  "traces": [
+    {
+      "exceptionType": "java.util.MissingResourceException",
+      "message": "Can\u0027t find resource for bundle  java.util.PropertyResourceBundle, key Editor.GotoLine.dialog.title",
+      "elements": [
+        {
+          "method": "com.ibm.eclipse.ui.editors.text.GotoLineAction.actionPerformed",
+          "source": "\u003e\u003e\u003e\u003e\u003eGotoLineAction.java:69\u003c\u003c\u003c\u003c\u003c\u003c"
+        }
+      ],
+      "number": 0,
+      "commentIndex": 0,
+      "bugId": "1531",
+      "date": "2001-10-11T04:14:54+02:00",
+      "product": "JDT",
+      "component": "Debug",
+      "severity": "enhancement"
+    }
+  ],
+  "groupId": "1531",
+  "bugId": "1531",
+  "date": "2001-10-11T04:14:54+02:00",
+  "product": "JDT",
+  "component": "Debug",
+  "severity": "enhancement"
+}

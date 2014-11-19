@@ -1,0 +1,114 @@
+{
+  "comments": [
+    "DS (6/12/2001 4:10:02 PM)\n\tRunning self hosting workspace on IBM1.3 vm\n\n\tLog: Wed Jun 13 15:05:10 GMT+00:00 2001\n2 org.eclipse.core.runtime\n 2 Problems occurred when invoking code from plug-in: org.eclipse.core.runtime.java.lang.NullPointerException\n\tat org.eclipse.jdt.debug.core.JDIDebugModel.getPluginIdentifier(JDIDebugModel.java:323)\n\tat org.eclipse.jdt.internal.debug.core.JDIDebugElement.targetRequestFailed(JDIDebugElement.java:291)\n\tat org.eclipse.jdt.internal.debug.core.JDIDebugTarget.terminate(JDIDebugTarget.java:1449)\n\tat org.eclipse.debug.core.Launch.terminate(Launch.java:225)\n\tat org.eclipse.debug.internal.core.LaunchManager.shutdown(LaunchManager.java:222)\n\tat org.eclipse.debug.core.DebugPlugin.shutdown(DebugPlugin.java:189)\n\tat org.eclipse.core.internal.plugins.PluginRegistry$2.run(PluginRegistry.java:253)\n\tat org.eclipse.core.internal.runtime.InternalPlatform.run(InternalPlatform.java(Compiled Code))\n\tat org.eclipse.core.internal.plugins.PluginRegistry$1.visit(PluginRegistry.java:262)\n\tat org.eclipse.core.internal.plugins.PluginRegistry.accept(PluginRegistry.java:41)\n\tat org.eclipse.core.internal.plugins.PluginRegistry.shutdownPlugins(PluginRegistry.java:265)\n\tat org.eclipse.core.internal.plugins.PluginRegistry.shutdown(PluginRegistry.java:240)\n\tat org.eclipse.core.internal.runtime.InternalPlatform.loaderShutdown(InternalPlatform.java:467)\n\tat java.lang.reflect.Method.invoke(Native Method)\n\tat org.eclipse.core.internal.boot.InternalBootLoader.shutdown(InternalBootLoader.java:883)\n\tat org.eclipse.core.internal.boot.InternalBootLoader.run(InternalBootLoader.java:815)\n\tat org.eclipse.core.boot.BootLoader.run(BootLoader.java:280)\n\tat java.lang.reflect.Method.invoke(Native Method)\n\tat org.eclipse.core.launcher.Main.basicRun(Main.java:126)\n\tat org.eclipse.core.launcher.Main.run(Main.java:408)\n\tat org.eclipse.core.launcher.Main.main(Main.java:281)\n\nDW (6/12/01 4:18:23 PM)\n\tThis problem occurs because of a known problem with terminating a suspended VM.\n\tSee:\n\t\t1GEYWL7: ITPDUI:ALL - README: Terminating VM on Linux\n\n\tThere is no good workaround to this problem.\n\tSuggest as README.\n\nDW (6/13/01 10:31:46 AM)\n\tFix is to change the code that retrieves the plugin identifier to use\n\ta constant instead of asking the plugin for an identifier.\n\n\tAlternatively, the JDI debug plugin could terminate its launches when shutdown.\n\tThere is an interesting problem here - the JDI debug model has already been shut\n\tdown, and now the generic debug plugin is being shutdown, which terminates\n\tall launches. There are instances of a debug model that has already been shutdown.\n\tShould each debug model be responsible for terminating its launches when shutdown?\n\nDW (6/13/01 3:05:55 PM)\n\tSuggest to defer. Side effect is that not all launches will be terminated when the IDE\n\tshuts down.\n\nDS (7/10/01 11:58:11 AM)\n\tCreated constant plugin identifier for the JDI debug model.\n\nARCH (7/11/01 12:09:00 PM)\n\tFix it but not sure the fix proposed is right. Additional investigation needed\n\nDW (7/17/01 7:34:58 PM)\n\tWe are no longer able to duplicate this problem. When running in debug mode,\n\tand the IDE is exited (on Linux), with a debug target active which has a suspended\n\tthread, the IDE will exit, and the debugger will dump an error to system out saying\n\tthat it was unable to terminate a debug target - which is the expected behaviour.\n\n\tWe no longer get the unexpected walkback. On investigation we found that the\n\tdebug plugin attempts to terminate the system process associated with the debug\n\ttarget first (which fails). It then tries to terminate the debug target, which accepts the\n\trequest without error. However, the debug target never gets a \"VM Disconnected\"\n\tcallback, and thus it does not set its state to terminated. Previously, to get the error\n\tin this PR, the debug target was failing when we asked it to terminate.\n\n\tPropose no fix/change.",
+    "This is an old bug, and  comment shows unable to reproduce."
+  ],
+  "commentCreationDates": [
+    "2001-10-11T04:16:51+02:00",
+    "2001-10-15T17:32:53+02:00"
+  ],
+  "traces": [
+    {
+      "exceptionType": "org.eclipse.core.runtime.java.lang.NullPointerException",
+      "elements": [
+        {
+          "method": "org.eclipse.jdt.debug.core.JDIDebugModel.getPluginIdentifier",
+          "source": "JDIDebugModel.java:323"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.JDIDebugElement.targetRequestFailed",
+          "source": "JDIDebugElement.java:291"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.JDIDebugTarget.terminate",
+          "source": "JDIDebugTarget.java:1449"
+        },
+        {
+          "method": "org.eclipse.debug.core.Launch.terminate",
+          "source": "Launch.java:225"
+        },
+        {
+          "method": "org.eclipse.debug.internal.core.LaunchManager.shutdown",
+          "source": "LaunchManager.java:222"
+        },
+        {
+          "method": "org.eclipse.debug.core.DebugPlugin.shutdown",
+          "source": "DebugPlugin.java:189"
+        },
+        {
+          "method": "org.eclipse.core.internal.plugins.PluginRegistry$2.run",
+          "source": "PluginRegistry.java:253"
+        },
+        {
+          "method": "org.eclipse.core.internal.runtime.InternalPlatform.run",
+          "source": "InternalPlatform.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.core.internal.plugins.PluginRegistry$1.visit",
+          "source": "PluginRegistry.java:262"
+        },
+        {
+          "method": "org.eclipse.core.internal.plugins.PluginRegistry.accept",
+          "source": "PluginRegistry.java:41"
+        },
+        {
+          "method": "org.eclipse.core.internal.plugins.PluginRegistry.shutdownPlugins",
+          "source": "PluginRegistry.java:265"
+        },
+        {
+          "method": "org.eclipse.core.internal.plugins.PluginRegistry.shutdown",
+          "source": "PluginRegistry.java:240"
+        },
+        {
+          "method": "org.eclipse.core.internal.runtime.InternalPlatform.loaderShutdown",
+          "source": "InternalPlatform.java:467"
+        },
+        {
+          "method": "java.lang.reflect.Method.invoke",
+          "source": "Native Method"
+        },
+        {
+          "method": "org.eclipse.core.internal.boot.InternalBootLoader.shutdown",
+          "source": "InternalBootLoader.java:883"
+        },
+        {
+          "method": "org.eclipse.core.internal.boot.InternalBootLoader.run",
+          "source": "InternalBootLoader.java:815"
+        },
+        {
+          "method": "org.eclipse.core.boot.BootLoader.run",
+          "source": "BootLoader.java:280"
+        },
+        {
+          "method": "java.lang.reflect.Method.invoke",
+          "source": "Native Method"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.basicRun",
+          "source": "Main.java:126"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.run",
+          "source": "Main.java:408"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.main",
+          "source": "Main.java:281"
+        }
+      ],
+      "number": 0,
+      "commentIndex": 0,
+      "bugId": "1645",
+      "date": "2001-10-11T04:16:51+02:00",
+      "product": "JDT",
+      "component": "Debug",
+      "severity": "critical"
+    }
+  ],
+  "groupId": "1645",
+  "bugId": "1645",
+  "date": "2001-10-11T04:16:51+02:00",
+  "product": "JDT",
+  "component": "Debug",
+  "severity": "critical"
+}

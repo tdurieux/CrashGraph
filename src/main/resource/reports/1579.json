@@ -1,0 +1,150 @@
+{
+  "comments": [
+    "Most of the time (but not allways) I don\u0027t get a + sign in front of UIMain when I debug Eclipse using J9. Also hitting a breakpoint\n\tstops the program execution but doesn\u0027t reveal the corresponding method on the stack frame.\n\n\tZipped my workspace if it helps.\n\n\nNOTES:\n\nDW (5/21/01 8:02:00 PM)\n\tSounds like unable to retrieve threads from VM on startup.\n\tTry J9 on Win2000.\n\nDW (5/22/01 3:35:13 PM)\n\tUnable to reproduce - asked DB to use debug options to look for error messages.\n\nDB (23.05.2001 10:18:24)\n\tGot the following on my console when I started J9 in debug mode. Had no plus in front\n\nInternal error logged from JDI debug model:\norg.eclipse.jdi.TimeoutException\n        at org.eclipse.jdi.internal.connect.PacketReceiveManager.getReply(PacketReceiveManager.java, Compiled Code)\n        at org.eclipse.jdi.internal.connect.PacketReceiveManager.getReply(PacketReceiveManager.java:127)\n        at org.eclipse.jdi.internal.MirrorImpl.requestVM(MirrorImpl.java:152)\n        at org.eclipse.jdi.internal.MirrorImpl.requestVM(MirrorImpl.java:208)\n        at org.eclipse.jdi.internal.VirtualMachineImpl.getIDSizes(VirtualMachineImpl.java:704)\n        at org.eclipse.jdi.internal.VirtualMachineImpl.packetSendManager(VirtualMachineImpl.java:231)\n        at org.eclipse.jdi.internal.MirrorImpl.requestVM(MirrorImpl.java:148)\n        at org.eclipse.jdi.internal.MirrorImpl.requestVM(MirrorImpl.java:170)\n        at org.eclipse.jdi.internal.request.EventRequestImpl.enable(EventRequestImpl.java:200)\n        at org.eclipse.jdt.internal.debug.core.JDIDebugTarget.initializeRequests(JDIDebugTarget.java:233)\n        at org.eclipse.jdt.internal.debug.core.JDIDebugTarget.initialize(JDIDebugTarget.java:197)\n        at org.eclipse.jdt.internal.debug.core.JDIDebugTarget.\u003cinit\u003e(JDIDebugTarget.java:165)\n        at org.eclipse.jdt.debug.core.JDIDebugModel$1.run(JDIDebugModel.java:144)\n        at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:1099)\n        at org.eclipse.jdt.debug.core.JDIDebugModel.newDebugTarget(JDIDebugModel.java:148)\n        at org.eclipse.jdt.internal.ui.launcher.J9DebugLauncher.run(J9DebugLauncher.java, Compiled Code)\n        at org.eclipse.jdt.internal.ui.launcher.JavaApplicationLauncher$1.run(JavaApplicationLauncher.java:190)\n        at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:102)\n\nDB  (23.05.2001 10:30:01)\n\tBTW: the walkback doesn\u0027t show up in the normal .log file. \n\nDB (23.05.2001 10:30:57)\n\tAfter terminating the target I got the following on the console\n\njava.lang.NullPointerException\n        at org.eclipse.jdt.internal.debug.core.JDIDebugTarget.removeAllChildren(JDIDebugTarget.java, Compiled Code)\n        at org.eclipse.jdt.internal.debug.core.JDIDebugTarget.terminate0(JDIDebugTarget.java:1212)\n        at org.eclipse.jdt.internal.debug.core.JDIDebugTarget.handleVMDisconnect(JDIDebugTarget.java:706)\n        at org.eclipse.jdt.internal.debug.core.EventDispatcher.dispatch(EventDispatcher.java, Compiled Code)\n        at org.eclipse.jdt.internal.debug.core.EventDispatcher$1.run(EventDispatcher.java:153)\n        at org.eclipse.core.internal.resources.Workspace.run(Workspace.java, Compiled Code)\n        at org.eclipse.jdt.internal.debug.core.EventDispatcher.run(EventDispatcher.java, Compiled Code)\n        at java.lang.Thread.run(Thread.java:479)\n\nDW (5/23/01 10:49:35 AM)\n\tIncreasing the timeout fixes the problem.\n\tFixed NPE by safeguarding the removeAllChildren with a null check.\n\nDW (5/23/01 1:46:51 PM)\n\tWe could propogate creation/init failures by having the debug target creation methods throw a debug exception on\n\tfailure - this way, the launch could report the failure to the user.\n\n\tWould require an API change.\n\nDW (5/25/01 9:08:29 AM)\n\tAdd a readme note for this - increase timeout if the problem occurrs.\n\nDW (6/15/01 10:20:39 AM)\n\tAdded to README.",
+    "This appears to be a timeout issue. The workaround is to increase the\ntimeout preference.",
+    "Closed.",
+    "PRODUCT VERSION:\n\t108\n\tJ9\n\n"
+  ],
+  "commentCreationDates": [
+    "2001-10-11T04:15:42+02:00",
+    "2001-10-12T19:55:10+02:00",
+    "2001-10-12T19:56:16+02:00",
+    "2001-10-24T12:35:57+02:00"
+  ],
+  "traces": [
+    {
+      "exceptionType": "org.eclipse.jdi.TimeoutException",
+      "elements": [
+        {
+          "method": "org.eclipse.jdi.internal.connect.PacketReceiveManager.getReply",
+          "source": "PacketReceiveManager.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.jdi.internal.connect.PacketReceiveManager.getReply",
+          "source": "PacketReceiveManager.java:127"
+        },
+        {
+          "method": "org.eclipse.jdi.internal.MirrorImpl.requestVM",
+          "source": "MirrorImpl.java:152"
+        },
+        {
+          "method": "org.eclipse.jdi.internal.MirrorImpl.requestVM",
+          "source": "MirrorImpl.java:208"
+        },
+        {
+          "method": "org.eclipse.jdi.internal.VirtualMachineImpl.getIDSizes",
+          "source": "VirtualMachineImpl.java:704"
+        },
+        {
+          "method": "org.eclipse.jdi.internal.VirtualMachineImpl.packetSendManager",
+          "source": "VirtualMachineImpl.java:231"
+        },
+        {
+          "method": "org.eclipse.jdi.internal.MirrorImpl.requestVM",
+          "source": "MirrorImpl.java:148"
+        },
+        {
+          "method": "org.eclipse.jdi.internal.MirrorImpl.requestVM",
+          "source": "MirrorImpl.java:170"
+        },
+        {
+          "method": "org.eclipse.jdi.internal.request.EventRequestImpl.enable",
+          "source": "EventRequestImpl.java:200"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.JDIDebugTarget.initializeRequests",
+          "source": "JDIDebugTarget.java:233"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.JDIDebugTarget.initialize",
+          "source": "JDIDebugTarget.java:197"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.JDIDebugTarget.\u003cinit\u003e",
+          "source": "JDIDebugTarget.java:165"
+        },
+        {
+          "method": "org.eclipse.jdt.debug.core.JDIDebugModel$1.run",
+          "source": "JDIDebugModel.java:144"
+        },
+        {
+          "method": "org.eclipse.core.internal.resources.Workspace.run",
+          "source": "Workspace.java:1099"
+        },
+        {
+          "method": "org.eclipse.jdt.debug.core.JDIDebugModel.newDebugTarget",
+          "source": "JDIDebugModel.java:148"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.ui.launcher.J9DebugLauncher.run",
+          "source": "J9DebugLauncher.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.ui.launcher.JavaApplicationLauncher$1.run",
+          "source": "JavaApplicationLauncher.java:190"
+        },
+        {
+          "method": "org.eclipse.jface.operation.ModalContext$ModalContextThread.run",
+          "source": "ModalContext.java:102"
+        }
+      ],
+      "number": 0,
+      "commentIndex": 0,
+      "bugId": "1579",
+      "date": "2001-10-11T04:15:42+02:00",
+      "product": "JDT",
+      "component": "Debug",
+      "severity": "critical"
+    },
+    {
+      "exceptionType": "java.lang.NullPointerException",
+      "elements": [
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.JDIDebugTarget.removeAllChildren",
+          "source": "JDIDebugTarget.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.JDIDebugTarget.terminate0",
+          "source": "JDIDebugTarget.java:1212"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.JDIDebugTarget.handleVMDisconnect",
+          "source": "JDIDebugTarget.java:706"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.EventDispatcher.dispatch",
+          "source": "EventDispatcher.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.EventDispatcher$1.run",
+          "source": "EventDispatcher.java:153"
+        },
+        {
+          "method": "org.eclipse.core.internal.resources.Workspace.run",
+          "source": "Workspace.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.EventDispatcher.run",
+          "source": "EventDispatcher.java, Compiled Code"
+        },
+        {
+          "method": "java.lang.Thread.run",
+          "source": "Thread.java:479"
+        }
+      ],
+      "number": 1,
+      "commentIndex": 0,
+      "bugId": "1579",
+      "date": "2001-10-11T04:15:42+02:00",
+      "product": "JDT",
+      "component": "Debug",
+      "severity": "critical"
+    }
+  ],
+  "groupId": "1579",
+  "bugId": "1579",
+  "date": "2001-10-11T04:15:42+02:00",
+  "product": "JDT",
+  "component": "Debug",
+  "severity": "critical"
+}

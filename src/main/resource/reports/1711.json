@@ -1,0 +1,152 @@
+{
+  "comments": [
+    "PRODUCT VERSION:\n135 Sun JDK1.2.2\n\nJGS (9/10/01 5:22:48 PM)\n\tIn InnerAnon scenario class, set breakpoints in nextElement() methods\n\tin both inner classes.  Debug, and notice that the debugger is in a weird state\n\twhere neither of the breakpoints was hit (as evidenced by console output),\n\tbut DebugView still shows all threads as running with \"unknown\" labels.\n\tOne of the breakpoints is shown as installed, the other isn\u0027t.\n\tIf if you disable the line 38 breakpoint, you successfully stop at the line\n\t25 breakpoint, but the program never terminates.  If you try it the other way \n\taround, back to weird state.\n\nDS (9/13/01 3:56:37 PM)\n\tCannot reproduce on 135 (or 135++).\n\nJGS (9/13/01 4:26:41 PM)\n\tCan still reproduce on 135 under Sun JDK1.2.2.  Cannot reproduce under\n\tIBM VM or Sun JDK1.3.  Under 1.2.2, following walkback appears:\n\ncom.sun.jdi.VMDisconnectedException: Got IOException from Virtual Machine\n\tat org.eclipse.jdi.internal.connect.PacketReceiveManager.getReply(PacketReceiveManager.java:116)\n\tat org.eclipse.jdi.internal.connect.PacketReceiveManager.getReply(PacketReceiveManager.java:130)\n\tat org.eclipse.jdi.internal.MirrorImpl.requestVM(MirrorImpl.java:155)\n\tat org.eclipse.jdi.internal.MirrorImpl.requestVM(MirrorImpl.java:173)\n\tat org.eclipse.jdi.internal.MirrorImpl.requestVM(MirrorImpl.java:188)\n\tat org.eclipse.jdi.internal.ThreadReferenceImpl.resume(ThreadReferenceImpl.java:292)\n\tat org.eclipse.jdi.internal.event.EventSetImpl.resumeThreads(EventSetImpl.java:104)\n\tat org.eclipse.jdi.internal.event.EventSetImpl.resume(EventSetImpl.java:86)\n\tat org.eclipse.jdt.internal.debug.core.EventDispatcher.dispatch(EventDispatcher.java:104)\n\tat org.eclipse.jdt.internal.debug.core.EventDispatcher$1.run(EventDispatcher.java:136)\n\tat org.eclipse.core.internal.resources.Workspace.run(Workspace.java:1197)\n\tat org.eclipse.jdt.internal.debug.core.EventDispatcher.run(EventDispatcher.java:153)\n\tat java.lang.Thread.run(Thread.java:498)\n\nDS (9/13/01 4:54:15 PM)\n\tNot reliably reproduceable...takes me 1 in 10.  Timing problem.  Are we trying to talk to a VM too\n\tearly?  Appears to be a JDI problem. Should figure out what event is causing the problem.\n\nJGS (9/13/01 5:25:01 PM)\n\tProblem is a SocketException trying to read reply from telling thread to resume (JdwpCommandPacket\n\tis TR_RESUME).  \n\n\tAdded tracing to PacketManager to dump out each event.  The first block is for a succesful run:\n\nEvent\u003dVMStartEvent: 0\nEvent\u003dThreadStartEvent: 5\nEvent\u003dClassPrepareEvent: 7\nEvent\u003dClassPrepareEvent: 11\nEvent\u003dClassPrepareEvent: 10\nEvent\u003dClassPrepareEvent: 11\nEvent\u003dClassPrepareEvent: 10\nEvent\u003dBreakpointEvent: 13\nEvent\u003dBreakpointEvent: 13\nEvent\u003dBreakpointEvent: 13\nEvent\u003dClassPrepareEvent: 11\nEvent\u003dClassPrepareEvent: 10\nEvent\u003dBreakpointEvent: 14\nEvent\u003dBreakpointEvent: 14\nEvent\u003dBreakpointEvent: 14\nEvent\u003dThreadDeathEvent: 6\nEvent\u003dThreadStartEvent: 5\nEvent\u003dVMDisconnectEvent: 0\n\n\tNext block is what we get when the problem happens:\n\nEvent\u003dVMStartEvent: 0\nEvent\u003dThreadStartEvent: 5\nEvent\u003dClassPrepareEvent: 7\nEvent\u003dClassPrepareEvent: 11\nEvent\u003dClassPrepareEvent: 10\nEvent\u003dClassPrepareEvent: 11\nEvent\u003dClassPrepareEvent: 10\ncom.sun.jdi.VMDisconnectedException: Got IOException from Virtual Machine\n\tat org.eclipse.jdi.internal.connect.PacketReceiveManager.getReply(PacketReceiveManager.java:116)\n\tat org.eclipse.jdi.internal.connect.PacketReceiveManager.getReply(PacketReceiveManager.java:130)\n\tat org.eclipse.jdi.internal.MirrorImpl.requestVM(MirrorImpl.java:155)\n\tat org.eclipse.jdi.internal.MirrorImpl.requestVM(MirrorImpl.java:173)\n\tat org.eclipse.jdi.internal.MirrorImpl.requestVM(MirrorImpl.java:188)\n\tat org.eclipse.jdi.internal.ThreadReferenceImpl.resume(ThreadReferenceImpl.java:292)\n\tat org.eclipse.jdi.internal.event.EventSetImpl.resumeThreads(EventSetImpl.java:104)\n\tat org.eclipse.jdi.internal.event.EventSetImpl.resume(EventSetImpl.java:86)\n\tat org.eclipse.jdt.internal.debug.core.EventDispatcher.dispatch(EventDispatcher.java:105)\n\tat org.eclipse.jdt.internal.debug.core.EventDispatcher$1.run(EventDispatcher.java:137)\n\tat org.eclipse.core.internal.resources.Workspace.run(Workspace.java:1197)\n\tat org.eclipse.jdt.internal.debug.core.EventDispatcher.run(EventDispatcher.java:154)\n\tat java.lang.Thread.run(Thread.java:498)\n\n\tSo it appears the resume after a ClassPrepareEvent is causing the problem.\n\nJGS (9/13/01 5:43:56 PM)\n\tSource for InnerAnon follows:\n\n\nimport java.util.*;\n\npublic class InnerAnon {\n     private Object[] stuff;\n     private static String description \u003d \"foo\";\n     private int answer \u003d 42;\n\n     public class Inner implements Enumeration {\n         private int count;\n         private Object[] contents;\n\n         public Inner(Object[] cont) {\n              contents \u003d cont;\n              count \u003d 0;\n         }\n\n         public boolean hasMoreElements() {\n              if (count \u003c contents.length) {\n                  return true;\n              }\n              return false;\n         }\n\n         public Object nextElement() {\n              return contents[count++];   // Set one breakpoint here\n         }\n     }\n\n     public static Enumeration Anon(final Object[] cont) {\n\n         return new Enumeration() {\n              final int[] c \u003d {0};\n              public boolean hasMoreElements() {\n                  return c[0] \u003c cont.length;\n              }\n\n              public Object nextElement() {\n                  return cont[c[0]++];   // Set the second breakpoint here\n              }\n         };\n     }\n\n     public InnerAnon(){\n         stuff \u003d new Object[] {new String(\"one\"),\n              new String(\"two\"), new String(\"three\")};\n     }\n\n     public static void main(String[] args) {\n         InnerAnon ia \u003d new InnerAnon();\n         Enumeration enum \u003d ia.new Inner(ia.stuff);\n         ia.printEnum(enum);\n         enum \u003d Anon(ia.stuff);\n         ia.printEnum(enum);\n     }\n\n     public static void printEnum(Enumeration e) {\n         final char lastLetter \u003d \u0027z\u0027;\n         while (e.hasMoreElements()) {\n              System.out.println((String)e.nextElement());\n         }\n     }\n}",
+    "Joe, is this still a problem in 204++?",
+    "This is still a problem in 204, generating the same walkback.\nNote this is only a problem under Sun 1.2.2., not under the IBM VM or under Sun \n1.3.0.",
+    "This is a VM dependent problem. We do not intend to fix."
+  ],
+  "commentCreationDates": [
+    "2001-10-11T04:18:02+02:00",
+    "2001-10-15T18:05:12+02:00",
+    "2001-10-16T22:44:29+02:00",
+    "2001-10-16T22:46:20+02:00"
+  ],
+  "traces": [
+    {
+      "exceptionType": "com.sun.jdi.VMDisconnectedException",
+      "message": "Got IOException from Virtual Machine",
+      "elements": [
+        {
+          "method": "org.eclipse.jdi.internal.connect.PacketReceiveManager.getReply",
+          "source": "PacketReceiveManager.java:116"
+        },
+        {
+          "method": "org.eclipse.jdi.internal.connect.PacketReceiveManager.getReply",
+          "source": "PacketReceiveManager.java:130"
+        },
+        {
+          "method": "org.eclipse.jdi.internal.MirrorImpl.requestVM",
+          "source": "MirrorImpl.java:155"
+        },
+        {
+          "method": "org.eclipse.jdi.internal.MirrorImpl.requestVM",
+          "source": "MirrorImpl.java:173"
+        },
+        {
+          "method": "org.eclipse.jdi.internal.MirrorImpl.requestVM",
+          "source": "MirrorImpl.java:188"
+        },
+        {
+          "method": "org.eclipse.jdi.internal.ThreadReferenceImpl.resume",
+          "source": "ThreadReferenceImpl.java:292"
+        },
+        {
+          "method": "org.eclipse.jdi.internal.event.EventSetImpl.resumeThreads",
+          "source": "EventSetImpl.java:104"
+        },
+        {
+          "method": "org.eclipse.jdi.internal.event.EventSetImpl.resume",
+          "source": "EventSetImpl.java:86"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.EventDispatcher.dispatch",
+          "source": "EventDispatcher.java:104"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.EventDispatcher$1.run",
+          "source": "EventDispatcher.java:136"
+        },
+        {
+          "method": "org.eclipse.core.internal.resources.Workspace.run",
+          "source": "Workspace.java:1197"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.EventDispatcher.run",
+          "source": "EventDispatcher.java:153"
+        },
+        {
+          "method": "java.lang.Thread.run",
+          "source": "Thread.java:498"
+        }
+      ],
+      "number": 0,
+      "commentIndex": 0,
+      "bugId": "1711",
+      "date": "2001-10-11T04:18:02+02:00",
+      "product": "JDT",
+      "component": "Debug",
+      "severity": "normal"
+    },
+    {
+      "exceptionType": "com.sun.jdi.VMDisconnectedException",
+      "message": "Got IOException from Virtual Machine",
+      "elements": [
+        {
+          "method": "org.eclipse.jdi.internal.connect.PacketReceiveManager.getReply",
+          "source": "PacketReceiveManager.java:116"
+        },
+        {
+          "method": "org.eclipse.jdi.internal.connect.PacketReceiveManager.getReply",
+          "source": "PacketReceiveManager.java:130"
+        },
+        {
+          "method": "org.eclipse.jdi.internal.MirrorImpl.requestVM",
+          "source": "MirrorImpl.java:155"
+        },
+        {
+          "method": "org.eclipse.jdi.internal.MirrorImpl.requestVM",
+          "source": "MirrorImpl.java:173"
+        },
+        {
+          "method": "org.eclipse.jdi.internal.MirrorImpl.requestVM",
+          "source": "MirrorImpl.java:188"
+        },
+        {
+          "method": "org.eclipse.jdi.internal.ThreadReferenceImpl.resume",
+          "source": "ThreadReferenceImpl.java:292"
+        },
+        {
+          "method": "org.eclipse.jdi.internal.event.EventSetImpl.resumeThreads",
+          "source": "EventSetImpl.java:104"
+        },
+        {
+          "method": "org.eclipse.jdi.internal.event.EventSetImpl.resume",
+          "source": "EventSetImpl.java:86"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.EventDispatcher.dispatch",
+          "source": "EventDispatcher.java:105"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.EventDispatcher$1.run",
+          "source": "EventDispatcher.java:137"
+        },
+        {
+          "method": "org.eclipse.core.internal.resources.Workspace.run",
+          "source": "Workspace.java:1197"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.EventDispatcher.run",
+          "source": "EventDispatcher.java:154"
+        },
+        {
+          "method": "java.lang.Thread.run",
+          "source": "Thread.java:498"
+        }
+      ],
+      "number": 1,
+      "commentIndex": 0,
+      "bugId": "1711",
+      "date": "2001-10-11T04:18:02+02:00",
+      "product": "JDT",
+      "component": "Debug",
+      "severity": "normal"
+    }
+  ],
+  "groupId": "1711",
+  "bugId": "1711",
+  "date": "2001-10-11T04:18:02+02:00",
+  "product": "JDT",
+  "component": "Debug",
+  "severity": "normal"
+}

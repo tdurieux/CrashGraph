@@ -1,0 +1,144 @@
+{
+  "comments": [
+    "- new Java Project\n- new Scrapbook page\n- use toolbar package button to have it run in java.util\n- evaluate: new Hashtable()\n- you get: An exception occurred during evaluation: java.lang.SecurityException\n\nNOTES:\n\nNE (6/12/01 11:14:23 AM)\n\tI noticed that it put a java.util package in my project.\n\tI guess the VM doesn\u0027t let you shadow JDK packages.\n\nEG (6/12/2001 5:18:04 AM)\n\tthis has worked in the old evaluation support.\nEG (6/12/2001 5:14:57 AM)\n\tthis has worked in the past. \n\tRun in works for application packages, e.g., I can do run in \"junit.text.ui\" \n\tand evaluate new TestRunner().\n\tSuggest README\n\tMoving to DUI\n\nJGS (6/12/01 10:38:06 AM)\n\tCan duplicate under 122.  This problem was originally filed as 1GEWPXV: ITPDUI:ALL - SecurityException running in package\n\tbut was closed because it couldn\u0027t be duplicated under 119.  It appears to be back with 122.\n\nDW (6/12/01 12:29:00 PM)\n\tProblem does not occur with Sun JDK 1.2.2 or J9.\n\tREADME.\n\nDW (6/15/01 10:12:57 AM)\n\tAdded to README.",
+    "PRODUCT VERSION:\n122 JDK\n\n",
+    "Requires AST evaluation",
+    "*** Bug 8282 has been marked as a duplicate of this bug. ***",
+    "Suggest to remove \"run in package\", and replace with \"imports\"",
+    "\"Run in\" to be replaced with \"Select imports\" (a multi-selection dialog). Use \ndialog instead of writing in source code, as Snippet parser does not support \nimport parsing.",
+    "*** Bug 1526 has been marked as a duplicate of this bug. ***",
+    "Released initial implementation to head.",
+    "Implemented in JavaSnippetEditor, SelectImportsAction and SelectImportDialog.\n",
+    "Please verify (Darin W)",
+    "Got an NPE verifying - created a new snippet page in the root of JUnit project, \npressed imports button:\n\njava.lang.NullPointerException\n\tat \norg.eclipse.jdt.internal.debug.ui.snippeteditor.SelectImportsDialog$ImportsConte\nntProvider.populateFilters(SelectImportsDialog.java:120)\n\tat \norg.eclipse.jdt.internal.debug.ui.snippeteditor.SelectImportsDialog$ImportsConte\nntProvider.\u003cinit\u003e(SelectImportsDialog.java:115)\n\tat \norg.eclipse.jdt.internal.debug.ui.snippeteditor.SelectImportsDialog.createDialog\nArea(SelectImportsDialog.java:364)\n\tat org.eclipse.jface.dialogs.Dialog.createContents(Dialog.java:465)\n\tat org.eclipse.jface.window.Window.create(Window.java:263)\n\tat org.eclipse.jface.window.Window.open(Window.java:512)\n\tat \norg.eclipse.jdt.internal.debug.ui.snippeteditor.SelectImportsAction.chooseImport\ns(SelectImportsAction.java:36)\n\tat \norg.eclipse.jdt.internal.debug.ui.snippeteditor.SelectImportsAction.run\n(SelectImportsAction.java:30)\n\tat org.eclipse.jface.action.Action.runWithEvent(Action.java:473)\n\tat org.eclipse.jface.action.ActionContributionItem.handleWidgetSelection\n(ActionContributionItem.java:407)\n\tat org.eclipse.jface.action.ActionContributionItem.handleWidgetEvent\n(ActionContributionItem.java:361)\n\tat org.eclipse.jface.action.ActionContributionItem.access$0\n(ActionContributionItem.java:352)\n\tat \norg.eclipse.jface.action.ActionContributionItem$ActionListener.handleEvent\n(ActionContributionItem.java:47)\n\tat org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:75)\n\tat org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java:637)\n\tat org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:1420)\n\tat org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:1208)\n\tat org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:722)\n\tat org.eclipse.ui.internal.Workbench.run(Workbench.java:705)\n\tat org.eclipse.core.internal.boot.InternalBootLoader.run\n(InternalBootLoader.java:777)\n\tat org.eclipse.core.boot.BootLoader.run(BootLoader.java:319)\n\tat EclipseRuntimeLauncher.main(EclipseRuntimeLauncher.java:14)",
+    "Re-opened for NPE",
+    "Sorry about that...fixed in ImportsContentProvider.\nPlease verify.",
+    "Verify (Darin W again).",
+    "Verified."
+  ],
+  "commentCreationDates": [
+    "2001-10-11T04:16:38+02:00",
+    "2001-10-24T12:37:00+02:00",
+    "2002-01-14T23:05:35+01:00",
+    "2002-01-23T20:36:12+01:00",
+    "2002-02-26T19:47:52+01:00",
+    "2002-03-18T20:23:09+01:00",
+    "2002-03-18T20:23:51+01:00",
+    "2002-03-22T23:38:15+01:00",
+    "2002-03-25T15:37:42+01:00",
+    "2002-03-25T15:38:04+01:00",
+    "2002-03-25T17:23:01+01:00",
+    "2002-03-25T17:23:21+01:00",
+    "2002-03-25T17:54:45+01:00",
+    "2002-03-25T17:55:04+01:00",
+    "2002-03-26T14:16:18+01:00"
+  ],
+  "traces": [
+    {
+      "exceptionType": "java.lang.NullPointerException",
+      "elements": [
+        {
+          "method": "org.eclipse.jdt.internal.debug.ui.snippeteditor.SelectImportsDialog$ImportsContentProvider.populateFilters",
+          "source": "SelectImportsDialog.java:120"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.ui.snippeteditor.SelectImportsDialog$ImportsContentProvider.\u003cinit\u003e",
+          "source": "SelectImportsDialog.java:115"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.ui.snippeteditor.SelectImportsDialog.createDialogArea",
+          "source": "SelectImportsDialog.java:364"
+        },
+        {
+          "method": "org.eclipse.jface.dialogs.Dialog.createContents",
+          "source": "Dialog.java:465"
+        },
+        {
+          "method": "org.eclipse.jface.window.Window.create",
+          "source": "Window.java:263"
+        },
+        {
+          "method": "org.eclipse.jface.window.Window.open",
+          "source": "Window.java:512"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.ui.snippeteditor.SelectImportsAction.chooseImports",
+          "source": "SelectImportsAction.java:36"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.ui.snippeteditor.SelectImportsAction.run",
+          "source": "SelectImportsAction.java:30"
+        },
+        {
+          "method": "org.eclipse.jface.action.Action.runWithEvent",
+          "source": "Action.java:473"
+        },
+        {
+          "method": "org.eclipse.jface.action.ActionContributionItem.handleWidgetSelection",
+          "source": "ActionContributionItem.java:407"
+        },
+        {
+          "method": "org.eclipse.jface.action.ActionContributionItem.handleWidgetEvent",
+          "source": "ActionContributionItem.java:361"
+        },
+        {
+          "method": "org.eclipse.jface.action.ActionContributionItem.access$0",
+          "source": "ActionContributionItem.java:352"
+        },
+        {
+          "method": "org.eclipse.jface.action.ActionContributionItem$ActionListener.handleEvent",
+          "source": "ActionContributionItem.java:47"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.EventTable.sendEvent",
+          "source": "EventTable.java:75"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Widget.notifyListeners",
+          "source": "Widget.java:637"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.runDeferredEvents",
+          "source": "Display.java:1420"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.readAndDispatch",
+          "source": "Display.java:1208"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.runEventLoop",
+          "source": "Workbench.java:722"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.run",
+          "source": "Workbench.java:705"
+        },
+        {
+          "method": "org.eclipse.core.internal.boot.InternalBootLoader.run",
+          "source": "InternalBootLoader.java:777"
+        },
+        {
+          "method": "org.eclipse.core.boot.BootLoader.run",
+          "source": "BootLoader.java:319"
+        },
+        {
+          "method": "EclipseRuntimeLauncher.main",
+          "source": "EclipseRuntimeLauncher.java:14"
+        }
+      ],
+      "number": 0,
+      "commentIndex": 10,
+      "bugId": "1633",
+      "date": "2002-03-25T17:23:01+01:00",
+      "product": "JDT",
+      "component": "Debug",
+      "severity": "normal"
+    }
+  ],
+  "groupId": "1633",
+  "bugId": "1633",
+  "date": "2001-10-11T04:16:38+02:00",
+  "product": "JDT",
+  "component": "Debug",
+  "severity": "normal"
+}

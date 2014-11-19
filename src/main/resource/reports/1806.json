@@ -1,0 +1,588 @@
+{
+  "comments": [
+    "-open the preferences dialog\n-click on Scripts\n-\u003e I get the NullPointerException shown below\n\njava.lang.NullPointerException\n\tat org.eclipse.scripting.internal.views.ScriptDevelopmentPreferencePage.loadImportList(ScriptDevelopmentPreferencePage.java:220)\n\tat org.eclipse.scripting.internal.views.ScriptDevelopmentPreferencePage.initializeContent(ScriptDevelopmentPreferencePage.java:151)\n\tat org.eclipse.scripting.internal.views.ScriptDevelopmentPreferencePage.createContents(ScriptDevelopmentPreferencePage.java:98)\n\tat org.eclipse.jface.preference.PreferencePage.createControl(PreferencePage.java:194)\n\tat org.eclipse.jface.preference.PreferenceDialog.showPage(PreferenceDialog.java:685)\n\tat org.eclipse.jface.preference.PreferenceDialog$6.run(PreferenceDialog.java:393)\n\tat org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:56)\n\tat org.eclipse.jface.preference.PreferenceDialog$5.widgetSelected(PreferenceDialog.java:385)\n\tat org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:85)\n\tat org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Display.readAndDispatch(Display.java(Compiled Code))\n\tat org.eclipse.jface.window.Window.runEventLoop(Window.java(Compiled Code))\n\tat org.eclipse.jface.window.Window.open(Window.java:523)\n\tat org.eclipse.ui.internal.OpenPreferencesAction.run(OpenPreferencesAction.java:47)\n\tat org.eclipse.jface.action.Action.runWithEvent(Action.java:451)\n\tat org.eclipse.jface.action.ActionContributionItem.handleWidgetSelection(ActionContributionItem.java:407)\n\tat org.eclipse.jface.action.ActionContributionItem.handleWidgetEvent(ActionContributionItem.java:361)\n\tat org.eclipse.jface.action.ActionContributionItem.access$0(ActionContributionItem.java:352)\n\tat org.eclipse.jface.action.ActionContributionItem$ActionListener.handleEvent(ActionContributionItem.java:47)\n\tat org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Display.readAndDispatch(Display.java(Compiled Code))\n\tat org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java(Compiled Code))\n\tat org.eclipse.ui.internal.Workbench.run(Workbench.java:658)\n\tat org.eclipse.core.internal.boot.InternalBootLoader.run(InternalBootLoader.java:820)\n\tat org.eclipse.core.boot.BootLoader.run(BootLoader.java:285)\n\tat java.lang.reflect.Method.invoke(Native Method)\n\tat org.eclipse.core.launcher.Main.basicRun(Main.java:151)\n\tat org.eclipse.core.launcher.Main.run(Main.java:502)\n\tat org.eclipse.core.launcher.Main.main(Main.java:362)\n\n\nNOTES:",
+    "This bug is still in build 204.\nHere is the walkback I got:\n\nLog: Sat Oct 13 01:14:33 EDT 2001\n4 org.eclipse.core.runtime 0 Unhandled exception caught in event loop.\njava.lang.NullPointerException\n\tat \norg.eclipse.scripting.internal.views.ScriptDevelopmentPreferencePage.loadImportL\nist(ScriptDevelopmentPreferencePage.java:220)\n\tat \norg.eclipse.scripting.internal.views.ScriptDevelopmentPreferencePage.initializeC\nontent(ScriptDevelopmentPreferencePage.java:151)\n\tat \norg.eclipse.scripting.internal.views.ScriptDevelopmentPreferencePage.createConte\nnts(ScriptDevelopmentPreferencePage.java:98)\n\tat org.eclipse.jface.preference.PreferencePage.createControl\n(PreferencePage.java:194)\n\tat org.eclipse.jface.preference.PreferenceDialog.showPage\n(PreferenceDialog.java:685)\n\tat org.eclipse.jface.preference.PreferenceDialog$6.run\n(PreferenceDialog.java:393)\n\tat org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:56)\n\tat org.eclipse.jface.preference.PreferenceDialog$5.widgetSelected\n(PreferenceDialog.java:385)\n\tat org.eclipse.swt.widgets.TypedListener.handleEvent\n(TypedListener.java:85)\n\tat org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java(Compiled \nCode))\n\tat org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java(Compiled \nCode))\n\tat org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java\n(Compiled Code))\n\tat org.eclipse.swt.widgets.Display.readAndDispatch(Display.java\n(Compiled Code))\n\tat org.eclipse.jface.window.Window.runEventLoop(Window.java(Compiled \nCode))\n\tat org.eclipse.jface.window.Window.open(Window.java:523)\n\tat org.eclipse.ui.internal.OpenPreferencesAction.run\n(OpenPreferencesAction.java:47)\n\tat org.eclipse.jface.action.Action.runWithEvent(Action.java:451)\n\tat org.eclipse.jface.action.ActionContributionItem.handleWidgetSelection\n(ActionContributionItem.java:407)\n\tat org.eclipse.jface.action.ActionContributionItem.handleWidgetEvent\n(ActionContributionItem.java:361)\n\tat org.eclipse.jface.action.ActionContributionItem.access$0\n(ActionContributionItem.java:352)\n\tat \norg.eclipse.jface.action.ActionContributionItem$ActionListener.handleEvent\n(ActionContributionItem.java:47)\n\tat org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java\n(Compiled Code))\n\tat org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java:645)\n\tat org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:1359)\n\tat org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:1160)\n\tat org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:675)\n\tat org.eclipse.ui.internal.Workbench.run(Workbench.java:658)\n\tat org.eclipse.core.internal.boot.InternalBootLoader.run\n(InternalBootLoader.java:820)\n\tat org.eclipse.core.boot.BootLoader.run(BootLoader.java:285)\n\tat java.lang.reflect.Method.invoke(Native Method)\n\tat org.eclipse.core.launcher.Main.basicRun(Main.java:151)\n\tat org.eclipse.core.launcher.Main.run(Main.java:433)\n\tat org.eclipse.core.launcher.Main.main(Main.java:306)\nLog: Sat Oct 13 01:14:33 EDT 2001\n4 org.eclipse.core.runtime 0 java.lang.NullPointerException\njava.lang.NullPointerException\n\tat \norg.eclipse.scripting.internal.views.ScriptDevelopmentPreferencePage.loadImportL\nist(ScriptDevelopmentPreferencePage.java:220)\n\tat \norg.eclipse.scripting.internal.views.ScriptDevelopmentPreferencePage.initializeC\nontent(ScriptDevelopmentPreferencePage.java:151)\n\tat \norg.eclipse.scripting.internal.views.ScriptDevelopmentPreferencePage.createConte\nnts(ScriptDevelopmentPreferencePage.java:98)\n\tat org.eclipse.jface.preference.PreferencePage.createControl\n(PreferencePage.java:194)\n\tat org.eclipse.jface.preference.PreferenceDialog.showPage\n(PreferenceDialog.java:685)\n\tat org.eclipse.jface.preference.PreferenceDialog$6.run\n(PreferenceDialog.java:393)\n\tat org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:56)\n\tat org.eclipse.jface.preference.PreferenceDialog$5.widgetSelected\n(PreferenceDialog.java:385)\n\tat org.eclipse.swt.widgets.TypedListener.handleEvent\n(TypedListener.java:85)\n\tat org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java(Compiled \nCode))\n\tat org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java(Compiled \nCode))\n\tat org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java\n(Compiled Code))\n\tat org.eclipse.swt.widgets.Display.readAndDispatch(Display.java\n(Compiled Code))\n\tat org.eclipse.jface.window.Window.runEventLoop(Window.java(Compiled \nCode))\n\tat org.eclipse.jface.window.Window.open(Window.java:523)\n\tat org.eclipse.ui.internal.OpenPreferencesAction.run\n(OpenPreferencesAction.java:47)\n\tat org.eclipse.jface.action.Action.runWithEvent(Action.java:451)\n\tat org.eclipse.jface.action.ActionContributionItem.handleWidgetSelection\n(ActionContributionItem.java:407)\n\tat org.eclipse.jface.action.ActionContributionItem.handleWidgetEvent\n(ActionContributionItem.java:361)\n\tat org.eclipse.jface.action.ActionContributionItem.access$0\n(ActionContributionItem.java:352)\n\tat \norg.eclipse.jface.action.ActionContributionItem$ActionListener.handleEvent\n(ActionContributionItem.java:47)\n\tat org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java\n(Compiled Code))\n\tat org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java:645)\n\tat org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:1359)\n\tat org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:1160)\n\tat org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:675)\n\tat org.eclipse.ui.internal.Workbench.run(Workbench.java:658)\n\tat org.eclipse.core.internal.boot.InternalBootLoader.run\n(InternalBootLoader.java:820)\n\tat org.eclipse.core.boot.BootLoader.run(BootLoader.java:285)\n\tat java.lang.reflect.Method.invoke(Native Method)\n\tat org.eclipse.core.launcher.Main.basicRun(Main.java:151)\n\tat org.eclipse.core.launcher.Main.run(Main.java:433)\n\tat org.eclipse.core.launcher.Main.main(Main.java:306)\n",
+    "This is also a problem when you try to close the Preferences dialog after you \nhave accidentally clicked on Scripts. You get the following walkback:\n\nLog: Sat Oct 13 01:24:41 EDT 2001\n4 org.eclipse.core.runtime 0 java.lang.NullPointerException\njava.lang.NullPointerException\n\tat \norg.eclipse.scripting.internal.views.ScriptDevelopmentPreferencePage.saveImportL\nist(ScriptDevelopmentPreferencePage.java:292)\n\tat \norg.eclipse.scripting.internal.views.ScriptDevelopmentPreferencePage.performOk\n(ScriptDevelopmentPreferencePage.java:252)\n\tat org.eclipse.jface.preference.PreferenceDialog.okPressed\n(PreferenceDialog.java:514)\n\tat org.eclipse.jface.preference.PreferenceDialog.buttonPressed\n(PreferenceDialog.java:166)\n\tat org.eclipse.jface.dialogs.Dialog$1.widgetSelected(Dialog.java:211)\n\tat org.eclipse.swt.widgets.TypedListener.handleEvent\n(TypedListener.java:85)\n\tat org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java(Compiled \nCode))\n\tat org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java(Compiled \nCode))\n\tat org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java\n(Compiled Code))\n\tat org.eclipse.swt.widgets.Display.readAndDispatch(Display.java\n(Compiled Code))\n\tat org.eclipse.jface.window.Window.runEventLoop(Window.java(Compiled \nCode))\n\tat org.eclipse.jface.window.Window.open(Window.java:523)\n\tat org.eclipse.ui.internal.OpenPreferencesAction.run\n(OpenPreferencesAction.java:47)\n\tat org.eclipse.jface.action.Action.runWithEvent(Action.java:451)\n\tat org.eclipse.jface.action.ActionContributionItem.handleWidgetSelection\n(ActionContributionItem.java:407)\n\tat org.eclipse.jface.action.ActionContributionItem.handleWidgetEvent\n(ActionContributionItem.java:361)\n\tat org.eclipse.jface.action.ActionContributionItem.access$0\n(ActionContributionItem.java:352)\n\tat \norg.eclipse.jface.action.ActionContributionItem$ActionListener.handleEvent\n(ActionContributionItem.java:47)\n\tat org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java\n(Compiled Code))\n\tat org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java:645)\n\tat org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:1359)\n\tat org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:1160)\n\tat org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:675)\n\tat org.eclipse.ui.internal.Workbench.run(Workbench.java:658)\n\tat org.eclipse.core.internal.boot.InternalBootLoader.run\n(InternalBootLoader.java:820)\n\tat org.eclipse.core.boot.BootLoader.run(BootLoader.java:285)\n\tat java.lang.reflect.Method.invoke(Native Method)\n\tat org.eclipse.core.launcher.Main.basicRun(Main.java:151)\n\tat org.eclipse.core.launcher.Main.run(Main.java:433)\n\tat org.eclipse.core.launcher.Main.main(Main.java:306)\n",
+    "PRODUCT VERSION:\n203\n\n",
+    "Invalid defect. Scripting support has been removed. "
+  ],
+  "commentCreationDates": [
+    "2001-10-11T04:19:37+02:00",
+    "2001-10-13T07:19:07+02:00",
+    "2001-10-13T07:28:01+02:00",
+    "2001-10-24T13:07:06+02:00",
+    "2002-10-21T17:23:40+02:00"
+  ],
+  "traces": [
+    {
+      "exceptionType": "java.lang.NullPointerException",
+      "elements": [
+        {
+          "method": "org.eclipse.scripting.internal.views.ScriptDevelopmentPreferencePage.loadImportList",
+          "source": "ScriptDevelopmentPreferencePage.java:220"
+        },
+        {
+          "method": "org.eclipse.scripting.internal.views.ScriptDevelopmentPreferencePage.initializeContent",
+          "source": "ScriptDevelopmentPreferencePage.java:151"
+        },
+        {
+          "method": "org.eclipse.scripting.internal.views.ScriptDevelopmentPreferencePage.createContents",
+          "source": "ScriptDevelopmentPreferencePage.java:98"
+        },
+        {
+          "method": "org.eclipse.jface.preference.PreferencePage.createControl",
+          "source": "PreferencePage.java:194"
+        },
+        {
+          "method": "org.eclipse.jface.preference.PreferenceDialog.showPage",
+          "source": "PreferenceDialog.java:685"
+        },
+        {
+          "method": "org.eclipse.jface.preference.PreferenceDialog$6.run",
+          "source": "PreferenceDialog.java:393"
+        },
+        {
+          "method": "org.eclipse.swt.custom.BusyIndicator.showWhile",
+          "source": "BusyIndicator.java:56"
+        },
+        {
+          "method": "org.eclipse.jface.preference.PreferenceDialog$5.widgetSelected",
+          "source": "PreferenceDialog.java:385"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.TypedListener.handleEvent",
+          "source": "TypedListener.java:85"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Widget.notifyListeners",
+          "source": "Widget.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Widget.notifyListeners",
+          "source": "Widget.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.runDeferredEvents",
+          "source": "Display.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.readAndDispatch",
+          "source": "Display.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.jface.window.Window.runEventLoop",
+          "source": "Window.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.jface.window.Window.open",
+          "source": "Window.java:523"
+        },
+        {
+          "method": "org.eclipse.ui.internal.OpenPreferencesAction.run",
+          "source": "OpenPreferencesAction.java:47"
+        },
+        {
+          "method": "org.eclipse.jface.action.Action.runWithEvent",
+          "source": "Action.java:451"
+        },
+        {
+          "method": "org.eclipse.jface.action.ActionContributionItem.handleWidgetSelection",
+          "source": "ActionContributionItem.java:407"
+        },
+        {
+          "method": "org.eclipse.jface.action.ActionContributionItem.handleWidgetEvent",
+          "source": "ActionContributionItem.java:361"
+        },
+        {
+          "method": "org.eclipse.jface.action.ActionContributionItem.access$0",
+          "source": "ActionContributionItem.java:352"
+        },
+        {
+          "method": "org.eclipse.jface.action.ActionContributionItem$ActionListener.handleEvent",
+          "source": "ActionContributionItem.java:47"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Widget.notifyListeners",
+          "source": "Widget.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Widget.notifyListeners",
+          "source": "Widget.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.runDeferredEvents",
+          "source": "Display.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.readAndDispatch",
+          "source": "Display.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.runEventLoop",
+          "source": "Workbench.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.run",
+          "source": "Workbench.java:658"
+        },
+        {
+          "method": "org.eclipse.core.internal.boot.InternalBootLoader.run",
+          "source": "InternalBootLoader.java:820"
+        },
+        {
+          "method": "org.eclipse.core.boot.BootLoader.run",
+          "source": "BootLoader.java:285"
+        },
+        {
+          "method": "java.lang.reflect.Method.invoke",
+          "source": "Native Method"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.basicRun",
+          "source": "Main.java:151"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.run",
+          "source": "Main.java:502"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.main",
+          "source": "Main.java:362"
+        }
+      ],
+      "number": 0,
+      "commentIndex": 0,
+      "bugId": "1806",
+      "date": "2001-10-11T04:19:37+02:00",
+      "product": "Platform",
+      "component": "Scripting",
+      "severity": "normal"
+    },
+    {
+      "exceptionType": "java.lang.NullPointerException",
+      "elements": [
+        {
+          "method": "org.eclipse.scripting.internal.views.ScriptDevelopmentPreferencePage.loadImportList",
+          "source": "ScriptDevelopmentPreferencePage.java:220"
+        },
+        {
+          "method": "org.eclipse.scripting.internal.views.ScriptDevelopmentPreferencePage.initializeContent",
+          "source": "ScriptDevelopmentPreferencePage.java:151"
+        },
+        {
+          "method": "org.eclipse.scripting.internal.views.ScriptDevelopmentPreferencePage.createContents",
+          "source": "ScriptDevelopmentPreferencePage.java:98"
+        },
+        {
+          "method": "org.eclipse.jface.preference.PreferencePage.createControl",
+          "source": "PreferencePage.java:194"
+        },
+        {
+          "method": "org.eclipse.jface.preference.PreferenceDialog.showPage",
+          "source": "PreferenceDialog.java:685"
+        },
+        {
+          "method": "org.eclipse.jface.preference.PreferenceDialog$6.run",
+          "source": "PreferenceDialog.java:393"
+        },
+        {
+          "method": "org.eclipse.swt.custom.BusyIndicator.showWhile",
+          "source": "BusyIndicator.java:56"
+        },
+        {
+          "method": "org.eclipse.jface.preference.PreferenceDialog$5.widgetSelected",
+          "source": "PreferenceDialog.java:385"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.TypedListener.handleEvent",
+          "source": "TypedListener.java:85"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Widget.notifyListeners",
+          "source": "Widget.java(Compiled  Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Widget.notifyListeners",
+          "source": "Widget.java(Compiled  Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.runDeferredEvents",
+          "source": "Display.java (Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.readAndDispatch",
+          "source": "Display.java (Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.jface.window.Window.runEventLoop",
+          "source": "Window.java(Compiled  Code)"
+        },
+        {
+          "method": "org.eclipse.jface.window.Window.open",
+          "source": "Window.java:523"
+        },
+        {
+          "method": "org.eclipse.ui.internal.OpenPreferencesAction.run",
+          "source": "OpenPreferencesAction.java:47"
+        },
+        {
+          "method": "org.eclipse.jface.action.Action.runWithEvent",
+          "source": "Action.java:451"
+        },
+        {
+          "method": "org.eclipse.jface.action.ActionContributionItem.handleWidgetSelection",
+          "source": "ActionContributionItem.java:407"
+        },
+        {
+          "method": "org.eclipse.jface.action.ActionContributionItem.handleWidgetEvent",
+          "source": "ActionContributionItem.java:361"
+        },
+        {
+          "method": "org.eclipse.jface.action.ActionContributionItem.access$0",
+          "source": "ActionContributionItem.java:352"
+        },
+        {
+          "method": "org.eclipse.jface.action.ActionContributionItem$ActionListener.handleEvent",
+          "source": "ActionContributionItem.java:47"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.EventTable.sendEvent",
+          "source": "EventTable.java (Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Widget.notifyListeners",
+          "source": "Widget.java:645"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.runDeferredEvents",
+          "source": "Display.java:1359"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.readAndDispatch",
+          "source": "Display.java:1160"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.runEventLoop",
+          "source": "Workbench.java:675"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.run",
+          "source": "Workbench.java:658"
+        },
+        {
+          "method": "org.eclipse.core.internal.boot.InternalBootLoader.run",
+          "source": "InternalBootLoader.java:820"
+        },
+        {
+          "method": "org.eclipse.core.boot.BootLoader.run",
+          "source": "BootLoader.java:285"
+        },
+        {
+          "method": "java.lang.reflect.Method.invoke",
+          "source": "Native Method"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.basicRun",
+          "source": "Main.java:151"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.run",
+          "source": "Main.java:433"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.main",
+          "source": "Main.java:306"
+        }
+      ],
+      "number": 1,
+      "commentIndex": 1,
+      "bugId": "1806",
+      "date": "2001-10-13T07:19:07+02:00",
+      "product": "Platform",
+      "component": "Scripting",
+      "severity": "normal"
+    },
+    {
+      "exceptionType": "java.lang.NullPointerException",
+      "elements": [
+        {
+          "method": "org.eclipse.scripting.internal.views.ScriptDevelopmentPreferencePage.loadImportList",
+          "source": "ScriptDevelopmentPreferencePage.java:220"
+        },
+        {
+          "method": "org.eclipse.scripting.internal.views.ScriptDevelopmentPreferencePage.initializeContent",
+          "source": "ScriptDevelopmentPreferencePage.java:151"
+        },
+        {
+          "method": "org.eclipse.scripting.internal.views.ScriptDevelopmentPreferencePage.createContents",
+          "source": "ScriptDevelopmentPreferencePage.java:98"
+        },
+        {
+          "method": "org.eclipse.jface.preference.PreferencePage.createControl",
+          "source": "PreferencePage.java:194"
+        },
+        {
+          "method": "org.eclipse.jface.preference.PreferenceDialog.showPage",
+          "source": "PreferenceDialog.java:685"
+        },
+        {
+          "method": "org.eclipse.jface.preference.PreferenceDialog$6.run",
+          "source": "PreferenceDialog.java:393"
+        },
+        {
+          "method": "org.eclipse.swt.custom.BusyIndicator.showWhile",
+          "source": "BusyIndicator.java:56"
+        },
+        {
+          "method": "org.eclipse.jface.preference.PreferenceDialog$5.widgetSelected",
+          "source": "PreferenceDialog.java:385"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.TypedListener.handleEvent",
+          "source": "TypedListener.java:85"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Widget.notifyListeners",
+          "source": "Widget.java(Compiled  Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Widget.notifyListeners",
+          "source": "Widget.java(Compiled  Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.runDeferredEvents",
+          "source": "Display.java (Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.readAndDispatch",
+          "source": "Display.java (Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.jface.window.Window.runEventLoop",
+          "source": "Window.java(Compiled  Code)"
+        },
+        {
+          "method": "org.eclipse.jface.window.Window.open",
+          "source": "Window.java:523"
+        },
+        {
+          "method": "org.eclipse.ui.internal.OpenPreferencesAction.run",
+          "source": "OpenPreferencesAction.java:47"
+        },
+        {
+          "method": "org.eclipse.jface.action.Action.runWithEvent",
+          "source": "Action.java:451"
+        },
+        {
+          "method": "org.eclipse.jface.action.ActionContributionItem.handleWidgetSelection",
+          "source": "ActionContributionItem.java:407"
+        },
+        {
+          "method": "org.eclipse.jface.action.ActionContributionItem.handleWidgetEvent",
+          "source": "ActionContributionItem.java:361"
+        },
+        {
+          "method": "org.eclipse.jface.action.ActionContributionItem.access$0",
+          "source": "ActionContributionItem.java:352"
+        },
+        {
+          "method": "org.eclipse.jface.action.ActionContributionItem$ActionListener.handleEvent",
+          "source": "ActionContributionItem.java:47"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.EventTable.sendEvent",
+          "source": "EventTable.java (Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Widget.notifyListeners",
+          "source": "Widget.java:645"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.runDeferredEvents",
+          "source": "Display.java:1359"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.readAndDispatch",
+          "source": "Display.java:1160"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.runEventLoop",
+          "source": "Workbench.java:675"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.run",
+          "source": "Workbench.java:658"
+        },
+        {
+          "method": "org.eclipse.core.internal.boot.InternalBootLoader.run",
+          "source": "InternalBootLoader.java:820"
+        },
+        {
+          "method": "org.eclipse.core.boot.BootLoader.run",
+          "source": "BootLoader.java:285"
+        },
+        {
+          "method": "java.lang.reflect.Method.invoke",
+          "source": "Native Method"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.basicRun",
+          "source": "Main.java:151"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.run",
+          "source": "Main.java:433"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.main",
+          "source": "Main.java:306"
+        }
+      ],
+      "number": 2,
+      "commentIndex": 1,
+      "bugId": "1806",
+      "date": "2001-10-13T07:19:07+02:00",
+      "product": "Platform",
+      "component": "Scripting",
+      "severity": "normal"
+    },
+    {
+      "exceptionType": "java.lang.NullPointerException",
+      "elements": [
+        {
+          "method": "org.eclipse.scripting.internal.views.ScriptDevelopmentPreferencePage.saveImportList",
+          "source": "ScriptDevelopmentPreferencePage.java:292"
+        },
+        {
+          "method": "org.eclipse.scripting.internal.views.ScriptDevelopmentPreferencePage.performOk",
+          "source": "ScriptDevelopmentPreferencePage.java:252"
+        },
+        {
+          "method": "org.eclipse.jface.preference.PreferenceDialog.okPressed",
+          "source": "PreferenceDialog.java:514"
+        },
+        {
+          "method": "org.eclipse.jface.preference.PreferenceDialog.buttonPressed",
+          "source": "PreferenceDialog.java:166"
+        },
+        {
+          "method": "org.eclipse.jface.dialogs.Dialog$1.widgetSelected",
+          "source": "Dialog.java:211"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.TypedListener.handleEvent",
+          "source": "TypedListener.java:85"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Widget.notifyListeners",
+          "source": "Widget.java(Compiled  Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Widget.notifyListeners",
+          "source": "Widget.java(Compiled  Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.runDeferredEvents",
+          "source": "Display.java (Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.readAndDispatch",
+          "source": "Display.java (Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.jface.window.Window.runEventLoop",
+          "source": "Window.java(Compiled  Code)"
+        },
+        {
+          "method": "org.eclipse.jface.window.Window.open",
+          "source": "Window.java:523"
+        },
+        {
+          "method": "org.eclipse.ui.internal.OpenPreferencesAction.run",
+          "source": "OpenPreferencesAction.java:47"
+        },
+        {
+          "method": "org.eclipse.jface.action.Action.runWithEvent",
+          "source": "Action.java:451"
+        },
+        {
+          "method": "org.eclipse.jface.action.ActionContributionItem.handleWidgetSelection",
+          "source": "ActionContributionItem.java:407"
+        },
+        {
+          "method": "org.eclipse.jface.action.ActionContributionItem.handleWidgetEvent",
+          "source": "ActionContributionItem.java:361"
+        },
+        {
+          "method": "org.eclipse.jface.action.ActionContributionItem.access$0",
+          "source": "ActionContributionItem.java:352"
+        },
+        {
+          "method": "org.eclipse.jface.action.ActionContributionItem$ActionListener.handleEvent",
+          "source": "ActionContributionItem.java:47"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.EventTable.sendEvent",
+          "source": "EventTable.java (Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Widget.notifyListeners",
+          "source": "Widget.java:645"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.runDeferredEvents",
+          "source": "Display.java:1359"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.readAndDispatch",
+          "source": "Display.java:1160"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.runEventLoop",
+          "source": "Workbench.java:675"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.run",
+          "source": "Workbench.java:658"
+        },
+        {
+          "method": "org.eclipse.core.internal.boot.InternalBootLoader.run",
+          "source": "InternalBootLoader.java:820"
+        },
+        {
+          "method": "org.eclipse.core.boot.BootLoader.run",
+          "source": "BootLoader.java:285"
+        },
+        {
+          "method": "java.lang.reflect.Method.invoke",
+          "source": "Native Method"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.basicRun",
+          "source": "Main.java:151"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.run",
+          "source": "Main.java:433"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.main",
+          "source": "Main.java:306"
+        }
+      ],
+      "number": 3,
+      "commentIndex": 2,
+      "bugId": "1806",
+      "date": "2001-10-13T07:28:01+02:00",
+      "product": "Platform",
+      "component": "Scripting",
+      "severity": "normal"
+    }
+  ],
+  "groupId": "1806",
+  "bugId": "1806",
+  "date": "2001-10-11T04:19:37+02:00",
+  "product": "Platform",
+  "component": "Scripting",
+  "severity": "normal"
+}

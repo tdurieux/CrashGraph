@@ -1,0 +1,613 @@
+{
+  "comments": [
+    "DW (10/23/00 11:08:55 AM)\n\tWe currently show the instruction pointer by highlighting code. We \nshould\n\talso use an instruction pointer marker as in VAME (red arrow).\n\nDS (10/23/2000 4:06:12 PM)\n\t0.5 day\n\nDW (11/29/00 10:17:47 AM)\n\tIssue: the types of markers is defined by the platform. We would need a \nnew\n\ttype of marker.\n\nDW (12/6/00 2:09:36 PM)\n\tDeferred until we get new marker support.\n\nJGS (1/17/01 10:51:04 AM)\n\tWith the new desktop, it seems there are still only 6 predefined marker \ntypes.\n\tHowever, could we use type OTHER and the \"getAdapter()\" method from the \n\tIAdaptable interface to allow an InstructionPointerMarker to provide an \nicon \n\t(and anything else required)?\n\nDW (1/23/01 2:59:59 PM)\n\tWaiting on new marker support.\n\t\nDW (3/8/01 4:55:11 PM)\n\tIssues:\n\t\tHow will editors know how to render the instruction pointer?\n\t\tWhat will the marker be associated with? I.e. how will it work \nwith non-resources?\n\nDW (3/23/01 9:47:32 AM)\n\tOn Hold - Waiting for Workbench support for marker \nrendering/registering.\n\nDW (3/30/01 9:18:40 AM)\n\tSupport is coming - URL attribute on the marker to refer to an image.\n\nDW (4/20/01 8:51:01 AM)\n\tFor now use existing instuction pointer that we use to highlight\n\tsource lines. Give it an image, and the Java editor will add it\n\tas a known marker type.\n\nDW (4/23/01 6:21:24 PM)\n\tChanged to use a instruction pointer marker, stored with IWorkspaceRoot.\n\nDS (4/25/01 11:08:56 AM)\n\tOn hold waiting for the image. Look at IMarkerImageProvider\n\nDW (4/30/01 11:25:56 AM)\n\tReplace with real image when \n\treceived. Define an extension point for IMarkerImageProvider, using\n\ta class that dynamically returns either the top stack frame image \n(solid arrow),\n\tor other stack frame image (hollow).\n\t\t\nDW (4/30/01 3:16:00 PM)\n\tAdded marker image support to our IP marker. Available in 102.\n\n\tMarker type is \"org.eclipse.debug.ui.instructionPointer\"\n\n\tMoved to JUI. Java Editor should display this marker type.\n\nKUM (5/11/01 4:45:51 PM)\n\tThe instruction pointer is not displayed. The reason for that is that \nthe DebugView creates the instruction pointer marker\n\twhich is associated with the workspace root. An editor only displays \nthose markers which are associated with its\n\tinput element. Thus, the instruction pointer is never displayed as it \nis not associated with any editor input.\n\tMoved back to inbox.\n\nDW (5/11/01 11:00:02 AM)\n\tProblem is knowing what resource to associated the marker with - i.e. \nthe debugger UI only knows of editor\n\tinputs, not resources.\n\nDW (5/11/01 2:34:52 PM)\n\tSuggest to not implement instruction pointer feature.\n\nDW (5/16/01 12:21:08 PM)\n\tHas been removed for GA.",
+    "Deferred",
+    "*** Bug 1575 has been marked as a duplicate of this bug. ***",
+    "Issue: what if an editor has no ruler? Where does the marker appear?\n\nThis occurrs currently (in 2.0) when debugging source that is not contained in \nthe workspace.",
+    "*** Bug 1622 has been marked as a duplicate of this bug. ***",
+    "*** Bug 21146 has been marked as a duplicate of this bug. ***",
+    "I\u0027d prefer a highlight indicator instead of (or in addition to) a marker. The \ncurrent execution line - or any number of current execution lines if you\u0027ve \ngot multiple suspended threads - could be highlighted a certain color (user \nconfigurable). This would be much easier to find than a marker and it would \nalso avoid the problem of stacking multiple markers on the same line.",
+    "*** Bug 22449 has been marked as a duplicate of this bug. ***",
+    "I\u0027d vote for highlighting in a user configurable color.\nThis highlighting should not \ndisappear when a selection in the editor is made.\n\nWhy is this feature marked for LATER? Is it \nconsidered not very important? I\u0027ve lost lots time while debugging programs that were blocked on \nsome I/O operations. I couldn\u0027t make Eclipse show me where the execution stopped.",
+    "We are currently in the process of determining the set of features/improvements \nfor 2.1.  If you are interested, follow the discussion on the debug mailing \nlists.",
+    "The reason this bug is on hold, is that editors (API) do not generically \nsupport such a feature (dynanmic line highlighting in an arbitrary color). The \ndebug view/source view interaction supports multi-launguages (not just Java), \nand thus, the intercation cannot be Java specific - it must be in terms of \nplatform/workbench APIs. We would need new support from the workbench to \nsupport such a feature.",
+    "Marking for 2.1. Implementation is yet undetermined - use of markers or new API \nfor highlight lines.",
+    "*** Bug 16123 has been marked as a duplicate of this bug. ***",
+    "Will investigate a markerless approach based on explicitly adding \u0026 removing Annotations.",
+    "Fixed.  Annotations are created and applied to the appropriate editor when a stack frame is selected in the LaunchView.  This annotations exist until the owning thread or debug target is terminated or resumed, at which time they are removed.  This approach is very fast.  Once consequence is that if an editor is opened in some way OTHER than by selecting a stack frame, no instruction pointers will be seen in that editor (until the corresponding stack frame is selected).  Note that top stack frames are always programatically selected on a suspend event, such as the end of a step.  Another consequence is that if multiple stack frames are associated with one editor, the user only sees instruction pointers for those stack frames that have been selected since the last resume event.  \n\nAt present, there are \u0027temporary\u0027 icons used for the top stack frame instruction pointer and the non-top stack frame instruction pointer, pending arrival of \u0027official\u0027 icons from the artist.  ",
+    "Whoops, it appears the \u0027new\u0027 Bugzilla doesn\u0027t auto-insert line breaks the way\nthe old one used to.  Sorry.\n\nPlease verify, Darin W.",
+    "I found a problem with the following scenario.\n\n(1) Create a workspace with a standard JUnit project (I am using version 3.8.1)\n(2) Build the project with the IBM 1.3.1 JRE\n(3) Place a breakpoint in VectorTests.testsCapacity()\n(4) Debug on JDK1.4.1 to the breakpoint\n(5) The stack will look like this:\n\nThread [main] (Suspended (breakpoint at line 28 in junit.samples.VectorTest))\n\tjunit.samples.VectorTest.testCapacity() line: 28\n\tsun.reflect.NativeMethodAccessorImpl.invoke0(java.lang.reflect.Method, \njava.lang.Object, java.lang.Object[]) line: not available [native method]\n\tsun.reflect.NativeMethodAccessorImpl.invoke(java.lang.Object, \njava.lang.Object[]) line: 39\n\tsun.reflect.DelegatingMethodAccessorImpl.invoke(java.lang.Object, \njava.lang.Object[]) line: 25\n\tjava.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[]) \nline: 324\n\tjunit.samples.VectorTest(junit.framework.TestCase).runTest() line: 154\n\tjunit.samples.VectorTest(junit.framework.TestCase).runBare() line: 127\n\tjunit.framework.TestResult$1.protect() line: 106\n\tjunit.framework.TestResult.runProtected(junit.framework.Test, \njunit.framework.Protectable) line: 124\n\tjunit.framework.TestResult.run(junit.framework.TestCase) line: 109\n\tjunit.samples.VectorTest(junit.framework.TestCase).run\n(junit.framework.TestResult) line: 118\n\tjunit.framework.TestSuite.runTest(junit.framework.Test, \njunit.framework.TestResult) line: 208\n\tjunit.framework.TestSuite.run(junit.framework.TestResult) line: 203\n\tjunit.textui.TestRunner.doRun(junit.framework.Test, boolean) line: 116\n\tjunit.textui.TestRunner.doRun(junit.framework.Test) line: 109\n\tjunit.textui.TestRunner.run(junit.framework.Test) line: 72\n\tjunit.samples.VectorTest.main(java.lang.String[]) line: 15\n\n(6) Select the stack frame \"java.lang.reflect.Method.invoke(java.lang.Object, \njava.lang.Object[]) line: 324\".\n(7) This is external source, so there is no ruler (no icon appears, as \nexpected).\n(8) Select the next frame down \"junit.samples.VectorTest\n(junit.framework.TestCase).runTest() line: 154\" - the icon appears\n(9) Press resume. \n(10) The program exists, but there pointer image does not disappear, and I find \nthese in my log:\n\n!ENTRY org.eclipse.ui 4 4 Oct 30, 2002 15:26:08.729\n!MESSAGE Unhandled exception caught in event loop.\n!ENTRY org.eclipse.ui 4 0 Oct 30, 2002 15:26:08.769\n!MESSAGE java.lang.NullPointerException\n!STACK 0\njava.lang.NullPointerException\n\tat org.eclipse.debug.internal.ui.InstructionPointerManager.addAnnotation\n(InstructionPointerManager.java:99)\n\tat \norg.eclipse.debug.internal.ui.views.launch.LaunchView.openEditorAndSetMarker\n(LaunchView.java:611)\n\tat \norg.eclipse.debug.internal.ui.views.launch.LaunchView.showMarkerForCurrentSelect\nion(LaunchView.java:470)\n\tat \norg.eclipse.debug.internal.ui.views.launch.LaunchView.selectionChanged\n(LaunchView.java:331)\n\tat org.eclipse.jface.viewers.Viewer.fireSelectionChanged\n(Viewer.java:147)\n\tat org.eclipse.jface.viewers.StructuredViewer.updateSelection\n(StructuredViewer.java:1151)\n\tat org.eclipse.jface.viewers.StructuredViewer.handleSelect\n(StructuredViewer.java:540)\n\tat org.eclipse.jface.viewers.StructuredViewer$1.widgetSelected\n(StructuredViewer.java:564)\n\tat org.eclipse.jface.util.OpenStrategy.fireSelectionEvent\n(OpenStrategy.java:172)\n\tat org.eclipse.jface.util.OpenStrategy.access$3(OpenStrategy.java:167)\n\tat org.eclipse.jface.util.OpenStrategy$1.handleEvent\n(OpenStrategy.java:302)\n\tat org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:77)\n\tat org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:825)\n\tat org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:1692)\n\tat org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:1410)\n\tat org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:1419)\n\tat org.eclipse.ui.internal.Workbench.run(Workbench.java:1402)\n\tat org.eclipse.core.internal.boot.InternalBootLoader.run\n(InternalBootLoader.java:831)\n\tat org.eclipse.core.boot.BootLoader.run(BootLoader.java:432)\n\tat EclipseRuntimeLauncher.main(EclipseRuntimeLauncher.java:24)\n!ENTRY org.eclipse.ui 4 4 Oct 30, 2002 15:26:17.832\n!MESSAGE Unhandled exception caught in event loop.\n!ENTRY org.eclipse.ui 4 0 Oct 30, 2002 15:26:17.842\n!MESSAGE java.lang.NullPointerException\n!STACK 0\njava.lang.NullPointerException\n\tat org.eclipse.debug.internal.ui.InstructionPointerManager.addAnnotation\n(InstructionPointerManager.java:99)\n\tat \norg.eclipse.debug.internal.ui.views.launch.LaunchView.openEditorAndSetMarker\n(LaunchView.java:611)\n\tat \norg.eclipse.debug.internal.ui.views.launch.LaunchView.showMarkerForCurrentSelect\nion(LaunchView.java:470)\n\tat \norg.eclipse.debug.internal.ui.views.launch.LaunchView.selectionChanged\n(LaunchView.java:331)\n\tat org.eclipse.jface.viewers.Viewer.fireSelectionChanged\n(Viewer.java:147)\n\tat org.eclipse.jface.viewers.StructuredViewer.updateSelection\n(StructuredViewer.java:1151)\n\tat org.eclipse.jface.viewers.StructuredViewer.handleSelect\n(StructuredViewer.java:540)\n\tat org.eclipse.jface.viewers.StructuredViewer$1.widgetSelected\n(StructuredViewer.java:564)\n\tat org.eclipse.jface.util.OpenStrategy.fireSelectionEvent\n(OpenStrategy.java:172)\n\tat org.eclipse.jface.util.OpenStrategy.access$3(OpenStrategy.java:167)\n\tat org.eclipse.jface.util.OpenStrategy$1.handleEvent\n(OpenStrategy.java:302)\n\tat org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:77)\n\tat org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:825)\n\tat org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:1692)\n\tat org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:1410)\n\tat org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:1419)\n\tat org.eclipse.ui.internal.Workbench.run(Workbench.java:1402)\n\tat org.eclipse.core.internal.boot.InternalBootLoader.run\n(InternalBootLoader.java:831)\n\tat org.eclipse.core.boot.BootLoader.run(BootLoader.java:432)\n\tat EclipseRuntimeLauncher.main(EclipseRuntimeLauncher.java:24)\n!ENTRY org.eclipse.ui 4 4 Oct 30, 2002 15:26:28.647\n!MESSAGE Unhandled exception caught in event loop.\n!ENTRY org.eclipse.ui 4 0 Oct 30, 2002 15:26:28.647\n!MESSAGE Failed to execute runnable (java.lang.NullPointerException)\n!STACK 0\norg.eclipse.swt.SWTException: Failed to execute runnable \n(java.lang.NullPointerException)\n\tat org.eclipse.swt.SWT.error(SWT.java:2180)\n\tat org.eclipse.swt.widgets.Synchronizer.runAsyncMessages\n(Synchronizer.java:97)\n\tat org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:1669)\n\tat org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:1414)\n\tat org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:1419)\n\tat org.eclipse.ui.internal.Workbench.run(Workbench.java:1402)\n\tat org.eclipse.core.internal.boot.InternalBootLoader.run\n(InternalBootLoader.java:831)\n\tat org.eclipse.core.boot.BootLoader.run(BootLoader.java:432)\n\tat EclipseRuntimeLauncher.main(EclipseRuntimeLauncher.java:24)\n!ENTRY org.eclipse.ui 4 4 Oct 30, 2002 15:26:28.647\n!MESSAGE \n*** Stack trace of contained exception ***\n!ENTRY org.eclipse.ui 4 0 Oct 30, 2002 15:26:28.647\n!MESSAGE java.lang.NullPointerException\n!STACK 0\njava.lang.NullPointerException\n\tat \norg.eclipse.debug.internal.ui.InstructionPointerManager.removeAnnotation\n(InstructionPointerManager.java:184)\n\tat \norg.eclipse.debug.internal.ui.InstructionPointerManager.removeAnnotations\n(InstructionPointerManager.java:171)\n\tat \norg.eclipse.debug.internal.ui.InstructionPointerManager.removeAnnotations\n(InstructionPointerManager.java:157)\n\tat \norg.eclipse.debug.internal.ui.views.launch.LaunchViewEventHandler.removeInstruct\nionPointerAnnotations(LaunchViewEventHandler.java:207)\n\tat \norg.eclipse.debug.internal.ui.views.launch.LaunchViewEventHandler.doHandleResume\nEvent(LaunchViewEventHandler.java:130)\n\tat \norg.eclipse.debug.internal.ui.views.launch.LaunchViewEventHandler.doHandleDebugE\nvents(LaunchViewEventHandler.java:103)\n\tat org.eclipse.debug.internal.ui.views.AbstractDebugEventHandler$1.run\n(AbstractDebugEventHandler.java:49)\n\tat org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:31)\n\tat org.eclipse.swt.widgets.Synchronizer.runAsyncMessages\n(Synchronizer.java:94)\n\tat org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:1669)\n\tat org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:1414)\n\tat org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:1419)\n\tat org.eclipse.ui.internal.Workbench.run(Workbench.java:1402)\n\tat org.eclipse.core.internal.boot.InternalBootLoader.run\n(InternalBootLoader.java:831)\n\tat org.eclipse.core.boot.BootLoader.run(BootLoader.java:432)\n\tat EclipseRuntimeLauncher.main(EclipseRuntimeLauncher.java:24)\n!ENTRY org.eclipse.ui 4 4 Oct 30, 2002 15:26:28.858\n!MESSAGE Unhandled exception caught in event loop.\n!ENTRY org.eclipse.ui 4 0 Oct 30, 2002 15:26:28.858\n!MESSAGE Failed to execute runnable (java.lang.NullPointerException)\n!STACK 0\norg.eclipse.swt.SWTException: Failed to execute runnable \n(java.lang.NullPointerException)\n\tat org.eclipse.swt.SWT.error(SWT.java:2180)\n\tat org.eclipse.swt.widgets.Synchronizer.runAsyncMessages\n(Synchronizer.java:97)\n\tat org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:1669)\n\tat org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:1414)\n\tat org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:1419)\n\tat org.eclipse.ui.internal.Workbench.run(Workbench.java:1402)\n\tat org.eclipse.core.internal.boot.InternalBootLoader.run\n(InternalBootLoader.java:831)\n\tat org.eclipse.core.boot.BootLoader.run(BootLoader.java:432)\n\tat EclipseRuntimeLauncher.main(EclipseRuntimeLauncher.java:24)\n!ENTRY org.eclipse.ui 4 4 Oct 30, 2002 15:26:28.858\n!MESSAGE \n*** Stack trace of contained exception ***\n!ENTRY org.eclipse.ui 4 0 Oct 30, 2002 15:26:28.868\n!MESSAGE java.lang.NullPointerException\n!STACK 0\njava.lang.NullPointerException\n\tat \norg.eclipse.debug.internal.ui.InstructionPointerManager.removeAnnotation\n(InstructionPointerManager.java:184)\n\tat \norg.eclipse.debug.internal.ui.InstructionPointerManager.removeAnnotations\n(InstructionPointerManager.java:171)\n\tat \norg.eclipse.debug.internal.ui.InstructionPointerManager.removeAnnotations\n(InstructionPointerManager.java:157)\n\tat \norg.eclipse.debug.internal.ui.views.launch.LaunchViewEventHandler.removeInstruct\nionPointerAnnotations(LaunchViewEventHandler.java:207)\n\tat \norg.eclipse.debug.internal.ui.views.launch.LaunchViewEventHandler.doHandleDebugE\nvents(LaunchViewEventHandler.java:90)\n\tat org.eclipse.debug.internal.ui.views.AbstractDebugEventHandler$1.run\n(AbstractDebugEventHandler.java:49)\n\tat org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:31)\n\tat org.eclipse.swt.widgets.Synchronizer.runAsyncMessages\n(Synchronizer.java:94)\n\tat org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:1669)\n\tat org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:1414)\n\tat org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:1419)\n\tat org.eclipse.ui.internal.Workbench.run(Workbench.java:1402)\n\tat org.eclipse.core.internal.boot.InternalBootLoader.run\n(InternalBootLoader.java:831)\n\tat org.eclipse.core.boot.BootLoader.run(BootLoader.java:432)\n\tat EclipseRuntimeLauncher.main(EclipseRuntimeLauncher.java:24)\n!ENTRY org.eclipse.ui 4 4 Oct 30, 2002 15:26:29.88\n!MESSAGE Unhandled exception caught in event loop.\n!ENTRY org.eclipse.ui 4 0 Oct 30, 2002 15:26:29.88\n!MESSAGE Failed to execute runnable (java.lang.NullPointerException)\n!STACK 0\norg.eclipse.swt.SWTException: Failed to execute runnable \n(java.lang.NullPointerException)\n\tat org.eclipse.swt.SWT.error(SWT.java:2180)\n\tat org.eclipse.swt.widgets.Synchronizer.runAsyncMessages\n(Synchronizer.java:97)\n\tat org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:1669)\n\tat org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:1414)\n\tat org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:1419)\n\tat org.eclipse.ui.internal.Workbench.run(Workbench.java:1402)\n\tat org.eclipse.core.internal.boot.InternalBootLoader.run\n(InternalBootLoader.java:831)\n\tat org.eclipse.core.boot.BootLoader.run(BootLoader.java:432)\n\tat EclipseRuntimeLauncher.main(EclipseRuntimeLauncher.java:24)\n!ENTRY org.eclipse.ui 4 4 Oct 30, 2002 15:26:29.88\n!MESSAGE \n*** Stack trace of contained exception ***\n!ENTRY org.eclipse.ui 4 0 Oct 30, 2002 15:26:29.88\n!MESSAGE java.lang.NullPointerException\n!STACK 0\njava.lang.NullPointerException\n\tat \norg.eclipse.debug.internal.ui.InstructionPointerManager.removeAnnotation\n(InstructionPointerManager.java:184)\n\tat \norg.eclipse.debug.internal.ui.InstructionPointerManager.removeAnnotations\n(InstructionPointerManager.java:171)\n\tat \norg.eclipse.debug.internal.ui.InstructionPointerManager.removeAnnotations\n(InstructionPointerManager.java:139)\n\tat \norg.eclipse.debug.internal.ui.views.launch.LaunchViewEventHandler.removeInstruct\nionPointerAnnotations(LaunchViewEventHandler.java:209)\n\tat \norg.eclipse.debug.internal.ui.views.launch.LaunchViewEventHandler.doHandleDebugE\nvents(LaunchViewEventHandler.java:90)\n\tat org.eclipse.debug.internal.ui.views.AbstractDebugEventHandler$1.run\n(AbstractDebugEventHandler.java:49)\n\tat org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:31)\n\tat org.eclipse.swt.widgets.Synchronizer.runAsyncMessages\n(Synchronizer.java:94)\n\tat org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:1669)\n\tat org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:1414)\n\tat org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:1419)\n\tat org.eclipse.ui.internal.Workbench.run(Workbench.java:1402)\n\tat org.eclipse.core.internal.boot.InternalBootLoader.run\n(InternalBootLoader.java:831)\n\tat org.eclipse.core.boot.BootLoader.run(BootLoader.java:432)\n\tat EclipseRuntimeLauncher.main(EclipseRuntimeLauncher.java:24)\n",
+    "I cannot duplicate this problem.  I perform all steps and get expected results and no walkbacks.  On step 6, I DO see the icon.  I\u0027m not sure why not seeing the icon would be \u0027expected\u0027.  This is a Java method, there is source that can be found, so the hollowed out arrow (for a non-top stack frame) appears.  ",
+    "This must be the difference. In my configuration I am seeing external source \n(if you have a ruler, it is internal source, not external). Could you try the \nproblem, but run against a JRE that is not used in a project in the workspace? \n(i.e. does not exist on a project buildpath).",
+    "OK, now I can duplicate.  Thanks for the clarification.",
+    "Fixed two NPEs.  Also updated icons.",
+    "Please verify again, Darin W.",
+    "Verified.",
+    "*** Bug 26939 has been marked as a duplicate of this bug. ***"
+  ],
+  "commentCreationDates": [
+    "2001-10-11T04:14:47+02:00",
+    "2002-02-26T19:15:56+01:00",
+    "2002-02-26T19:35:23+01:00",
+    "2002-06-25T20:28:09+02:00",
+    "2002-06-25T21:11:50+02:00",
+    "2002-07-15T21:27:06+02:00",
+    "2002-08-05T20:23:22+02:00",
+    "2002-08-14T22:36:15+02:00",
+    "2002-08-18T01:52:53+02:00",
+    "2002-08-18T02:14:29+02:00",
+    "2002-08-19T14:41:02+02:00",
+    "2002-09-03T19:36:07+02:00",
+    "2002-09-10T23:01:29+02:00",
+    "2002-10-21T23:11:52+02:00",
+    "2002-10-30T20:17:24+01:00",
+    "2002-10-30T20:18:57+01:00",
+    "2002-10-30T21:31:16+01:00",
+    "2002-10-30T22:27:31+01:00",
+    "2002-10-30T22:43:21+01:00",
+    "2002-10-30T22:56:21+01:00",
+    "2002-10-31T17:18:00+01:00",
+    "2002-10-31T17:18:25+01:00",
+    "2002-10-31T20:44:44+01:00",
+    "2002-11-22T14:33:05+01:00"
+  ],
+  "traces": [
+    {
+      "exceptionType": "java.lang.NullPointerException",
+      "elements": [
+        {
+          "method": "org.eclipse.debug.internal.ui.InstructionPointerManager.addAnnotation",
+          "source": "InstructionPointerManager.java:99"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.views.launch.LaunchView.openEditorAndSetMarker",
+          "source": "LaunchView.java:611"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.views.launch.LaunchView.showMarkerForCurrentSelection",
+          "source": "LaunchView.java:470"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.views.launch.LaunchView.selectionChanged",
+          "source": "LaunchView.java:331"
+        },
+        {
+          "method": "org.eclipse.jface.viewers.Viewer.fireSelectionChanged",
+          "source": "Viewer.java:147"
+        },
+        {
+          "method": "org.eclipse.jface.viewers.StructuredViewer.updateSelection",
+          "source": "StructuredViewer.java:1151"
+        },
+        {
+          "method": "org.eclipse.jface.viewers.StructuredViewer.handleSelect",
+          "source": "StructuredViewer.java:540"
+        },
+        {
+          "method": "org.eclipse.jface.viewers.StructuredViewer$1.widgetSelected",
+          "source": "StructuredViewer.java:564"
+        },
+        {
+          "method": "org.eclipse.jface.util.OpenStrategy.fireSelectionEvent",
+          "source": "OpenStrategy.java:172"
+        },
+        {
+          "method": "org.eclipse.jface.util.OpenStrategy.access$3",
+          "source": "OpenStrategy.java:167"
+        },
+        {
+          "method": "org.eclipse.jface.util.OpenStrategy$1.handleEvent",
+          "source": "OpenStrategy.java:302"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.EventTable.sendEvent",
+          "source": "EventTable.java:77"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Widget.sendEvent",
+          "source": "Widget.java:825"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.runDeferredEvents",
+          "source": "Display.java:1692"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.readAndDispatch",
+          "source": "Display.java:1410"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.runEventLoop",
+          "source": "Workbench.java:1419"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.run",
+          "source": "Workbench.java:1402"
+        },
+        {
+          "method": "org.eclipse.core.internal.boot.InternalBootLoader.run",
+          "source": "InternalBootLoader.java:831"
+        },
+        {
+          "method": "org.eclipse.core.boot.BootLoader.run",
+          "source": "BootLoader.java:432"
+        },
+        {
+          "method": "EclipseRuntimeLauncher.main",
+          "source": "EclipseRuntimeLauncher.java:24"
+        }
+      ],
+      "number": 0,
+      "commentIndex": 16,
+      "bugId": "1524",
+      "date": "2002-10-30T21:31:16+01:00",
+      "product": "JDT",
+      "component": "Debug",
+      "severity": "enhancement"
+    },
+    {
+      "exceptionType": "java.lang.NullPointerException",
+      "elements": [
+        {
+          "method": "org.eclipse.debug.internal.ui.InstructionPointerManager.addAnnotation",
+          "source": "InstructionPointerManager.java:99"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.views.launch.LaunchView.openEditorAndSetMarker",
+          "source": "LaunchView.java:611"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.views.launch.LaunchView.showMarkerForCurrentSelection",
+          "source": "LaunchView.java:470"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.views.launch.LaunchView.selectionChanged",
+          "source": "LaunchView.java:331"
+        },
+        {
+          "method": "org.eclipse.jface.viewers.Viewer.fireSelectionChanged",
+          "source": "Viewer.java:147"
+        },
+        {
+          "method": "org.eclipse.jface.viewers.StructuredViewer.updateSelection",
+          "source": "StructuredViewer.java:1151"
+        },
+        {
+          "method": "org.eclipse.jface.viewers.StructuredViewer.handleSelect",
+          "source": "StructuredViewer.java:540"
+        },
+        {
+          "method": "org.eclipse.jface.viewers.StructuredViewer$1.widgetSelected",
+          "source": "StructuredViewer.java:564"
+        },
+        {
+          "method": "org.eclipse.jface.util.OpenStrategy.fireSelectionEvent",
+          "source": "OpenStrategy.java:172"
+        },
+        {
+          "method": "org.eclipse.jface.util.OpenStrategy.access$3",
+          "source": "OpenStrategy.java:167"
+        },
+        {
+          "method": "org.eclipse.jface.util.OpenStrategy$1.handleEvent",
+          "source": "OpenStrategy.java:302"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.EventTable.sendEvent",
+          "source": "EventTable.java:77"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Widget.sendEvent",
+          "source": "Widget.java:825"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.runDeferredEvents",
+          "source": "Display.java:1692"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.readAndDispatch",
+          "source": "Display.java:1410"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.runEventLoop",
+          "source": "Workbench.java:1419"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.run",
+          "source": "Workbench.java:1402"
+        },
+        {
+          "method": "org.eclipse.core.internal.boot.InternalBootLoader.run",
+          "source": "InternalBootLoader.java:831"
+        },
+        {
+          "method": "org.eclipse.core.boot.BootLoader.run",
+          "source": "BootLoader.java:432"
+        },
+        {
+          "method": "EclipseRuntimeLauncher.main",
+          "source": "EclipseRuntimeLauncher.java:24"
+        }
+      ],
+      "number": 1,
+      "commentIndex": 16,
+      "bugId": "1524",
+      "date": "2002-10-30T21:31:16+01:00",
+      "product": "JDT",
+      "component": "Debug",
+      "severity": "enhancement"
+    },
+    {
+      "exceptionType": "org.eclipse.swt.SWTException",
+      "message": "Failed to execute runnable  (java.lang.NullPointerException)",
+      "elements": [
+        {
+          "method": "org.eclipse.swt.SWT.error",
+          "source": "SWT.java:2180"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Synchronizer.runAsyncMessages",
+          "source": "Synchronizer.java:97"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.runAsyncMessages",
+          "source": "Display.java:1669"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.readAndDispatch",
+          "source": "Display.java:1414"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.runEventLoop",
+          "source": "Workbench.java:1419"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.run",
+          "source": "Workbench.java:1402"
+        },
+        {
+          "method": "org.eclipse.core.internal.boot.InternalBootLoader.run",
+          "source": "InternalBootLoader.java:831"
+        },
+        {
+          "method": "org.eclipse.core.boot.BootLoader.run",
+          "source": "BootLoader.java:432"
+        },
+        {
+          "method": "EclipseRuntimeLauncher.main",
+          "source": "EclipseRuntimeLauncher.java:24"
+        }
+      ],
+      "number": 2,
+      "commentIndex": 16,
+      "bugId": "1524",
+      "date": "2002-10-30T21:31:16+01:00",
+      "product": "JDT",
+      "component": "Debug",
+      "severity": "enhancement"
+    },
+    {
+      "exceptionType": "java.lang.NullPointerException",
+      "elements": [
+        {
+          "method": "org.eclipse.debug.internal.ui.InstructionPointerManager.removeAnnotation",
+          "source": "InstructionPointerManager.java:184"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.InstructionPointerManager.removeAnnotations",
+          "source": "InstructionPointerManager.java:171"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.InstructionPointerManager.removeAnnotations",
+          "source": "InstructionPointerManager.java:157"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.views.launch.LaunchViewEventHandler.removeInstructionPointerAnnotations",
+          "source": "LaunchViewEventHandler.java:207"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.views.launch.LaunchViewEventHandler.doHandleResumeEvent",
+          "source": "LaunchViewEventHandler.java:130"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.views.launch.LaunchViewEventHandler.doHandleDebugEvents",
+          "source": "LaunchViewEventHandler.java:103"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.views.AbstractDebugEventHandler$1.run",
+          "source": "AbstractDebugEventHandler.java:49"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.RunnableLock.run",
+          "source": "RunnableLock.java:31"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Synchronizer.runAsyncMessages",
+          "source": "Synchronizer.java:94"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.runAsyncMessages",
+          "source": "Display.java:1669"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.readAndDispatch",
+          "source": "Display.java:1414"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.runEventLoop",
+          "source": "Workbench.java:1419"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.run",
+          "source": "Workbench.java:1402"
+        },
+        {
+          "method": "org.eclipse.core.internal.boot.InternalBootLoader.run",
+          "source": "InternalBootLoader.java:831"
+        },
+        {
+          "method": "org.eclipse.core.boot.BootLoader.run",
+          "source": "BootLoader.java:432"
+        },
+        {
+          "method": "EclipseRuntimeLauncher.main",
+          "source": "EclipseRuntimeLauncher.java:24"
+        }
+      ],
+      "number": 3,
+      "commentIndex": 16,
+      "bugId": "1524",
+      "date": "2002-10-30T21:31:16+01:00",
+      "product": "JDT",
+      "component": "Debug",
+      "severity": "enhancement"
+    },
+    {
+      "exceptionType": "org.eclipse.swt.SWTException",
+      "message": "Failed to execute runnable  (java.lang.NullPointerException)",
+      "elements": [
+        {
+          "method": "org.eclipse.swt.SWT.error",
+          "source": "SWT.java:2180"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Synchronizer.runAsyncMessages",
+          "source": "Synchronizer.java:97"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.runAsyncMessages",
+          "source": "Display.java:1669"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.readAndDispatch",
+          "source": "Display.java:1414"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.runEventLoop",
+          "source": "Workbench.java:1419"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.run",
+          "source": "Workbench.java:1402"
+        },
+        {
+          "method": "org.eclipse.core.internal.boot.InternalBootLoader.run",
+          "source": "InternalBootLoader.java:831"
+        },
+        {
+          "method": "org.eclipse.core.boot.BootLoader.run",
+          "source": "BootLoader.java:432"
+        },
+        {
+          "method": "EclipseRuntimeLauncher.main",
+          "source": "EclipseRuntimeLauncher.java:24"
+        }
+      ],
+      "number": 4,
+      "commentIndex": 16,
+      "bugId": "1524",
+      "date": "2002-10-30T21:31:16+01:00",
+      "product": "JDT",
+      "component": "Debug",
+      "severity": "enhancement"
+    },
+    {
+      "exceptionType": "java.lang.NullPointerException",
+      "elements": [
+        {
+          "method": "org.eclipse.debug.internal.ui.InstructionPointerManager.removeAnnotation",
+          "source": "InstructionPointerManager.java:184"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.InstructionPointerManager.removeAnnotations",
+          "source": "InstructionPointerManager.java:171"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.InstructionPointerManager.removeAnnotations",
+          "source": "InstructionPointerManager.java:157"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.views.launch.LaunchViewEventHandler.removeInstructionPointerAnnotations",
+          "source": "LaunchViewEventHandler.java:207"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.views.launch.LaunchViewEventHandler.doHandleDebugEvents",
+          "source": "LaunchViewEventHandler.java:90"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.views.AbstractDebugEventHandler$1.run",
+          "source": "AbstractDebugEventHandler.java:49"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.RunnableLock.run",
+          "source": "RunnableLock.java:31"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Synchronizer.runAsyncMessages",
+          "source": "Synchronizer.java:94"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.runAsyncMessages",
+          "source": "Display.java:1669"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.readAndDispatch",
+          "source": "Display.java:1414"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.runEventLoop",
+          "source": "Workbench.java:1419"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.run",
+          "source": "Workbench.java:1402"
+        },
+        {
+          "method": "org.eclipse.core.internal.boot.InternalBootLoader.run",
+          "source": "InternalBootLoader.java:831"
+        },
+        {
+          "method": "org.eclipse.core.boot.BootLoader.run",
+          "source": "BootLoader.java:432"
+        },
+        {
+          "method": "EclipseRuntimeLauncher.main",
+          "source": "EclipseRuntimeLauncher.java:24"
+        }
+      ],
+      "number": 5,
+      "commentIndex": 16,
+      "bugId": "1524",
+      "date": "2002-10-30T21:31:16+01:00",
+      "product": "JDT",
+      "component": "Debug",
+      "severity": "enhancement"
+    },
+    {
+      "exceptionType": "org.eclipse.swt.SWTException",
+      "message": "Failed to execute runnable  (java.lang.NullPointerException)",
+      "elements": [
+        {
+          "method": "org.eclipse.swt.SWT.error",
+          "source": "SWT.java:2180"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Synchronizer.runAsyncMessages",
+          "source": "Synchronizer.java:97"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.runAsyncMessages",
+          "source": "Display.java:1669"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.readAndDispatch",
+          "source": "Display.java:1414"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.runEventLoop",
+          "source": "Workbench.java:1419"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.run",
+          "source": "Workbench.java:1402"
+        },
+        {
+          "method": "org.eclipse.core.internal.boot.InternalBootLoader.run",
+          "source": "InternalBootLoader.java:831"
+        },
+        {
+          "method": "org.eclipse.core.boot.BootLoader.run",
+          "source": "BootLoader.java:432"
+        },
+        {
+          "method": "EclipseRuntimeLauncher.main",
+          "source": "EclipseRuntimeLauncher.java:24"
+        }
+      ],
+      "number": 6,
+      "commentIndex": 16,
+      "bugId": "1524",
+      "date": "2002-10-30T21:31:16+01:00",
+      "product": "JDT",
+      "component": "Debug",
+      "severity": "enhancement"
+    },
+    {
+      "exceptionType": "java.lang.NullPointerException",
+      "elements": [
+        {
+          "method": "org.eclipse.debug.internal.ui.InstructionPointerManager.removeAnnotation",
+          "source": "InstructionPointerManager.java:184"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.InstructionPointerManager.removeAnnotations",
+          "source": "InstructionPointerManager.java:171"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.InstructionPointerManager.removeAnnotations",
+          "source": "InstructionPointerManager.java:139"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.views.launch.LaunchViewEventHandler.removeInstructionPointerAnnotations",
+          "source": "LaunchViewEventHandler.java:209"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.views.launch.LaunchViewEventHandler.doHandleDebugEvents",
+          "source": "LaunchViewEventHandler.java:90"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.views.AbstractDebugEventHandler$1.run",
+          "source": "AbstractDebugEventHandler.java:49"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.RunnableLock.run",
+          "source": "RunnableLock.java:31"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Synchronizer.runAsyncMessages",
+          "source": "Synchronizer.java:94"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.runAsyncMessages",
+          "source": "Display.java:1669"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.readAndDispatch",
+          "source": "Display.java:1414"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.runEventLoop",
+          "source": "Workbench.java:1419"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.run",
+          "source": "Workbench.java:1402"
+        },
+        {
+          "method": "org.eclipse.core.internal.boot.InternalBootLoader.run",
+          "source": "InternalBootLoader.java:831"
+        },
+        {
+          "method": "org.eclipse.core.boot.BootLoader.run",
+          "source": "BootLoader.java:432"
+        },
+        {
+          "method": "EclipseRuntimeLauncher.main",
+          "source": "EclipseRuntimeLauncher.java:24"
+        }
+      ],
+      "number": 7,
+      "commentIndex": 16,
+      "bugId": "1524",
+      "date": "2002-10-30T21:31:16+01:00",
+      "product": "JDT",
+      "component": "Debug",
+      "severity": "enhancement"
+    }
+  ],
+  "groupId": "1524",
+  "bugId": "1524",
+  "date": "2001-10-11T04:14:47+02:00",
+  "product": "JDT",
+  "component": "Debug",
+  "severity": "enhancement"
+}

@@ -1,0 +1,50 @@
+{
+  "comments": [
+    "DW (10/10/2001 9:48:06 AM)\n\t* set the console maximum output size to 128\n\t* run the following program (Flood)\n\t* while the program is running, place the cursor in the console, and type some\n\t\tcharacters into the conosle\n--------------------\npublic class Flood {\n\n\tpublic static void main(String[] args) {\n\t\twhile (true) {\n\t\t\tSystem.out.println(\"junk\");\n\t\t}\n\t}\n}\n--------------------\n\n\t* The workbench locks up after showing a \"Failed to execute runnable\" dialog.\n\t* Pressing CTRL-Break seemed to free it up\n\nInternal error logged from UI:\norg.eclipse.jface.text.BadLocationException\n        at org.eclipse.jface.text.AbstractDocument.replace(AbstractDocument.java:749)\n        at org.eclipse.debug.internal.ui.ConsoleDocument.replace0(ConsoleDocument.java:141)\n        at org.eclipse.debug.internal.ui.ConsoleDocument$3.run(ConsoleDocument.java:205)\n        at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java(Compiled Code)\n        at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java(Compiled Code))\n        at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java(Compiled Code))\n        at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java(Compiled Code))\n        at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java(Compiled Code))\n        at org.eclipse.ui.internal.Workbench.run(Workbench.java:658)\n        at org.eclipse.core.internal.boot.InternalBootLoader.run(InternalBootLoader.java:820)\n        at org.eclipse.core.boot.BootLoader.run(BootLoader.java:285)\n        at java.lang.reflect.Method.invoke(Native Method)\n        at org.eclipse.core.launcher.Main.basicRun(Main.java:151)\n        at org.eclipse.core.launcher.Main.run(Main.java:502)\n        at org.eclipse.core.launcher.UIMain.main(UIMain.java:52)",
+    "Should no longer be a problem as the console was roled back?",
+    "Waiting to see if workbench will provide a generic console that we\ncan reuse.",
+    "closing",
+    "no longer an issue",
+    "closed"
+  ],
+  "commentCreationDates": [
+    "2001-10-11T04:18:43+02:00",
+    "2001-10-11T22:38:09+02:00",
+    "2001-10-11T22:49:08+02:00",
+    "2002-06-26T19:16:46+02:00",
+    "2002-06-26T19:16:59+02:00",
+    "2002-06-26T19:17:06+02:00"
+  ],
+  "traces": [
+    {
+      "exceptionType": "org.eclipse.jface.text.BadLocationException",
+      "elements": [
+        {
+          "method": "org.eclipse.jface.text.AbstractDocument.replace",
+          "source": "AbstractDocument.java:749"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.ConsoleDocument.replace0",
+          "source": "ConsoleDocument.java:141"
+        },
+        {
+          "method": "org.eclipse.debug.internal.ui.ConsoleDocument$3.run",
+          "source": "ConsoleDocument.java:205"
+        }
+      ],
+      "number": 0,
+      "commentIndex": 0,
+      "bugId": "1752",
+      "date": "2001-10-11T04:18:43+02:00",
+      "product": "JDT",
+      "component": "Debug",
+      "severity": "critical"
+    }
+  ],
+  "groupId": "1752",
+  "bugId": "1752",
+  "date": "2001-10-11T04:18:43+02:00",
+  "product": "JDT",
+  "component": "Debug",
+  "severity": "critical"
+}

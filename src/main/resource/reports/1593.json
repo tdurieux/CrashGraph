@@ -1,0 +1,91 @@
+{
+  "comments": [
+    "JGS (5/29/01 12:14:31 PM)\n\tSwipe \"InfiniteLoop.main(null);\" in a scrapbook page and run.\n\tOnce running, click main toolbar Terminate button.  Consistently\n\tget following walkback:\n\ncom.sun.jdi.VMDisconnectedException: Got IOException from Virtual Machine\n\tat org.eclipse.jdi.internal.connect.PacketReceiveManager.getReply(PacketReceiveManager.java, Compiled Code)\n\tat org.eclipse.jdi.internal.connect.PacketReceiveManager.getReply(PacketReceiveManager.java, Compiled Code)\n\tat org.eclipse.jdi.internal.MirrorImpl.requestVM(MirrorImpl.java, Compiled Code)\n\tat org.eclipse.jdi.internal.MirrorImpl.requestVM(MirrorImpl.java, Compiled Code)\n\tat org.eclipse.jdi.internal.ObjectReferenceImpl.invokeMethod(ObjectReferenceImpl.java, Compiled Code)\n\tat org.eclipse.jdt.internal.debug.core.JDIThread.invokeMethod(JDIThread.java:426)\n\tat org.eclipse.jdt.internal.debug.core.ThreadEvaluationContext.runSnippet(ThreadEvaluationContext.java:264)\n\tat org.eclipse.jdt.internal.debug.core.ThreadEvaluationContext.acceptClassFiles(ThreadEvaluationContext.java:209)\n\tat org.eclipse.jdt.internal.core.eval.RequestorWrapper.acceptClassFiles(RequestorWrapper.java, Compiled Code)\n\tat org.eclipse.jdt.internal.eval.EvaluationContext.evaluate(EvaluationContext.java:221)\n\tat org.eclipse.jdt.internal.eval.EvaluationContext.evaluate(EvaluationContext.java:239)\n\tat org.eclipse.jdt.internal.core.eval.EvaluationContextWrapper.evaluateCodeSnippet(EvaluationContextWrapper.java:166)\n\tat org.eclipse.jdt.internal.debug.core.ThreadEvaluationContext.doEvaluation(ThreadEvaluationContext.java:128)\n\tat org.eclipse.jdt.internal.debug.core.ThreadEvaluationContext.run(ThreadEvaluationContext.java:114)\n\tat java.lang.Thread.run(Thread.java:479)\n\nDS (5/30/2001 11:23:48 AM)\n\tWalkback shows in scrapbook.\n\tTry to be more friendly in the future (usability)\n\nDW (6/15/01 10:02:14 AM)\n\tAdded to README.",
+    "Exception no longer appears."
+  ],
+  "commentCreationDates": [
+    "2001-10-11T04:15:56+02:00",
+    "2001-11-28T19:01:10+01:00"
+  ],
+  "traces": [
+    {
+      "exceptionType": "com.sun.jdi.VMDisconnectedException",
+      "message": "Got IOException from Virtual Machine",
+      "elements": [
+        {
+          "method": "org.eclipse.jdi.internal.connect.PacketReceiveManager.getReply",
+          "source": "PacketReceiveManager.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.jdi.internal.connect.PacketReceiveManager.getReply",
+          "source": "PacketReceiveManager.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.jdi.internal.MirrorImpl.requestVM",
+          "source": "MirrorImpl.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.jdi.internal.MirrorImpl.requestVM",
+          "source": "MirrorImpl.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.jdi.internal.ObjectReferenceImpl.invokeMethod",
+          "source": "ObjectReferenceImpl.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.JDIThread.invokeMethod",
+          "source": "JDIThread.java:426"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.ThreadEvaluationContext.runSnippet",
+          "source": "ThreadEvaluationContext.java:264"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.ThreadEvaluationContext.acceptClassFiles",
+          "source": "ThreadEvaluationContext.java:209"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.core.eval.RequestorWrapper.acceptClassFiles",
+          "source": "RequestorWrapper.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.eval.EvaluationContext.evaluate",
+          "source": "EvaluationContext.java:221"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.eval.EvaluationContext.evaluate",
+          "source": "EvaluationContext.java:239"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.core.eval.EvaluationContextWrapper.evaluateCodeSnippet",
+          "source": "EvaluationContextWrapper.java:166"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.ThreadEvaluationContext.doEvaluation",
+          "source": "ThreadEvaluationContext.java:128"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.ThreadEvaluationContext.run",
+          "source": "ThreadEvaluationContext.java:114"
+        },
+        {
+          "method": "java.lang.Thread.run",
+          "source": "Thread.java:479"
+        }
+      ],
+      "number": 0,
+      "commentIndex": 0,
+      "bugId": "1593",
+      "date": "2001-10-11T04:15:56+02:00",
+      "product": "JDT",
+      "component": "Debug",
+      "severity": "minor"
+    }
+  ],
+  "groupId": "1593",
+  "bugId": "1593",
+  "date": "2001-10-11T04:15:56+02:00",
+  "product": "JDT",
+  "component": "Debug",
+  "severity": "minor"
+}

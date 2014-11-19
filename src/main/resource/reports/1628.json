@@ -1,0 +1,107 @@
+{
+  "comments": [
+    "DW (6/7/01 9:27:33 AM)\n\t119++ \n\n\tWhen doing an eval in the scrapbook/debugger, the package \"org.eclipse.jdt.internal.eval.target\"\n\tappears in the workspace, which is the home of \"CodeSnippet\".\n\n\tWe do not clean-up (remove) this package when the target termiantes.\n\nDW (6/7/01 2:09:06 PM)\n\tSimple fix would be to have the snippet support change the \"CodeSnippet\" class to\n\tbe in the default package.\n\n\tThere is a nasty side effect here. When a project uses the defualt source and binary\n\tfolder config (i.e. project is the root), a new package appears when a evaluation is done.\n\tThis package will also show up when releasing to a repository. This problem does not\n\tsurface in the self hosting world because the package is hidden in the output\n\tdirectory.\n\n\tAnother potential fix is to have the debugger delete the package - but that should only\n\tbe done if the package is empty.\n\n\tPropose fix in JCORE.\n\nDW (6/8/01 8:54:09 AM)\n\tMake into a README.\n\nDW (6/15/01 10:08:55 AM)\n\tAdded to README.",
+    "Fixed.\n\nThe scrapbook now uses the meta-data area for temp class files required for \nevaluation. The debugger still uses the project output area, but it does not \ntrigger builds/resource deltas anymore, as we write to java.io.Files instead of \nusing IFiles. The temp files will not appear in the resource tree unless a user \ndoes a \"refresh from local\" in the output directory of a java project.",
+    "Please verify",
+    "Unfortunately you get weird deletion problems once you have done an evaluation.\nPerform an evaluation in a debug session.\nThen attempt to delete the project.\nIf fails with a whole bunch of Resource is out of synch with the file system \ndetails.  The files that are out of synch are all of the ones the debugger \nwrites to the project output area.",
+    "The problem is the folder hierarchy as the files are all deleted on termination.\nCouldn\u0027t we delete the evaluation folders as well?",
+    "We have to be careful in which folders we delete. We should only delete the \nfolders we create.",
+    "*** Bug 1639 has been marked as a duplicate of this bug. ***",
+    "Fixed. The evaluation engine now keeps track of which directories it created \nwhen deploying snippet (evaluation) class files. It deletes only those \ndirectories when the associated debug target terminates.\n\nre-assigning for verification.",
+    "Please verify.",
+    "I am getting upon completion of the target:\nInternal error logged from JDI debug model: \norg.eclipse.debug.core.DebugException: Unable to delete temporary evaluation \nclass file \nC:\\workspaces\\Evaluation\\org\\eclipse\\jdt\\internal\\eval\\target\\CodeSnippet.class\n\tat org.eclipse.jdt.internal.debug.eval.LocalEvaluationEngine.dispose\n(LocalEvaluationEngine.java:577)\n\tat org.eclipse.jdt.debug.eval.EvaluationManager.disposeEvaluationEngine\n(EvaluationManager.java:135)\n\tat org.eclipse.jdt.debug.eval.EvaluationManager.access$0\n(EvaluationManager.java:126)\n\tat \norg.eclipse.jdt.debug.eval.EvaluationManager$VMMonitor.handleDebugEvent\n(EvaluationManager.java:154)\n\tat org.eclipse.debug.core.DebugPlugin.fireDebugEvent\n(DebugPlugin.java:151)\n\tat org.eclipse.jdt.internal.debug.core.JDIDebugElement.fireEvent\n(JDIDebugElement.java:123)\n\tat \norg.eclipse.jdt.internal.debug.core.JDIDebugElement.fireTerminateEvent\n(JDIDebugElement.java:152)\n\tat org.eclipse.jdt.internal.debug.core.JDIDebugTarget.terminated\n(JDIDebugTarget.java:1126)\n\tat org.eclipse.jdt.internal.debug.core.JDIDebugTarget.handleVMDeath\n(JDIDebugTarget.java:924)\n\tat org.eclipse.jdt.internal.debug.core.EventDispatcher.dispatch\n(EventDispatcher.java:114)\n\tat org.eclipse.jdt.internal.debug.core.EventDispatcher$1.run\n(EventDispatcher.java:143)\n\tat org.eclipse.core.internal.resources.Workspace.run\n(Workspace.java:1186)\n\tat org.eclipse.jdt.internal.debug.core.EventDispatcher.run\n(EventDispatcher.java:160)\n\tat java.lang.Thread.run(Thread.java:498)",
+    "Which platform? and does the file actually exist, or did it get deleted \n(i.e. :\\workspaces\\Evaluation\\org\\eclipse\\jdt\\internal\\eval\\target\\CodeSnippet.c\nlass)",
+    "Released changes to check for the existance of the files and directories in \nLocalEvaluationEngine.\n\nVerified."
+  ],
+  "commentCreationDates": [
+    "2001-10-11T04:16:33+02:00",
+    "2001-11-01T14:31:17+01:00",
+    "2001-11-01T14:31:30+01:00",
+    "2001-11-01T17:35:37+01:00",
+    "2001-11-01T17:43:17+01:00",
+    "2001-11-01T18:21:43+01:00",
+    "2001-11-28T18:31:22+01:00",
+    "2001-12-04T21:03:05+01:00",
+    "2001-12-04T21:03:21+01:00",
+    "2001-12-04T21:58:31+01:00",
+    "2001-12-04T22:15:13+01:00",
+    "2001-12-04T22:52:04+01:00"
+  ],
+  "traces": [
+    {
+      "exceptionType": "org.eclipse.debug.core.DebugException",
+      "message": "Unable to delete temporary evaluation  class file  C:\\workspaces\\Evaluation\\org\\eclipse\\jdt\\internal\\eval\\target\\CodeSnippet.class",
+      "elements": [
+        {
+          "method": "org.eclipse.jdt.internal.debug.eval.LocalEvaluationEngine.dispose",
+          "source": "LocalEvaluationEngine.java:577"
+        },
+        {
+          "method": "org.eclipse.jdt.debug.eval.EvaluationManager.disposeEvaluationEngine",
+          "source": "EvaluationManager.java:135"
+        },
+        {
+          "method": "org.eclipse.jdt.debug.eval.EvaluationManager.access$0",
+          "source": "EvaluationManager.java:126"
+        },
+        {
+          "method": "org.eclipse.jdt.debug.eval.EvaluationManager$VMMonitor.handleDebugEvent",
+          "source": "EvaluationManager.java:154"
+        },
+        {
+          "method": "org.eclipse.debug.core.DebugPlugin.fireDebugEvent",
+          "source": "DebugPlugin.java:151"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.JDIDebugElement.fireEvent",
+          "source": "JDIDebugElement.java:123"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.JDIDebugElement.fireTerminateEvent",
+          "source": "JDIDebugElement.java:152"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.JDIDebugTarget.terminated",
+          "source": "JDIDebugTarget.java:1126"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.JDIDebugTarget.handleVMDeath",
+          "source": "JDIDebugTarget.java:924"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.EventDispatcher.dispatch",
+          "source": "EventDispatcher.java:114"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.EventDispatcher$1.run",
+          "source": "EventDispatcher.java:143"
+        },
+        {
+          "method": "org.eclipse.core.internal.resources.Workspace.run",
+          "source": "Workspace.java:1186"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.EventDispatcher.run",
+          "source": "EventDispatcher.java:160"
+        },
+        {
+          "method": "java.lang.Thread.run",
+          "source": "Thread.java:498"
+        }
+      ],
+      "number": 0,
+      "commentIndex": 9,
+      "bugId": "1628",
+      "date": "2001-12-04T21:58:31+01:00",
+      "product": "JDT",
+      "component": "Debug",
+      "severity": "critical"
+    }
+  ],
+  "groupId": "1628",
+  "bugId": "1628",
+  "date": "2001-10-11T04:16:33+02:00",
+  "product": "JDT",
+  "component": "Debug",
+  "severity": "critical"
+}

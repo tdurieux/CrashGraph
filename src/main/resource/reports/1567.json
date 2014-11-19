@@ -1,0 +1,121 @@
+{
+  "comments": [
+    "DW (5/9/01 1:24:17 PM)\n\nI did a full build with an HCR target active, and got this in the console.\n\nInternal error logged from JDI debug model:\norg.eclipse.debug.core.DebugException: Hot code replace failed.\n        at org.eclipse.core.runtime.CoreException.\u003cinit\u003e(CoreException.java:30)\n        at org.eclipse.debug.core.DebugException.\u003cinit\u003e(DebugException.java:36)\n        at org.eclipse.jdt.internal.debug.core.JDIDebugElement.targetRequestFail\ned(JDIDebugElement.java:284)\n        at org.eclipse.jdt.internal.debug.core.JDIDebugTarget.typesHaveChanged(J\nDIDebugTarget.java:478)\n        at org.eclipse.jdt.internal.debug.core.JavaHotCodeReplaceManager.notify(\nJavaHotCodeReplaceManager.java:145)\n        at org.eclipse.jdt.internal.debug.core.JavaHotCodeReplaceManager.resourc\neChanged(JavaHotCodeReplaceManager.java:108)\n        at org.eclipse.core.internal.events.NotificationManager$1.run(Notificati\nonManager.java:92)\n        at org.eclipse.core.internal.runtime.InternalPlatform.run(InternalPlatfo\nrm.java:579)\n        at org.eclipse.core.runtime.Platform.run(Platform.java:388)\n        at org.eclipse.core.internal.events.NotificationManager.notify(Notificat\nionManager.java:103)\n        at org.eclipse.core.internal.events.NotificationManager.broadcastChanges\n(NotificationManager.java:34)\n        at org.eclipse.core.internal.events.NotificationManager.broadcastChanges\n(NotificationManager.java:48)\n        at org.eclipse.core.internal.resources.Workspace.broadcastChanges(Worksp\nace.java:99)\n        at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.\njava(Compiled Code))\n        at org.eclipse.core.internal.resources.Workspace.build(Workspace.java:11\n1)\n        at org.eclipse.ui.internal.GlobalBuildAction.build(GlobalBuildAction.jav\na:60)\n        at org.eclipse.ui.internal.GlobalBuildAction$1.run(GlobalBuildAction.jav\na:144)\n        at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(Modal\nContext.java:99)\n\nDW (5/9/01 1:34:08 PM)\n\tIs reproduceable with self host env, but when I try a smaller workspace example,\n\tit does not happen.\n\nDW (5/14/01 4:13:04 PM)\n\tStill reproduceable with 5/11/2001 J9.",
+    "As long as we update the debug elements with warnings now, that should be OK.",
+    "Bug 1565 requests dialog informing the user of HCR failure and Bug 1558 added\nout of synch notification to the DebugView.\n\nDo we need to do anything more with this bug?",
+    "I stopped at a breakpoint, debugging a self-hosted workspace, and did a full \nbuild. The following still appeared in the console, and an internal error was \nlogged to the .log.\n\nInternal error logged from JDI debug model:\norg.eclipse.debug.core.DebugException: Hot code replace failed - VM may be incon\nsistent\n\nStack trace:\n   java/lang/Throwable.\u003cinit\u003e()V\n   java/lang/Throwable.\u003cinit\u003e(Ljava/lang/String;)V\n   org/eclipse/core/runtime/CoreException.\u003cinit\u003e(Lorg/eclipse/core/runtime/IStat\nus;)V\n   org/eclipse/debug/core/DebugException.\u003cinit\u003e(Lorg/eclipse/core/runtime/IStatu\ns;)V\n   org/eclipse/jdt/internal/debug/core/JDIDebugElement.targetRequestFailed(Ljava\n/lang/String;Ljava/lang/RuntimeException;)V\n   org/eclipse/jdt/internal/debug/core/JDIDebugTarget.typesHaveChangedJ9(Ljava/u\ntil/List;Ljava/util/List;)V\n   org/eclipse/jdt/internal/debug/core/JDIDebugTarget.typesHaveChanged(Ljava/uti\nl/List;Ljava/util/List;)V\n   org/eclipse/jdt/internal/debug/core/JavaHotCodeReplaceManager.notify(Ljava/ut\nil/List;Ljava/util/List;Ljava/util/List;)V\n   org/eclipse/jdt/internal/debug/core/JavaHotCodeReplaceManager.access$0(Lorg/e\nclipse/jdt/internal/debug/core/JavaHotCodeReplaceManager;Ljava/util/List;Ljava/u\ntil/List;Ljava/util/List;)V\n   org/eclipse/jdt/internal/debug/core/JavaHotCodeReplaceManager$1.run(Lorg/ecli\npse/core/runtime/IProgressMonitor;)V\n   org/eclipse/core/internal/resources/Workspace.run(Lorg/eclipse/core/resources\n/IWorkspaceRunnable;Lorg/eclipse/core/runtime/IProgressMonitor;)V\n   org/eclipse/jdt/internal/debug/core/JavaHotCodeReplaceManager$3.run()V\n   java/lang/Thread.run()V\n\n\nError in .log\n\nLog: Tue Dec 04 10:22:24 CST 2001\n4 org.eclipse.ui 0 java.lang.NullPointerException\njava.lang.NullPointerException\n\nStack trace:\n   java/lang/Throwable.\u003cinit\u003e()V\n   java/lang/Throwable.\u003cinit\u003e(Ljava/lang/String;)V\n   java/lang/NullPointerException.\u003cinit\u003e(Ljava/lang/String;)V\n   org/eclipse/debug/internal/ui/ExecutionAction.getLaunchManager()\nLorg/eclipse/debug/core/ILaunchManager;\n   org/eclipse/debug/internal/ui/ExecutionAction.resolveLaunchers\n([Lorg/eclipse/core/resources/IProject;)[Lorg/eclipse/debug/core/ILauncher;\n   org/eclipse/debug/internal/ui/ExecutionAction.run()V\n   org/eclipse/debug/internal/ui/LaunchDropDownAction.run\n(Lorg/eclipse/jface/action/IAction;)V\n   org/eclipse/ui/internal/PluginAction.run()V\n   org/eclipse/jface/action/Action.runWithEvent(Lorg/eclipse/swt/widgets/Event;)\nV\n   org/eclipse/jface/action/ActionContributionItem.handleWidgetSelection\n(Lorg/eclipse/swt/widgets/Event;)V\n   org/eclipse/jface/action/ActionContributionItem.handleWidgetEvent\n(Lorg/eclipse/swt/widgets/Event;)V\n   org/eclipse/jface/action/ActionContributionItem.access$0\n(Lorg/eclipse/jface/action/ActionContributionItem;Lorg/eclipse/swt/widgets/Event\n;)V\n   org/eclipse/jface/action/ActionContributionItem$ActionListener.handleEvent\n(Lorg/eclipse/swt/widgets/Event;)V\n   org/eclipse/swt/widgets/EventTable.sendEvent(Lorg/eclipse/swt/widgets/Event;)\nV\n   org/eclipse/swt/widgets/Widget.notifyListeners\n(ILorg/eclipse/swt/widgets/Event;)V\n   org/eclipse/swt/widgets/Display.runDeferredEvents()Z\n   org/eclipse/swt/widgets/Display.readAndDispatch()Z\n   org/eclipse/ui/internal/Workbench.runEventLoop()V\n   org/eclipse/ui/internal/Workbench.run(Ljava/lang/Object;)Ljava/lang/Object;\n   org/eclipse/core/internal/boot/InternalBootLoader.run\n(Ljava/lang/String;Ljava/net/URL;Ljava/lang/String;[Ljava/lang/String;)\nLjava/lang/Object;\n   org/eclipse/core/boot/BootLoader.run\n(Ljava/lang/String;Ljava/net/URL;Ljava/lang/String;[Ljava/lang/String;)\nLjava/lang/Object;\n   SlimLauncher.main([Ljava/lang/String;)V\n",
+    "I then tried to step, and the thread showed stepping forever (never came back). \nI had to terminate the launched program. Looks like J9 cannot handle too many \nclass changes. Need to determine if this is a J9 bug.",
+    "Another note: After the HCR failed, the stack frames did not auto-drop, and \nthere was not \"out of synch\" indication in the debug view. I then did the step, \nwhich never returned.",
+    "Remains critical for Dec 07 - i.e. that the stack frames show \"out-of-synch\" \nwhen this occurrs.",
+    "Unable to reproduce this problem (having trouble with J9 on Linux), but I can\nsee what was happening in the code. When the JavaHotCodeReplaceManager was\ncatching an exception during an attempted HCR, it was failing to notify the\ntarget of the failure.",
+    "Fixed. When drop to frame fails after a successful HCR, we now inform the frames\nthat they are out of synch.",
+    "Please verify.",
+    "Verified."
+  ],
+  "commentCreationDates": [
+    "2001-10-11T04:15:30+02:00",
+    "2001-11-28T21:27:59+01:00",
+    "2001-12-04T15:37:15+01:00",
+    "2001-12-04T16:16:15+01:00",
+    "2001-12-04T16:18:17+01:00",
+    "2001-12-04T16:25:19+01:00",
+    "2001-12-04T17:24:29+01:00",
+    "2001-12-04T19:30:44+01:00",
+    "2001-12-04T23:34:40+01:00",
+    "2001-12-04T23:35:10+01:00",
+    "2001-12-05T20:27:26+01:00"
+  ],
+  "traces": [
+    {
+      "exceptionType": "org.eclipse.debug.core.DebugException",
+      "message": "Hot code replace failed.",
+      "elements": [
+        {
+          "method": "org.eclipse.core.runtime.CoreException.\u003cinit\u003e",
+          "source": "CoreException.java:30"
+        },
+        {
+          "method": "org.eclipse.debug.core.DebugException.\u003cinit\u003e",
+          "source": "DebugException.java:36"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.JDIDebugElement.targetRequestFailed",
+          "source": "JDIDebugElement.java:284"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.JDIDebugTarget.typesHaveChanged",
+          "source": "J DIDebugTarget.java:478"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.JavaHotCodeReplaceManager.notify",
+          "source": " JavaHotCodeReplaceManager.java:145"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.JavaHotCodeReplaceManager.resourceChanged",
+          "source": "JavaHotCodeReplaceManager.java:108"
+        },
+        {
+          "method": "org.eclipse.core.internal.events.NotificationManager$1.run",
+          "source": "Notificati onManager.java:92"
+        },
+        {
+          "method": "org.eclipse.core.internal.runtime.InternalPlatform.run",
+          "source": "InternalPlatfo rm.java:579"
+        },
+        {
+          "method": "org.eclipse.core.runtime.Platform.run",
+          "source": "Platform.java:388"
+        },
+        {
+          "method": "org.eclipse.core.internal.events.NotificationManager.notify",
+          "source": "Notificat ionManager.java:103"
+        },
+        {
+          "method": "org.eclipse.core.internal.events.NotificationManager.broadcastChanges",
+          "source": "NotificationManager.java:34"
+        },
+        {
+          "method": "org.eclipse.core.internal.events.NotificationManager.broadcastChanges",
+          "source": "NotificationManager.java:48"
+        },
+        {
+          "method": "org.eclipse.core.internal.resources.Workspace.broadcastChanges",
+          "source": "Worksp ace.java:99"
+        },
+        {
+          "method": "org.eclipse.core.internal.resources.Workspace.endOperation",
+          "source": "Workspace. java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.core.internal.resources.Workspace.build",
+          "source": "Workspace.java:11 1"
+        },
+        {
+          "method": "org.eclipse.ui.internal.GlobalBuildAction.build",
+          "source": "GlobalBuildAction.jav a:60"
+        },
+        {
+          "method": "org.eclipse.ui.internal.GlobalBuildAction$1.run",
+          "source": "GlobalBuildAction.jav a:144"
+        },
+        {
+          "method": "org.eclipse.jface.operation.ModalContext$ModalContextThread.run",
+          "source": "Modal Context.java:99"
+        }
+      ],
+      "number": 0,
+      "commentIndex": 0,
+      "bugId": "1567",
+      "date": "2001-10-11T04:15:30+02:00",
+      "product": "JDT",
+      "component": "Debug",
+      "severity": "critical"
+    }
+  ],
+  "groupId": "1567",
+  "bugId": "1567",
+  "date": "2001-10-11T04:15:30+02:00",
+  "product": "JDT",
+  "component": "Debug",
+  "severity": "critical"
+}

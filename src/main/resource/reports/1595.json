@@ -1,0 +1,103 @@
+{
+  "comments": [
+    "DW (5/31/01 8:28:26 AM)\n\tPut a method entry breakpoint on ClassLoader.loadClassInternal(String).\n\tWhen the breakpoint is hit, press step over...\n\n\t(This is related to the step causing a resume...)\n\t\n\ncom.sun.jdi.IncompatibleThreadStateException: Thread was not suspended.\n\tat org.eclipse.jdi.internal.ThreadReferenceImpl.frames(ThreadReferenceImpl.java, Compiled Code)\n\tat org.eclipse.jdi.internal.ThreadReferenceImpl.frames(ThreadReferenceImpl.java, Compiled Code)\n\tat org.eclipse.jdt.internal.debug.core.JDIThread.getUnderlyingFrames(JDIThread.java, Compiled Code)\n\tat org.eclipse.jdt.internal.debug.core.JDIThread.getChildren0(JDIThread.java, Compiled Code)\n\tat org.eclipse.jdt.internal.debug.core.JDIThread.setRunning(JDIThread.java, Compiled Code)\n\tat org.eclipse.jdt.internal.debug.core.JDIThread.handleStep(JDIThread.java:609)\n\tat org.eclipse.jdt.internal.debug.core.EventDispatcher.dispatchStepEvent(EventDispatcher.java:131)\n\tat org.eclipse.jdt.internal.debug.core.EventDispatcher.dispatch(EventDispatcher.java, Compiled Code)\n\tat org.eclipse.jdt.internal.debug.core.EventDispatcher$1.run(EventDispatcher.java, Compiled Code)\n\tat org.eclipse.core.internal.resources.Workspace.run(Workspace.java, Compiled Code)\n\tat org.eclipse.jdt.internal.debug.core.EventDispatcher.run(EventDispatcher.java, Compiled Code)\n\n\tat java.lang.Thread.run(Thread.java:479)\n\nDW (5/31/01 4:50:10 PM)\n\tCould not reproduce after fixing the step/resume problem.\n\nDW (5/31/01 5:01:43 PM)\n\tHowever, placing an entry breakpoint in that class and then stepping twice causes:\n\norg.eclipse.debug.core.DebugException[5010]: com.sun.jdi.InvalidStackFrameException\n\tat org.eclipse.jdi.internal.MirrorImpl.defaultReplyErrorHandler(MirrorImpl.java(Compiled Code))\n\tat org.eclipse.jdi.internal.StackFrameImpl.thisObject(StackFrameImpl.java:176)\n\tat org.eclipse.jdt.internal.debug.core.JDIStackFrame.getChildren0(JDIStackFrame.java:186)Internal error logged from UI: \n\n\tat org.eclipse.jdt.internal.debug.core.JDIDebugElement.getChildren(JDIDebugElement.java:151)\n\tat org.eclipse.debug.internal.ui.VariablesContentProvider.doGetChildren(VariablesContentProvider.java:29)\n\tat org.eclipse.debug.internal.ui.BasicContentProvider.getChildren(BasicContentProvider.java:95)\n\tat org.eclipse.debug.internal.ui.VariablesContentProvider.getElements(VariablesContentProvider.java:43)\n\tat org.eclipse.jface.viewers.AbstractTreeViewer.getRawChildren(AbstractTreeViewer.java(Compiled Code))\n\tat org.eclipse.jface.viewers.AbstractTreeViewer.getRawChildren(AbstractTreeViewer.java(Compiled Code))\n\tat org.eclipse.jface.viewers.StructuredViewer.getFilteredChildren(StructuredViewer.java(Compiled Code))\n\tat org.eclipse.jface.viewers.StructuredViewer.getSortedChildren(StructuredViewer.java(Compiled Code))\n\tat org.eclipse.jface.viewers.AbstractTreeViewer.createChildren(AbstractTreeViewer.java(Compiled Code))\n\tat org.eclipse.jface.viewers.AbstractTreeViewer$3.run(AbstractTreeViewer.java:651)\n\tat org.eclipse.jface.viewers.StructuredViewer.preservingSelection(StructuredViewer.java:534)\n\tat org.eclipse.jface.viewers.AbstractTreeViewer.inputChanged(AbstractTreeViewer.java:643)\n\tat org.eclipse.jface.viewers.ContentViewer.setInput(ContentViewer.java:239)\n\tat org.eclipse.jface.viewers.StructuredViewer.setInput(StructuredViewer.java:647)\n\tat org.eclipse.debug.internal.ui.VariablesView.setViewerInput(VariablesView.java:73)\n\tat org.eclipse.debug.internal.ui.VariablesView.selectionChanged(VariablesView.java:52)\n\tat org.eclipse.debug.internal.ui.DebugUIPlugin.selectionChanged(DebugUIPlugin.java:599)\n\tat org.eclipse.jface.viewers.Viewer.fireSelectionChanged(Viewer.java(Compiled Code))\n\tat org.eclipse.jface.viewers.StructuredViewer.updateSelection(StructuredViewer.java:891)\n\tat org.eclipse.jface.viewers.StructuredViewer.setSelection(StructuredViewer.java:671)\n\tat org.eclipse.debug.internal.ui.LaunchesViewer.setSelection(LaunchesViewer.java:77)\n\tat org.eclipse.debug.internal.ui.DebugView.autoExpand(DebugView.java:469)\n\tat org.eclipse.debug.internal.ui.DebugUIPlugin$3.run(DebugUIPlugin.java:304)\n\tat org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Display.readAndDispatch(Display.java(Compiled Code))\n\tat org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java(Compiled Code))\n\tat org.eclipse.ui.internal.Workbench.run(Workbench.java:602)\n\tat org.eclipse.core.internal.boot.InternalBootLoader.run(InternalBootLoader.java:820)\n\tat org.eclipse.core.boot.BootLoader.run(BootLoader.java:285)\n\tat java.lang.reflect.Method.invoke(Native Method)\n\tat org.eclipse.core.launcher.Main.basicRun(Main.java:66)\n\nDW (5/31/01 5:20:41 PM)\n\tProblem only occurrs on JDK.\n\tSee\n\t\t1GEM3UQ: ITPDUI:WIN2000 - JDK ClassLoader.loadClassInternal(String) throws NativeMethodException\n\n\tLow Priority.\n\nDW (6/2/01 10:59:37 AM)\n\tIt appears that the thread is resuming after the step completes, and then the\n\tmethod entry breakpoint is hit. This means our strack frames are stale.\n\tThe thread is resuming and not telling us (i.e. it appears the VM is resuming\n\tthe thread). There is something magical about this #loadClassInternal() method.\n\n\tNo action at this time.\n\nDW (6/7/01 4:46:05 PM)\n\tMake into a README.\n\nDW (6/15/01 10:48:45 AM)\n\tAdded to README.",
+    "I no longer have any problems with this in the 2.0 code base. The debug model \nimplementation has changed significantly since this bug was reported."
+  ],
+  "commentCreationDates": [
+    "2001-10-11T04:15:58+02:00",
+    "2002-01-15T16:54:08+01:00"
+  ],
+  "traces": [
+    {
+      "exceptionType": "com.sun.jdi.IncompatibleThreadStateException",
+      "message": "Thread was not suspended.",
+      "elements": [
+        {
+          "method": "org.eclipse.jdi.internal.ThreadReferenceImpl.frames",
+          "source": "ThreadReferenceImpl.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.jdi.internal.ThreadReferenceImpl.frames",
+          "source": "ThreadReferenceImpl.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.JDIThread.getUnderlyingFrames",
+          "source": "JDIThread.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.JDIThread.getChildren0",
+          "source": "JDIThread.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.JDIThread.setRunning",
+          "source": "JDIThread.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.JDIThread.handleStep",
+          "source": "JDIThread.java:609"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.EventDispatcher.dispatchStepEvent",
+          "source": "EventDispatcher.java:131"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.EventDispatcher.dispatch",
+          "source": "EventDispatcher.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.EventDispatcher$1.run",
+          "source": "EventDispatcher.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.core.internal.resources.Workspace.run",
+          "source": "Workspace.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.EventDispatcher.run",
+          "source": "EventDispatcher.java, Compiled Code"
+        },
+        {
+          "method": "java.lang.Thread.run",
+          "source": "Thread.java:479"
+        }
+      ],
+      "number": 0,
+      "commentIndex": 0,
+      "bugId": "1595",
+      "date": "2001-10-11T04:15:58+02:00",
+      "product": "JDT",
+      "component": "Debug",
+      "severity": "normal"
+    },
+    {
+      "exceptionType": "com.sun.jdi.InvalidStackFrameException",
+      "elements": [
+        {
+          "method": "org.eclipse.jdi.internal.MirrorImpl.defaultReplyErrorHandler",
+          "source": "MirrorImpl.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.jdi.internal.StackFrameImpl.thisObject",
+          "source": "StackFrameImpl.java:176"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.JDIStackFrame.getChildren0",
+          "source": "JDIStackFrame.java:186"
+        }
+      ],
+      "number": 1,
+      "commentIndex": 0,
+      "bugId": "1595",
+      "date": "2001-10-11T04:15:58+02:00",
+      "product": "JDT",
+      "component": "Debug",
+      "severity": "normal"
+    }
+  ],
+  "groupId": "1595",
+  "bugId": "1595",
+  "date": "2001-10-11T04:15:58+02:00",
+  "product": "JDT",
+  "component": "Debug",
+  "severity": "normal"
+}

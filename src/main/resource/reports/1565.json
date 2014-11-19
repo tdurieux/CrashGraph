@@ -1,0 +1,195 @@
+{
+  "comments": [
+    "DS (5/8/01 10:24:28 AM)\n\tIf you change the structure of a class, say by adding a instance variable, HCR fails\n\tbut there is no indication of this to the user.\n\nDW (5/8/01 1:01:00 PM)\n\tFor example:\n\nInternal error logged from JDI debug model: \n\norg.eclipse.debug.core.DebugException: Hot code replace failed.\n\n\tat org.eclipse.jdt.internal.debug.core.JDIDebugElement.targetRequestFailed(JDIDebugElement.java:284)\n\n\tat org.eclipse.jdt.internal.debug.core.JDIDebugTarget.typesHaveChanged(JDIDebugTarget.java:478)\n\n\tat org.eclipse.jdt.internal.debug.core.JavaHotCodeReplaceManager.notify(JavaHotCodeReplaceManager.java, Compiled Code)\n\n\tat org.eclipse.jdt.internal.debug.core.JavaHotCodeReplaceManager.resourceChanged(JavaHotCodeReplaceManager.java:108)\n\n\tat org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java, Compiled Code)\n\n\tat org.eclipse.core.internal.runtime.InternalPlatform.run(InternalPlatform.java, Compiled Code)\n\n\tat org.eclipse.core.runtime.Platform.run(Platform.java, Compiled Code)\n\n\tat org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java, Compiled Code)\n\n\tat org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:34)\n\n\tat org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java, Compiled Code)\n\n\tat org.eclipse.core.internal.resources.Workspace.broadcastChanges(Workspace.java, Compiled Code)\n\n\tat org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java, Compiled Code)\n\n\tat org.eclipse.core.internal.resources.Workspace.run(Workspace.java:1092)\n\n\tat org.eclipse.ui.actions.WorkspaceModifyOperation.run(WorkspaceModifyOperation.java:79)\n\n\tat org.eclipse.ui.texteditor.AbstractTextEditor.doSave(AbstractTextEditor.java:486)\n\n\tat org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor.doSave(CompilationUnitEditor.java:190)\n\n\tat org.eclipse.ui.internal.EditorManager.saveEditor(EditorManager.java:677)\n\n\tat org.eclipse.ui.internal.WorkbenchPage.saveEditor(WorkbenchPage.java:859)\n\n\tat org.eclipse.ui.internal.SaveAction.run(SaveAction.java:33)\n\n\tat org.eclipse.jface.action.ActionContributionItem.handleWidgetSelection(ActionContributionItem.java:366)\n\n\tat org.eclipse.jface.action.ActionContributionItem.handleWidgetEvent(ActionContributionItem.java, Compiled Code)\n\n\tat org.eclipse.jface.action.ActionContributionItem$ActionListener.handleEvent(ActionContributionItem.java, Compiled Code)\n\n\tat org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java, Compiled Code)\n\n\tat org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java, Compiled Code)\n\n\tat org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java, Compiled Code)\n\n\tat org.eclipse.swt.widgets.Display.readAndDispatch(Display.java, Compiled Code)\n\n\tat org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java, Compiled Code)\n\n\tat org.eclipse.ui.internal.Workbench.run(Workbench.java:554)\n\n\tat org.eclipse.core.internal.boot.InternalBootLoader.run(InternalBootLoader.java:825)\n\n\tat org.eclipse.core.boot.BootLoader.run(BootLoader.java:280)\n\n\tat java.lang.reflect.Method.invoke(Native Method)\n\n\tat org.eclipse.core.launcher.Main.basicRun(Main.java:66)\n\n\tat org.eclipse.core.launcher.Main.run(Main.java:314)\n\n\n\n\tat org.eclipse.core.launcher.UIMain.main(UIMain.java:46)\n\n\nDW (5/8/01 4:31:20 PM)\n\tCurrently we have no way to report the failure to the UI - we are in core debug support,\n\tin a resource callback, with no knoweldge of the UI.\n\nDW (5/9/01 7:01:02 PM)\n\tCould be addressed by showing \"synch\" info in UI.\n\t\t\t1GD0ANF: ITPDUI:ALL - CRC\u0027s and in synch\n\nTM (5/23/2001 14:16:55)\n\tI just got this behaviour when adding this line:\n\n\t\t\t\tString sourceName\u003d frame.getSourceName();\n\n\tto BuildPathSourceLocator.getSourceElement(IStackFrame stackFrame).\n\n\tDo we understand why I\u0027m not getting HCR in this case?\n\nDW (8/3/01 9:07:21 AM)\n\tPropose to a IHotSwapListener service to the Java debug mdoel, reporting\n\tfailures to registered clients.\n\t\t- public void hotSwapFailed(IJavaDebugTarget target, String[] classNames, DebugException exception)",
+    "IJavaHotCodeReplaceListener created. JavaHotCodeReplaceManager maintains a list\nof these listeners and notifies them of the success/failure of HCR attempts.",
+    "The debug view now displays stack frames, threads, and debug targets as out of\nsynch when HCR fails as part of \"Bug 1558 - Feature: CRC\u0027s and in synch\"\n\nThe IJavaHotCodeReplaceListener mechanism will be used to notify the JavaDebugUI\nof failures. The JavaDebugUI will then pop up a dialog informing the user that\nthe HCR failed. The dialog should allow the option to \"Never inform me of HCR\nfailures again.\"",
+    "*** Bug 1739 has been marked as a duplicate of this bug. ***",
+    "This is a feature and is not deemed critical for Dec 07 stable build.",
+    "HCR failure notification dialog implemented.",
+    "Reassigning for verification.",
+    "Please verify.",
+    "Re-openned. The API for \"add HCR listener\" cannot be on an internal class. The \nAPI has to be on \"JDIDebugModel\" which is public (which will delegate to the \ninternal class \"JDIDebugPlugin\".",
+    "Fixed.",
+    "Please verify.",
+    "I tried two things:\n(1) When using a target that does not support hot swap, there was no warning \n(this is arguable).\n(2) When I introduced a syntax error, there was no warning, and the target \nstill showed as in-synch",
+    "Re-openning.\n",
+    "#1 implemented - notification of no VM HCR support\n#2 is a duplicate of Bug 1729 - HCR with compilation error",
+    "Please verify",
+    "Verified."
+  ],
+  "commentCreationDates": [
+    "2001-10-11T04:15:28+02:00",
+    "2001-11-13T16:43:09+01:00",
+    "2001-12-04T15:34:22+01:00",
+    "2001-12-04T17:18:28+01:00",
+    "2001-12-04T17:19:46+01:00",
+    "2001-12-12T23:26:09+01:00",
+    "2001-12-12T23:26:38+01:00",
+    "2001-12-12T23:26:51+01:00",
+    "2001-12-13T15:07:41+01:00",
+    "2001-12-13T19:14:43+01:00",
+    "2001-12-13T19:15:01+01:00",
+    "2001-12-13T20:17:49+01:00",
+    "2001-12-13T20:51:38+01:00",
+    "2002-01-07T21:26:49+01:00",
+    "2002-01-07T21:27:04+01:00",
+    "2002-01-14T22:16:15+01:00"
+  ],
+  "traces": [
+    {
+      "exceptionType": "org.eclipse.debug.core.DebugException",
+      "message": "Hot code replace failed.",
+      "elements": [
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.JDIDebugElement.targetRequestFailed",
+          "source": "JDIDebugElement.java:284"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.JDIDebugTarget.typesHaveChanged",
+          "source": "JDIDebugTarget.java:478"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.JavaHotCodeReplaceManager.notify",
+          "source": "JavaHotCodeReplaceManager.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.debug.core.JavaHotCodeReplaceManager.resourceChanged",
+          "source": "JavaHotCodeReplaceManager.java:108"
+        },
+        {
+          "method": "org.eclipse.core.internal.events.NotificationManager$1.run",
+          "source": "NotificationManager.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.core.internal.runtime.InternalPlatform.run",
+          "source": "InternalPlatform.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.core.runtime.Platform.run",
+          "source": "Platform.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.core.internal.events.NotificationManager.notify",
+          "source": "NotificationManager.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.core.internal.events.NotificationManager.broadcastChanges",
+          "source": "NotificationManager.java:34"
+        },
+        {
+          "method": "org.eclipse.core.internal.events.NotificationManager.broadcastChanges",
+          "source": "NotificationManager.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.core.internal.resources.Workspace.broadcastChanges",
+          "source": "Workspace.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.core.internal.resources.Workspace.endOperation",
+          "source": "Workspace.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.core.internal.resources.Workspace.run",
+          "source": "Workspace.java:1092"
+        },
+        {
+          "method": "org.eclipse.ui.actions.WorkspaceModifyOperation.run",
+          "source": "WorkspaceModifyOperation.java:79"
+        },
+        {
+          "method": "org.eclipse.ui.texteditor.AbstractTextEditor.doSave",
+          "source": "AbstractTextEditor.java:486"
+        },
+        {
+          "method": "org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor.doSave",
+          "source": "CompilationUnitEditor.java:190"
+        },
+        {
+          "method": "org.eclipse.ui.internal.EditorManager.saveEditor",
+          "source": "EditorManager.java:677"
+        },
+        {
+          "method": "org.eclipse.ui.internal.WorkbenchPage.saveEditor",
+          "source": "WorkbenchPage.java:859"
+        },
+        {
+          "method": "org.eclipse.ui.internal.SaveAction.run",
+          "source": "SaveAction.java:33"
+        },
+        {
+          "method": "org.eclipse.jface.action.ActionContributionItem.handleWidgetSelection",
+          "source": "ActionContributionItem.java:366"
+        },
+        {
+          "method": "org.eclipse.jface.action.ActionContributionItem.handleWidgetEvent",
+          "source": "ActionContributionItem.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.jface.action.ActionContributionItem$ActionListener.handleEvent",
+          "source": "ActionContributionItem.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.EventTable.sendEvent",
+          "source": "EventTable.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Widget.notifyListeners",
+          "source": "Widget.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.runDeferredEvents",
+          "source": "Display.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.readAndDispatch",
+          "source": "Display.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.runEventLoop",
+          "source": "Workbench.java, Compiled Code"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.run",
+          "source": "Workbench.java:554"
+        },
+        {
+          "method": "org.eclipse.core.internal.boot.InternalBootLoader.run",
+          "source": "InternalBootLoader.java:825"
+        },
+        {
+          "method": "org.eclipse.core.boot.BootLoader.run",
+          "source": "BootLoader.java:280"
+        },
+        {
+          "method": "java.lang.reflect.Method.invoke",
+          "source": "Native Method"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.basicRun",
+          "source": "Main.java:66"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.run",
+          "source": "Main.java:314"
+        },
+        {
+          "method": "org.eclipse.core.launcher.UIMain.main",
+          "source": "UIMain.java:46"
+        }
+      ],
+      "number": 0,
+      "commentIndex": 0,
+      "bugId": "1565",
+      "date": "2001-10-11T04:15:28+02:00",
+      "product": "JDT",
+      "component": "Debug",
+      "severity": "enhancement"
+    }
+  ],
+  "groupId": "1565",
+  "bugId": "1565",
+  "date": "2001-10-11T04:15:28+02:00",
+  "product": "JDT",
+  "component": "Debug",
+  "severity": "enhancement"
+}

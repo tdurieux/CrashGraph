@@ -1,0 +1,317 @@
+{
+  "comments": [
+    "There are two problems here:\nproblem 1:\n- ran target eclipse under debugger (also a 202a install, plus changes to org.eclipse.ui)\n- set breakpoint in Action.run() (actually it was in a new method run(Event), but this should reproduce it)\n- in Java perspective in target eclipse, hit Create a Java Project button on toolbar\n- breakpoint was hit (in WWinPluginAction(PluginAction).run(), so it was showing source for PluginAction.java).\n- stepped through it until it called the delegate (delegate.run(this))\n- stack frame was added: OpenProjectWizardAction(AbstractOpenWizardAction).run(IAction)\n- source did not change: still showing PluginAction.java\n- Open On / Declaring Type or Receiving Type had no effect, either on this stack frame or previous one, but did on earlier ones\n\nproblem 2:\n- tried clicking down in lower stack frames, in rapid succession to see if other frames were OK\n- got a \"Failed to execute runnable\" error dialog\n- log had:\nLog: Thu Oct 04 11:21:04 EDT 2001\n1 org.eclipse.core.resources 4 Unhandled exception caught in event loop.\nLog: Thu Oct 04 11:21:04 EDT 2001\n4 org.eclipse.ui 0 Failed to execute runnable\norg.eclipse.swt.SWTException: Failed to execute runnable\n\tat org.eclipse.swt.SWT.error(SWT.java:1817)\n\tat org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Display.readAndDispatch(Display.java(Compiled Code))\n\tat org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java(Compiled Code))\n\tat org.eclipse.ui.internal.Workbench.run(Workbench.java:658)\n\tat org.eclipse.core.internal.boot.InternalBootLoader.run(InternalBootLoader.java:820)\n\tat org.eclipse.core.boot.BootLoader.run(BootLoader.java:285)\n\tat java.lang.reflect.Method.invoke(Native Method)\n\tat org.eclipse.core.launcher.Main.basicRun(Main.java:151)\n\tat org.eclipse.core.launcher.Main.run(Main.java:433)\n\tat org.eclipse.core.launcher.Main.main(Main.java:306)\nLog: Thu Oct 04 11:21:04 EDT 2001\n4 org.eclipse.core.runtime 0 Unhandled exception caught in event loop.\norg.eclipse.swt.SWTException: Failed to execute runnable\n\tat org.eclipse.swt.SWT.error(SWT.java:1817)\n\tat org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Display.readAndDispatch(Display.java(Compiled Code))\n\tat org.eclipse.jface.window.Window.runEventLoop(Window.java(Compiled Code))\n\tat org.eclipse.jface.window.Window.open(Window.java:523)\n\tat org.eclipse.jface.dialogs.MessageDialog.openError(MessageDialog.java:318)\n\tat org.eclipse.ui.internal.Workbench.handleExceptionInEventLoop(Workbench.java:362)\n\tat org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java(Compiled Code))\n\tat org.eclipse.ui.internal.Workbench.run(Workbench.java:658)\n\tat org.eclipse.core.internal.boot.InternalBootLoader.run(InternalBootLoader.java:820)\n\tat org.eclipse.core.boot.BootLoader.run(BootLoader.java:285)\n\tat java.lang.reflect.Method.invoke(Native Method)\n\tat org.eclipse.core.launcher.Main.basicRun(Main.java:151)\n\tat org.eclipse.core.launcher.Main.run(Main.java:433)\n\tat org.eclipse.core.launcher.Main.main(Main.java:306)\nLog: Thu Oct 04 11:21:04 EDT 2001\n4 org.eclipse.core.runtime 0 Failed to execute runnable\norg.eclipse.swt.SWTException: Failed to execute runnable\n\tat org.eclipse.swt.SWT.error(SWT.java:1817)\n\tat org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java(Compiled Code))\n\tat org.eclipse.swt.widgets.Display.readAndDispatch(Display.java(Compiled Code))\n\tat org.eclipse.jface.window.Window.runEventLoop(Window.java(Compiled Code))\n\tat org.eclipse.jface.window.Window.open(Window.java:523)\n\tat org.eclipse.jface.dialogs.MessageDialog.openError(MessageDialog.java:318)\n\tat org.eclipse.ui.internal.Workbench.handleExceptionInEventLoop(Workbench.java:362)\n\tat org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java(Compiled Code))\n\tat org.eclipse.ui.internal.Workbench.run(Workbench.java:658)\n\tat org.eclipse.core.internal.boot.InternalBootLoader.run(InternalBootLoader.java:820)\n\tat org.eclipse.core.boot.BootLoader.run(BootLoader.java:285)\n\tat java.lang.reflect.Method.invoke(Native Method)\n\tat org.eclipse.core.launcher.Main.basicRun(Main.java:151)\n\tat org.eclipse.core.launcher.Main.run(Main.java:433)\n\tat org.eclipse.core.launcher.Main.main(Main.java:306)\n\nThis seems to indicate a threading problem.\n\nNOTES:",
+    "PRODUCT VERSION:\n202a\n\n",
+    "I could not reproduce problem #1.\n\nProblem #2 was reproducable by rapidly clicking between stack frames that are \nfrom different compilation units (resulting in JavaEditors opening and closing \nrapidly).\n\nThe failed runnable:\nUnhandled exception caught in event loop.\nReason:\nFailed to execute runnable (java.lang.NullPointerException)\njava.lang.NullPointerException\n        at org.eclipse.ui.texteditor.AbstractTextEditor.getCursorPosition(Abstra\nctTextEditor.java:2172)\n        at org.eclipse.ui.texteditor.AbstractTextEditor.updateStatusField(Abstra\nctTextEditor.java:2150)\n        at org.eclipse.ui.texteditor.AbstractTextEditor.handleCursorPositionChan\nged(AbstractTextEditor.java:2130)\n        at org.eclipse.ui.texteditor.AbstractTextEditor$5.run(AbstractTextEditor\n.java:779)\n        at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:29)\n        at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.ja\nva:93)\n        at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:1345)\n        at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:1173)\n        at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:781)\n        at org.eclipse.ui.internal.Workbench.run(Workbench.java:764)\n        at org.eclipse.core.internal.boot.InternalBootLoader.run(InternalBootLoa\nder.java:820)\n        at org.eclipse.core.boot.BootLoader.run(BootLoader.java:285)\n        at java.lang.reflect.Method.invoke(Native Method)\n        at org.eclipse.core.launcher.Main.basicRun(Main.java:151)\n        at org.eclipse.core.launcher.Main.run(Main.java:502)\n        at org.eclipse.core.launcher.Main.main(Main.java:362)\n\nLooks like the AbstractTextEditor is attempting a runnable after it is disposed.\nMoving to Platform UI.",
+    "Kai, could you please take a look at this.",
+    "This is high priority for the debug team.\nIt causes eclipse to crash in such a way that metadata corrupted and \nunrecoverable.\n",
+    "Introduced guard code for all async exec. Build \u003e 20011204."
+  ],
+  "commentCreationDates": [
+    "2001-10-11T04:18:40+02:00",
+    "2001-10-24T12:39:49+02:00",
+    "2001-11-30T17:22:09+01:00",
+    "2001-11-30T19:11:46+01:00",
+    "2001-11-30T20:20:24+01:00",
+    "2001-12-03T11:42:02+01:00"
+  ],
+  "traces": [
+    {
+      "exceptionType": "org.eclipse.swt.SWTException",
+      "message": "Failed to execute runnable",
+      "elements": [
+        {
+          "method": "org.eclipse.swt.SWT.error",
+          "source": "SWT.java:1817"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Synchronizer.runAsyncMessages",
+          "source": "Synchronizer.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.runAsyncMessages",
+          "source": "Display.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.readAndDispatch",
+          "source": "Display.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.runEventLoop",
+          "source": "Workbench.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.run",
+          "source": "Workbench.java:658"
+        },
+        {
+          "method": "org.eclipse.core.internal.boot.InternalBootLoader.run",
+          "source": "InternalBootLoader.java:820"
+        },
+        {
+          "method": "org.eclipse.core.boot.BootLoader.run",
+          "source": "BootLoader.java:285"
+        },
+        {
+          "method": "java.lang.reflect.Method.invoke",
+          "source": "Native Method"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.basicRun",
+          "source": "Main.java:151"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.run",
+          "source": "Main.java:433"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.main",
+          "source": "Main.java:306"
+        }
+      ],
+      "number": 0,
+      "commentIndex": 0,
+      "bugId": "1749",
+      "date": "2001-10-11T04:18:40+02:00",
+      "product": "Platform",
+      "component": "UI",
+      "severity": "critical"
+    },
+    {
+      "exceptionType": "org.eclipse.swt.SWTException",
+      "message": "Failed to execute runnable",
+      "elements": [
+        {
+          "method": "org.eclipse.swt.SWT.error",
+          "source": "SWT.java:1817"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Synchronizer.runAsyncMessages",
+          "source": "Synchronizer.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.runAsyncMessages",
+          "source": "Display.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.readAndDispatch",
+          "source": "Display.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.jface.window.Window.runEventLoop",
+          "source": "Window.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.jface.window.Window.open",
+          "source": "Window.java:523"
+        },
+        {
+          "method": "org.eclipse.jface.dialogs.MessageDialog.openError",
+          "source": "MessageDialog.java:318"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.handleExceptionInEventLoop",
+          "source": "Workbench.java:362"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.runEventLoop",
+          "source": "Workbench.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.run",
+          "source": "Workbench.java:658"
+        },
+        {
+          "method": "org.eclipse.core.internal.boot.InternalBootLoader.run",
+          "source": "InternalBootLoader.java:820"
+        },
+        {
+          "method": "org.eclipse.core.boot.BootLoader.run",
+          "source": "BootLoader.java:285"
+        },
+        {
+          "method": "java.lang.reflect.Method.invoke",
+          "source": "Native Method"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.basicRun",
+          "source": "Main.java:151"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.run",
+          "source": "Main.java:433"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.main",
+          "source": "Main.java:306"
+        }
+      ],
+      "number": 1,
+      "commentIndex": 0,
+      "bugId": "1749",
+      "date": "2001-10-11T04:18:40+02:00",
+      "product": "Platform",
+      "component": "UI",
+      "severity": "critical"
+    },
+    {
+      "exceptionType": "org.eclipse.swt.SWTException",
+      "message": "Failed to execute runnable",
+      "elements": [
+        {
+          "method": "org.eclipse.swt.SWT.error",
+          "source": "SWT.java:1817"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Synchronizer.runAsyncMessages",
+          "source": "Synchronizer.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.runAsyncMessages",
+          "source": "Display.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.readAndDispatch",
+          "source": "Display.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.jface.window.Window.runEventLoop",
+          "source": "Window.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.jface.window.Window.open",
+          "source": "Window.java:523"
+        },
+        {
+          "method": "org.eclipse.jface.dialogs.MessageDialog.openError",
+          "source": "MessageDialog.java:318"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.handleExceptionInEventLoop",
+          "source": "Workbench.java:362"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.runEventLoop",
+          "source": "Workbench.java(Compiled Code)"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.run",
+          "source": "Workbench.java:658"
+        },
+        {
+          "method": "org.eclipse.core.internal.boot.InternalBootLoader.run",
+          "source": "InternalBootLoader.java:820"
+        },
+        {
+          "method": "org.eclipse.core.boot.BootLoader.run",
+          "source": "BootLoader.java:285"
+        },
+        {
+          "method": "java.lang.reflect.Method.invoke",
+          "source": "Native Method"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.basicRun",
+          "source": "Main.java:151"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.run",
+          "source": "Main.java:433"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.main",
+          "source": "Main.java:306"
+        }
+      ],
+      "number": 2,
+      "commentIndex": 0,
+      "bugId": "1749",
+      "date": "2001-10-11T04:18:40+02:00",
+      "product": "Platform",
+      "component": "UI",
+      "severity": "critical"
+    },
+    {
+      "exceptionType": "java.lang.NullPointerException",
+      "elements": [
+        {
+          "method": "org.eclipse.ui.texteditor.AbstractTextEditor.getCursorPosition",
+          "source": "Abstra ctTextEditor.java:2172"
+        },
+        {
+          "method": "org.eclipse.ui.texteditor.AbstractTextEditor.updateStatusField",
+          "source": "Abstra ctTextEditor.java:2150"
+        },
+        {
+          "method": "org.eclipse.ui.texteditor.AbstractTextEditor.handleCursorPositionChanged",
+          "source": "AbstractTextEditor.java:2130"
+        },
+        {
+          "method": "org.eclipse.ui.texteditor.AbstractTextEditor$5.run",
+          "source": "AbstractTextEditor .java:779"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.RunnableLock.run",
+          "source": "RunnableLock.java:29"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Synchronizer.runAsyncMessages",
+          "source": "Synchronizer.ja va:93"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.runAsyncMessages",
+          "source": "Display.java:1345"
+        },
+        {
+          "method": "org.eclipse.swt.widgets.Display.readAndDispatch",
+          "source": "Display.java:1173"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.runEventLoop",
+          "source": "Workbench.java:781"
+        },
+        {
+          "method": "org.eclipse.ui.internal.Workbench.run",
+          "source": "Workbench.java:764"
+        },
+        {
+          "method": "org.eclipse.core.internal.boot.InternalBootLoader.run",
+          "source": "InternalBootLoa der.java:820"
+        },
+        {
+          "method": "org.eclipse.core.boot.BootLoader.run",
+          "source": "BootLoader.java:285"
+        },
+        {
+          "method": "java.lang.reflect.Method.invoke",
+          "source": "Native Method"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.basicRun",
+          "source": "Main.java:151"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.run",
+          "source": "Main.java:502"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.main",
+          "source": "Main.java:362"
+        }
+      ],
+      "number": 3,
+      "commentIndex": 2,
+      "bugId": "1749",
+      "date": "2001-11-30T17:22:09+01:00",
+      "product": "Platform",
+      "component": "UI",
+      "severity": "critical"
+    }
+  ],
+  "groupId": "1749",
+  "bugId": "1749",
+  "date": "2001-10-11T04:18:40+02:00",
+  "product": "Platform",
+  "component": "UI",
+  "severity": "critical"
+}
