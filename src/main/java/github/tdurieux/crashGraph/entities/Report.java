@@ -1,8 +1,12 @@
 package github.tdurieux.crashGraph.entities;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Date;
 import java.util.List;
 
+import github.tdurieux.crashGraph.parser.ReportParse;
 import github.tdurieux.graph.Node;
 
 public class Report extends Node {
@@ -17,6 +21,11 @@ public class Report extends Node {
 	private String product;
 	private String component;
 	private String severity;
+	
+	public static Report openReport(String filename) throws IOException {
+		File file = new File(filename);
+		return ReportParse.parse(Files.readAllBytes(file.toPath()));
+	}
 
 	public int getGroupId() {
 		return groupId;
