@@ -124,4 +124,14 @@ public abstract class Graph<T extends Node<?>> {
 		}
 		return edges;
 	}
+	
+	public String toDot() {
+		String output = "digraph G {\n";
+		for (T node : this.graph.keySet()) {
+			for (T child : this.graph.get(node)) {
+				output += "\t\"" + node.getName() + "\" -> \"" + child.getName() + "\";\n";
+			}
+		}
+		return output + "}\n";
+	}
 }
