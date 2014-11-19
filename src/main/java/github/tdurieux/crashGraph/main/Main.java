@@ -10,7 +10,7 @@ public class Main {
 		Report report1 = Report.openReport("src/main/resource/reports/1755.json");
 		Report report2 = Report.openReport("src/main/resource/reports/1759.json");
 		
-		double similarity = report1.getTraces().get(0).similarity(report2.getTraces().get(0));
+		double similarity = report1.getLastTrace().similarity(report2.getLastTrace());
 		System.out.println("Similarity: " + similarity);
 	}
 }

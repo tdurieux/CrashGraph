@@ -102,6 +102,10 @@ public class Report extends Node {
 	public List<Trace> getTraces() {
 		return traces;
 	}
+	
+	public Trace getLastTrace() {
+		return traces.get(traces.size()-1);
+	}
 
 	public void setTraces(List<Trace> traces) {
 		this.traces = traces;
