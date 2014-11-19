@@ -97,16 +97,9 @@ public class Method extends Node<Method> {
 		}
 		Method m2 = (Method) obj;
 
-		return (this.getFile() + this.getLine()).equals((m2.getFile() + m2
-				.getLine()));
+		if(this.line != m2.line) {
+			return false;
+		}
+		return this.qualifiedName.equals(m2.qualifiedName);
 	}
-
-	@Override
-	protected Object clone() {
-		Method ouput = new Method(this.simpleName, this.qualifiedName,
-				this.file, this.line);
-
-		return ouput;
-	}
-
 }
