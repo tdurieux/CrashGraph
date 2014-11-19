@@ -18,6 +18,8 @@ public class Method extends Node<Method> {
 
 	private int line;
 
+	private boolean isCompiled;
+
 	public Method() {
 
 	}
@@ -65,9 +67,14 @@ public class Method extends Node<Method> {
 	public void setMethod(String m) {
 		String[] split = m.split("\\.");
 		this.qualifiedName = m;
+		this.setName(qualifiedName);
 	}
 
 	public void setSource(String source) {
+		if (source.contains("(Compiled Code)")) {
+			this.isCompiled = true;
+			source = source.replaceAll("\\(Compiled Code\\)", "");
+		}
 		String[] split = source.split(":");
 		this.file = split[0];
 		if (split.length > 1) {
@@ -87,7 +94,7 @@ public class Method extends Node<Method> {
 
 	@Override
 	public int hashCode() {
-		return (this.file + this.line).hashCode();
+		return this.qualifiedName.hashCode();
 	}
 
 	@Override
@@ -97,7 +104,12 @@ public class Method extends Node<Method> {
 		}
 		Method m2 = (Method) obj;
 
-		if(this.line != m2.line) {
+		if (m2.isCompiled || this.isCompiled) {
+			return this.qualifiedName.equals(m2.qualifiedName)
+					&& m2.file.equals(this.file);
+		}
+
+		if (this.line != m2.line) {
 			return false;
 		}
 		return this.qualifiedName.equals(m2.qualifiedName);
