@@ -17,7 +17,7 @@ import com.google.common.collect.Multimap;
  *            the node type
  */
 public abstract class Graph<T extends Node> {
-	private Multimap<T, T> graph;
+	protected Multimap<T, T> graph;
 
 	public Graph() {
 		this.graph = HashMultimap.create();
@@ -94,6 +94,10 @@ public abstract class Graph<T extends Node> {
 
 	public Collection<T> getEdges(T node) {
 		return graph.get(node);
+	}
+	
+	public Multimap<T, T> getEdges() {
+		return graph;
 	}
 	
 	public String toDot() {

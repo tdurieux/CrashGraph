@@ -23,4 +23,12 @@ public class EntitiesTest {
 		Report report1759 = Report.openReport("src/main/resource/reports/1759.json");
 		assertEquals(0.55, report1755.getLastTrace().similarity(report1759.getLastTrace()),0.01);
 	}
+	
+	@Test
+	public void creation_bucket_with_1524() throws IOException {
+		Report report1524 = Report.openReport("src/main/resource/reports/1524.json");
+		Bucket bucket1524 = new Bucket(report1524);
+		assertEquals(1, bucket1524.getReportIds().size());
+		assertTrue(bucket1524.getReportIds().contains(1524));
+	}
 }
