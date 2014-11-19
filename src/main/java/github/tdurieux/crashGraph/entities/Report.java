@@ -5,7 +5,7 @@ import java.util.List;
 
 import github.tdurieux.graph.Node;
 
-public class Report extends Node<Report> {
+public class Report extends Node {
 
 	private List<String> comments;
 	private List<Trace> traces;

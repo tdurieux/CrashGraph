@@ -13,7 +13,7 @@ import java.util.Map;
  * @param <T>
  *            the node type
  */
-public abstract class Graph<T extends Node<?>> {
+public abstract class Graph<T extends Node> {
 	private Map<T, List<T>> graph;
 
 	public Graph() {

@@ -8,7 +8,7 @@ package github.tdurieux.graph;
  * @param <T>
  *            the node type
  */
-public abstract class Node<T extends Node<?>> {
+public abstract class Node {
 	private String name;
 
 	public String getName() {

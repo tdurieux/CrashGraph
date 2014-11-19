@@ -8,11 +8,9 @@ import github.tdurieux.graph.Node;
  * @author Thomas Durieux
  * 
  */
-public class Method extends Node<Method> {
+public class Method extends Node {
 
 	private String simpleName;
-
-	private String qualifiedName;
 
 	private String file;
 
@@ -27,7 +25,7 @@ public class Method extends Node<Method> {
 	public Method(String simpleName, String qualifiedName, String file, int line) {
 		super();
 		this.simpleName = simpleName;
-		this.qualifiedName = qualifiedName;
+		this.setName(qualifiedName);
 		this.file = file;
 		this.line = line;
 	}
@@ -41,11 +39,11 @@ public class Method extends Node<Method> {
 	}
 
 	public String getQualifiedName() {
-		return qualifiedName;
+		return this.getName();
 	}
 
 	public void setQualifiedName(String qualifiedName) {
-		this.qualifiedName = qualifiedName;
+		this.setName(qualifiedName);
 	}
 
 	public int getLine() {
@@ -66,8 +64,7 @@ public class Method extends Node<Method> {
 
 	public void setMethod(String m) {
 		String[] split = m.split("\\.");
-		this.qualifiedName = m;
-		this.setName(qualifiedName);
+		this.setName(m);
 	}
 
 	public void setSource(String source) {
@@ -94,7 +91,7 @@ public class Method extends Node<Method> {
 
 	@Override
 	public int hashCode() {
-		return this.qualifiedName.hashCode();
+		return this.getQualifiedName().hashCode();
 	}
 
 	@Override
@@ -105,13 +102,13 @@ public class Method extends Node<Method> {
 		Method m2 = (Method) obj;
 
 		if (m2.isCompiled || this.isCompiled) {
-			return this.qualifiedName.equals(m2.qualifiedName)
+			return this.getQualifiedName().equals(m2.getQualifiedName())
 					&& m2.file.equals(this.file);
 		}
 
 		if (this.line != m2.line) {
 			return false;
 		}
-		return this.qualifiedName.equals(m2.qualifiedName);
+		return this.getQualifiedName().equals(m2.getQualifiedName());
 	}
 }
