@@ -54,7 +54,7 @@ public class GraphTest {
 	}
 	
 	@Test
-	public void remove_existing_edge_to_graph() {
+	public void remove_existing_edge_from_graph() {
 		Graph<NodeElement> g = new GraphElement();
 		NodeElement n1 = new NodeElement();
 		NodeElement n2 = new NodeElement();
@@ -67,6 +67,22 @@ public class GraphTest {
 		assertEquals(0, g.getNodes().size());
 	}
 
+	@Test
+	public void remove_existing_edge_with_2_parent_from_graph() {
+		Graph<NodeElement> g = new GraphElement();
+		NodeElement n1 = new NodeElement();
+		NodeElement n2 = new NodeElement();
+		NodeElement n3 = new NodeElement();
+
+		g.addEdge(n1, n2);
+		g.addEdge(n3, n2);
+		
+		g.removeEdge(n1, n2);
+
+		assertEquals(1, g.numberOfEdges());
+		assertEquals(2, g.getNodes().size());
+	}
+	
 	@Test
 	public void intersection_null_graph() {
 		Graph<NodeElement> g1 = new GraphElement();
@@ -210,7 +226,7 @@ public class GraphTest {
 		assertEquals(1/2.0, value, 0);
 	}
 
-	private class NodeElement extends Node<NodeElement> {
+	private class NodeElement extends Node {
 	}
 
 	private class GraphElement extends Graph<NodeElement> {

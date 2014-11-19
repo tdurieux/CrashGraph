@@ -108,9 +108,11 @@ public abstract class Graph<T extends Node> {
 		if (graph.get(node1).size() == 0) {
 			graph.remove(node1);
 		}
-		if (graph.get(node2).size() == 0) {
-			graph.remove(node2);
+		for (List<T> children : graph.values()) {
+			if (children.contains(node2)) 
+				return;
 		}
+		graph.remove(node2);
 	}
 
 	public List<T> getNodes() {
