@@ -129,9 +129,9 @@ public class GraphTest {
 
 		Graph<NodeElement> intersection = g1.intersection(g2);
 		assertEquals(0, intersection.numberOfEdges());
-		assertEquals(1, intersection.getNodes().size());
+		assertEquals(0, intersection.getNodes().size());
 
-		assertTrue("The node n3 is not found in the graph", intersection
+		assertFalse("The node n3 was found in the graph", intersection
 				.getNodes().contains(n3));
 	}
 
