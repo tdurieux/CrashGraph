@@ -47,4 +47,29 @@ public class EntitiesTest {
 		assertEquals(20, reports.size());
 		assertTrue(reports.contains("src/main/resource/reports/1524.json"));
 	}
+	
+	@Test
+	public void creation_bucket_with_1524() {
+		Bucket bucket1524 = new Bucket(report1524);
+		assertEquals(1, bucket1524.getReportIds().size());
+		assertTrue(bucket1524.getReportIds().contains(1524));
+	}
+	
+	@Test
+	public void fit_bucket_1524() {
+		Bucket bucket1524 = new Bucket(report1524);
+		double similarityTreshold = 0.5;
+		assertTrue(bucket1524.fits(report1524,similarityTreshold));
+		assertFalse(bucket1524.fits(report1755,similarityTreshold));
+		assertFalse(bucket1524.fits(report1759,similarityTreshold));
+	}
+
+	@Test
+	public void fit_bucket_1755() {
+		Bucket bucket1755 = new Bucket(report1755);
+		double similarityTreshold = 0.5;
+		assertFalse(bucket1755.fits(report1524,similarityTreshold));
+		assertTrue(bucket1755.fits(report1755,similarityTreshold));
+		assertTrue(bucket1755.fits(report1759,similarityTreshold));
+	}
 }

@@ -23,4 +23,8 @@ public class Bucket extends Graph<Method> {
 	public Set<Integer> getReportIds() {
 		return reportIds;
 	}
+	
+	public boolean fits(Report report, double similarityTreshold) {
+		return similarity(report.getLastTrace()) >= similarityTreshold;
+	}
 }
