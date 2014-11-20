@@ -132,6 +132,29 @@ public class GraphTest {
 		assertTrue("The edge n3-n5 is not found in the graph", intersection
 				.getEdges(n3).contains(n5));
 	}
+	
+	@Test
+	public void union_null_graph() {
+		assertTrue(g1.union(null).isEmpty());
+	}
+
+	@Test
+	public void union_empty_graph() {
+		assertTrue(g1.intersection(g2).isEmpty());
+	}
+
+	@Test
+	public void union_graph() {
+		g1.addEdge(n1, n2);
+		g1.addEdge(n2, n3);
+		g1.addEdge(n3, n5);
+		g2.addEdge(n3, n4);
+		g2.addEdge(n3, n5);
+
+		Graph<NodeElement> union = g1.union(g2);
+		assertEquals(4, union.numberOfEdges());
+		assertEquals(5, union.getNodes().size());
+	}
 
 	@Test
 	public void similarity_empty_graph() {

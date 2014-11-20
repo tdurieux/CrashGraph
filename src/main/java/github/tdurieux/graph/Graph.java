@@ -36,9 +36,29 @@ public abstract class Graph<T extends Node> {
 		if (g2 == null) {
 			return output;
 		}
-		for ( Entry<T, T> edge : graph.entries()) {
-			if(g2.graph.containsEntry(edge.getKey(), edge.getValue())) {
+		for (Entry<T, T> edge : graph.entries()) {
+			if (g2.graph.containsEntry(edge.getKey(), edge.getValue())) {
 				output.addEdge(edge.getKey(), edge.getValue());
+			}
+		}
+		return output;
+	}
+
+	/**
+	 * performs the union between two graph
+	 * 
+	 * @param g2
+	 *            the second graph
+	 * @return the union graph
+	 */
+	public Graph<T> union(Graph<T> g2) {
+		Graph<T> output = this;
+		if (g2 == null) {
+			return output;
+		}
+		for (Entry<T, T> edgesG2 : g2.graph.entries()) {
+			if (!graph.containsEntry(edgesG2.getKey(), edgesG2.getValue())) {
+				output.addEdge(edgesG2.getKey(), edgesG2.getValue());
 			}
 		}
 		return output;
@@ -47,7 +67,7 @@ public abstract class Graph<T extends Node> {
 	public double similarity(Graph<T> g2) {
 		double output = this.intersection(g2).numberOfEdges();
 		double minEdgeSize = Math.min(this.numberOfEdges(), g2.numberOfEdges());
-		if(minEdgeSize == 0) {
+		if (minEdgeSize == 0) {
 			return 0;
 		}
 		output /= minEdgeSize;
@@ -85,7 +105,7 @@ public abstract class Graph<T extends Node> {
 	public void removeEdge(T node1, T node2) {
 		graph.remove(node1, node2);
 	}
-	
+
 	public Set<T> getNodes() {
 		Set<T> Nodes = new HashSet<T>(graph.keySet());
 		Nodes.addAll(graph.values());
@@ -95,15 +115,16 @@ public abstract class Graph<T extends Node> {
 	public Collection<T> getEdges(T node) {
 		return graph.get(node);
 	}
-	
+
 	public Multimap<T, T> getEdges() {
 		return graph;
 	}
-	
+
 	public String toDot() {
 		String output = "digraph G {\n";
-		for ( Entry<T, T> edge : graph.entries()) {
-			output += "\t\"" + edge.getKey().getName() + "\" -> \"" + edge.getValue().getName() + "\";\n";
+		for (Entry<T, T> edge : graph.entries()) {
+			output += "\t\"" + edge.getKey().getName() + "\" -> \""
+					+ edge.getValue().getName() + "\";\n";
 		}
 		return output + "}\n";
 	}
