@@ -6,17 +6,17 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Set;
 
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 public class EntitiesTest {
 
-	private static Report report1524;
-	private static Report report1755;
-	private static Report report1759;
+	private Report report1524;
+	private Report report1755;
+	private Report report1759;
 
-	@BeforeClass
-	public static void setUpClass() throws IOException {
+	@Before
+	public void setUpClass() throws IOException {
 		report1524 = Report.openReport("src/main/resource/reports/1524.json");
 		report1755 = Report.openReport("src/main/resource/reports/1755.json");
 		report1759 = Report.openReport("src/main/resource/reports/1759.json");
@@ -91,6 +91,25 @@ public class EntitiesTest {
 				bucket1755.fits(report1755, similarityTreshold));
 		assertTrue(
 				"The report 1759 does not fit the bucket made from report 1755"
+						+ " with a threshold of " + similarityTreshold,
+				bucket1755.fits(report1759, similarityTreshold));
+	}
+
+	@Test
+	public void add_1759_to_bucket_1755() {
+		Bucket bucket1755 = new Bucket(report1755);
+		bucket1755.add(report1759);
+		double similarityTreshold = 1;
+		assertFalse(
+				"The report 1524 fits the bucket made from report 1755 and 1759"
+						+ " with a threshold of " + similarityTreshold,
+				bucket1755.fits(report1524, similarityTreshold));
+		assertTrue(
+				"The report 1755 does not fit the bucket made from report 1755 and 1759"
+						+ " with a threshold of " + similarityTreshold,
+				bucket1755.fits(report1755, similarityTreshold));
+		assertTrue(
+				"The report 1759 does not fit the bucket made from report 1755 and 1759"
 						+ " with a threshold of " + similarityTreshold,
 				bucket1755.fits(report1759, similarityTreshold));
 	}
