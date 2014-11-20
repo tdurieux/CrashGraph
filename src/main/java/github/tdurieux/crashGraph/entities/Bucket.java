@@ -1,5 +1,6 @@
 package github.tdurieux.crashGraph.entities;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,6 +21,25 @@ public class Bucket extends Graph<Method> {
 		this.reportIds.add(initialReport.getBugId());
 	}
 
+	public static Set<Bucket> createBuckets(String reportDir, double similarityTreshold) throws IOException {
+		Set<Bucket> buckets = new HashSet<>();
+		for (String reportName : Report.getReportNames(reportDir)) {
+			Report report = Report.openReport(reportName);
+			boolean reportBucketed = false;
+			for (Bucket bucket : buckets) {
+				if(bucket.fits(report, similarityTreshold)) {
+					bucket.add(report);
+					reportBucketed = true;
+					break;
+				}
+			}
+			if(!reportBucketed) {
+				buckets.add(new Bucket(report));
+			}
+		}
+		return buckets;
+	}
+	
 	public Set<Integer> getReportIds() {
 		return reportIds;
 	}

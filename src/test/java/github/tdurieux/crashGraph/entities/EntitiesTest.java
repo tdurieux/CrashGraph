@@ -113,4 +113,11 @@ public class EntitiesTest {
 						+ " with a threshold of " + similarityTreshold,
 				bucket1755.fits(report1759, similarityTreshold));
 	}
+	
+	@Test
+	public void bucketing() throws IOException {
+		double similarityTreshold = 0.5;
+		Set<Bucket> buckets = Bucket.createBuckets("src/main/resource/reports/",similarityTreshold);
+		assertEquals(19, buckets.size());
+	}
 }
