@@ -43,7 +43,7 @@ public abstract class Graph<T extends Node> {
 		}
 		return output;
 	}
-
+	
 	/**
 	 * performs the union between two graph
 	 * 

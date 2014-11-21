@@ -115,6 +115,14 @@ public class EntitiesTest {
 	}
 	
 	@Test
+	public void printingBucket() {
+		Bucket bucket = new Bucket(report1524);
+		bucket.add(report1755);
+		bucket.add(report1759);
+		assertEquals("1524.json 1755.json 1759.json ", bucket.toString());
+	}
+	
+	@Test
 	public void bucketing() throws IOException {
 		double similarityTreshold = 0.5;
 		Set<Bucket> buckets = Bucket.createBuckets("src/main/resource/reports/",similarityTreshold);
