@@ -101,7 +101,7 @@ public class Bucket extends Graph<Method> {
         // Add bugId is list of report Id
         reportIds.add(report.getBugId());
         // construct the new bucket graph
-        this.graph = this.union(report.getLastTrace()).getEdges();
+        this.union(report.getLastTrace());
     }
 
     public String toString() {

@@ -1,6 +1,7 @@
 package github.tdurieux.graph;
 
 import static org.junit.Assert.*;
+import github.tdurieux.crashGraph.entities.Method;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -135,7 +136,8 @@ public class GraphTest {
 	
 	@Test
 	public void union_null_graph() {
-		assertTrue(g1.union(null).isEmpty());
+		g1.union(null);
+		assertTrue(g1.isEmpty());
 	}
 
 	@Test
@@ -151,9 +153,9 @@ public class GraphTest {
 		g2.addEdge(n3, n4);
 		g2.addEdge(n3, n5);
 
-		Graph<NodeElement> union = g1.union(g2);
-		assertEquals(4, union.numberOfEdges());
-		assertEquals(5, union.getNodes().size());
+		g1.union(g2);
+		assertEquals(4, g1.numberOfEdges());
+		assertEquals(5, g1.getNodes().size());
 	}
 
 	@Test
