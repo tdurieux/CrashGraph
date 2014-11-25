@@ -1,6 +1,11 @@
 package github.tdurieux.crashGraph.entities;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import github.tdurieux.crashGraph.classifier.Classifier;
+import github.tdurieux.crashGraph.classifier.GraphViewClassifier;
+import github.tdurieux.crashGraph.parser.BucketsParser;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,33 +71,35 @@ public class EntitiesTest {
 	public void fit_bucket_1524() {
 		Bucket bucket1524 = new Bucket(report1524);
 		double similarityTreshold = 0.5;
+		Classifier classifier = new GraphViewClassifier(similarityTreshold);
 		assertTrue(
 				"The report 1524 does not fit the bucket made from this same report"
 						+ " with a threshold of " + similarityTreshold,
-				bucket1524.fits(report1524, similarityTreshold));
+				classifier.isSameBucket(bucket1524, report1524.getLastTrace()));
 		assertFalse("The report 1755 fits the bucket made from report 1524"
 				+ " with a threshold of " + similarityTreshold,
-				bucket1524.fits(report1755, similarityTreshold));
+				classifier.isSameBucket(bucket1524, report1755.getLastTrace()));
 		assertFalse("The report 1759 fits the bucket made from report 1524"
 				+ " with a threshold of " + similarityTreshold,
-				bucket1524.fits(report1759, similarityTreshold));
+				classifier.isSameBucket(bucket1524, report1759.getLastTrace()));
 	}
 
 	@Test
 	public void fit_bucket_1755() {
 		Bucket bucket1755 = new Bucket(report1755);
 		double similarityTreshold = 0.5;
+		Classifier classifier = new GraphViewClassifier(similarityTreshold);
 		assertFalse("The report 1524 fits the bucket made from report 1755"
 				+ " with a threshold of " + similarityTreshold,
-				bucket1755.fits(report1524, similarityTreshold));
+				classifier.isSameBucket(bucket1755, report1524.getLastTrace()));
 		assertTrue(
 				"The report 1755 does not fit the bucket made from this same report"
 						+ " with a threshold of " + similarityTreshold,
-				bucket1755.fits(report1755, similarityTreshold));
+				classifier.isSameBucket(bucket1755, report1755.getLastTrace()));
 		assertTrue(
 				"The report 1759 does not fit the bucket made from report 1755"
 						+ " with a threshold of " + similarityTreshold,
-				bucket1755.fits(report1759, similarityTreshold));
+				classifier.isSameBucket(bucket1755, report1759.getLastTrace()));
 	}
 
 	@Test
@@ -100,32 +107,35 @@ public class EntitiesTest {
 		Bucket bucket1755 = new Bucket(report1755);
 		bucket1755.add(report1759);
 		double similarityTreshold = 1;
+		Classifier classifier = new GraphViewClassifier(similarityTreshold);
 		assertFalse(
 				"The report 1524 fits the bucket made from report 1755 and 1759"
 						+ " with a threshold of " + similarityTreshold,
-				bucket1755.fits(report1524, similarityTreshold));
+				classifier.isSameBucket(bucket1755, report1524.getLastTrace()));
 		assertTrue(
 				"The report 1755 does not fit the bucket made from report 1755 and 1759"
 						+ " with a threshold of " + similarityTreshold,
-				bucket1755.fits(report1755, similarityTreshold));
+				classifier.isSameBucket(bucket1755, report1755.getLastTrace()));
 		assertTrue(
 				"The report 1759 does not fit the bucket made from report 1755 and 1759"
 						+ " with a threshold of " + similarityTreshold,
-				bucket1755.fits(report1759, similarityTreshold));
+				classifier.isSameBucket(bucket1755, report1759.getLastTrace()));
 	}
-	
+
 	@Test
 	public void printingBucket() {
 		Bucket bucket = new Bucket(report1524);
 		bucket.add(report1755);
 		bucket.add(report1759);
-		assertEquals("1524.json 1755.json 1759.json ", bucket.toString());
+		assertEquals("1524 1755 1759 ", bucket.toString());
 	}
-	
+
 	@Test
 	public void bucketing() throws IOException {
 		double similarityTreshold = 0.5;
-		Set<Bucket> buckets = Bucket.createBuckets("src/main/resource/reports/",similarityTreshold);
+		Classifier classifier = new GraphViewClassifier(similarityTreshold);
+		Buckets buckets = BucketsParser.parse("src/main/resource/reports/",
+				classifier);
 		assertEquals(19, buckets.size());
 	}
 }

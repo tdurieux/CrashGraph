@@ -15,11 +15,11 @@
 			<artifactId>fastjson</artifactId>
 			<version>1.1.41</version>
 		</dependency>
-	    <dependency>
-	        <groupId>com.google.guava</groupId>
-	        <artifactId>guava</artifactId>
-	        <version>18.0</version>
-	    </dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>18.0</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -38,6 +38,10 @@
 				<version>1.2.1</version>
 				<configuration>
 					<mainClass>github.tdurieux.crashGraph.main.Main</mainClass>
+					<arguments>
+						<argument>src/main/resource/reports</argument>
+						<argument>0.5</argument>
+					</arguments>
 				</configuration>
 			</plugin>
 			<plugin>

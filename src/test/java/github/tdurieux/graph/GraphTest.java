@@ -1,7 +1,8 @@
 package github.tdurieux.graph;
 
-import static org.junit.Assert.*;
-import github.tdurieux.crashGraph.entities.Method;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +16,7 @@ public class GraphTest {
 	private NodeElement n3;
 	private NodeElement n4;
 	private NodeElement n5;
-	
+
 	@Before
 	public void setUp() {
 		g1 = new GraphElement();
@@ -26,7 +27,7 @@ public class GraphTest {
 		n4 = new NodeElement();
 		n5 = new NodeElement();
 	}
-	
+
 	@Test
 	public void creation_empty_graph() {
 		assertEquals(0, g1.numberOfEdges());
@@ -61,11 +62,11 @@ public class GraphTest {
 		assertEquals(1, g1.numberOfEdges());
 		assertEquals(2, g1.getNodes().size());
 	}
-	
+
 	@Test
 	public void remove_existing_edge_from_graph() {
 		g1.addEdge(n1, n2);
-		
+
 		g1.removeEdge(n1, n2);
 
 		assertEquals(0, g1.numberOfEdges());
@@ -76,13 +77,13 @@ public class GraphTest {
 	public void remove_existing_edge_with_2_parent_from_graph() {
 		g1.addEdge(n1, n2);
 		g1.addEdge(n3, n2);
-		
+
 		g1.removeEdge(n1, n2);
 
 		assertEquals(1, g1.numberOfEdges());
 		assertEquals(2, g1.getNodes().size());
 	}
-	
+
 	@Test
 	public void intersection_null_graph() {
 		assertTrue(g1.intersection(null).isEmpty());
@@ -133,7 +134,7 @@ public class GraphTest {
 		assertTrue("The edge n3-n5 is not found in the graph", intersection
 				.getEdges(n3).contains(n5));
 	}
-	
+
 	@Test
 	public void union_null_graph() {
 		g1.union(null);
@@ -172,7 +173,7 @@ public class GraphTest {
 
 		assertEquals(1.0, value, 0);
 	}
-	
+
 	@Test
 	public void similarity_distinct_graph() {
 		g1.addEdge(n1, n2);
@@ -181,7 +182,7 @@ public class GraphTest {
 
 		assertEquals(0, value, 0);
 	}
-	
+
 	@Test
 	public void similarity_graph() {
 		g1.addEdge(n1, n2);
@@ -189,10 +190,10 @@ public class GraphTest {
 		g1.addEdge(n3, n5);
 		g2.addEdge(n3, n4);
 		g2.addEdge(n3, n5);
-		
+
 		double value = g1.similarity(g2);
 
-		assertEquals(1/2.0, value, 0);
+		assertEquals(1 / 2.0, value, 0);
 	}
 
 	private class NodeElement extends Node {
