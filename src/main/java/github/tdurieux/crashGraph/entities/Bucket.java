@@ -17,10 +17,16 @@ public class Bucket extends Graph<Method> {
 	 * Set of crash reports
 	 */
 	Set<Integer> reportIds;
+	
+	/**
+	 * Set of group Id's, which denote the manually sorted buckets
+	 */
+	Set<Integer> groupIds;
 
 	public Bucket(Report initialReport) {
 		this.graph = initialReport.getLastTrace().getEdges();
 		this.reportIds = new HashSet<Integer>();
+		this.groupIds = new HashSet<Integer>();
 		this.reportIds.add(initialReport.getBugId());
 	}
 
@@ -36,11 +42,21 @@ public class Bucket extends Graph<Method> {
 	public void add(Report report) {
 		// Add bugId is list of report Id
 		reportIds.add(report.getBugId());
+		// Add groupId to identify how many different bugs end up in the buckets
+		groupIds.add(report.getGroupId());
 		// construct the new bucket graph
 		this.union(report.getLastTrace());
 	}
 
-	public String toString() {
+	public int numBugs() {
+		return groupIds.size();
+	}
+	
+	public boolean containsBug(int groupId) {
+		return groupIds.contains(groupId);
+	}
+	
+ 	public String toString() {
 		String output = "";
 		for (Integer integer : reportIds) {
 			output += integer + " ";

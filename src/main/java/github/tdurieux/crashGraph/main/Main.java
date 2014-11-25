@@ -3,6 +3,7 @@ package github.tdurieux.crashGraph.main;
 import github.tdurieux.crashGraph.classifier.Classifier;
 import github.tdurieux.crashGraph.classifier.GraphViewClassifier;
 import github.tdurieux.crashGraph.entities.Buckets;
+import github.tdurieux.crashGraph.entities.Validator;
 import github.tdurieux.crashGraph.parser.BucketsParser;
 
 import java.io.IOException;
@@ -19,10 +20,16 @@ public class Main {
 		try {
 			Classifier classifier = new GraphViewClassifier(
 					Double.parseDouble(args[1]));
-			Buckets buckets = BucketsParser.parse(args[0], classifier);
+			Validator valReport = new Validator();
+			Buckets buckets = BucketsParser.parse(args[0], classifier,
+					valReport);
 
 			System.out.println(buckets.size() + " buckets where created from: "
-					+ buckets.numReports() + " reports.");
+					+ buckets.numReports() + " reports. There where "
+					+ valReport.getNumFalseNegatives()
+					+ " false negatives and "
+					+ valReport.getNumFalsePositives()
+					+ " false positives.");
 			buckets.printBuckets("buckets.txt");
 		} catch (NumberFormatException e) {
 			System.out

@@ -4,6 +4,7 @@ import github.tdurieux.crashGraph.classifier.Classifier;
 import github.tdurieux.crashGraph.entities.Bucket;
 import github.tdurieux.crashGraph.entities.Buckets;
 import github.tdurieux.crashGraph.entities.Report;
+import github.tdurieux.crashGraph.entities.Validator;
 
 import java.io.File;
 import java.util.logging.Level;
@@ -12,7 +13,7 @@ import java.util.logging.Logger;
 public class BucketsParser {
 	private static Logger log = Logger.getLogger(BucketsParser.class.getName());
 
-	public static Buckets parse(String foldername, Classifier classifier) {
+	public static Buckets parse(String foldername, Classifier classifier, Validator valReport) {
 		Buckets buckets = new Buckets();
 
 		File folder = new File(foldername);
@@ -30,10 +31,12 @@ public class BucketsParser {
 			boolean reportBucketed = false;
 			for (Bucket bucket : buckets) {
 				if (classifier.isSameBucket(bucket, report.getLastTrace())) {
+					valReport.validate(true, bucket, report);
 					bucket.add(report);
 					reportBucketed = true;
 					break;
 				}
+				valReport.validate(false, bucket, report);
 			}
 			if (!reportBucketed) {
 				log.log(Level.FINER, "Creating a new Bucket.");

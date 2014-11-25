@@ -121,6 +121,14 @@ public class EntitiesTest {
 						+ " with a threshold of " + similarityTreshold,
 				classifier.isSameBucket(bucket1755, report1759.getLastTrace()));
 	}
+	
+	@Test
+	public void count_bugs_in_bucket() {
+		Bucket bucket1755 = new Bucket(report1755);
+		bucket1755.add(report1524);
+		bucket1755.add(report1759);
+		assertEquals(2, bucket1755.numBugs());
+	}
 
 	@Test
 	public void printingBucket() {
@@ -134,8 +142,19 @@ public class EntitiesTest {
 	public void bucketing() throws IOException {
 		double similarityTreshold = 0.5;
 		Classifier classifier = new GraphViewClassifier(similarityTreshold);
+		Validator valReport = new Validator();
 		Buckets buckets = BucketsParser.parse("src/main/resource/reports/",
-				classifier);
+				classifier, valReport);
 		assertEquals(19, buckets.size());
+	}
+	
+	@Test
+	public void validationTester() {
+		Validator valReport = new Validator();
+		valReport.increaseNumFalseNegatives();
+		valReport.increaseNumFalseNegatives();
+		valReport.increaseNumFalsePositives();
+		assertEquals(2, valReport.getNumFalseNegatives());
+		assertEquals(1, valReport.getNumFalsePositives());
 	}
 }
