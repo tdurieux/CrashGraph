@@ -3,7 +3,7 @@ package github.tdurieux.crashGraph.entities;
 import github.tdurieux.graph.Node;
 
 /**
- * is a method of the stack trace
+ * A method of the stack trace
  * 
  * @author Thomas Durieux
  * 

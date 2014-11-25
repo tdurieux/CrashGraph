@@ -12,6 +12,10 @@ import java.util.Set;
 import github.tdurieux.crashGraph.parser.ReportParse;
 import github.tdurieux.graph.Node;
 
+/**
+ * A crash report
+ * @author edmondvanovertveldt
+ */
 public class Report extends Node {
 
 	private List<String> comments;
@@ -25,6 +29,11 @@ public class Report extends Node {
 	private String component;
 	private String severity;
 	
+        /**
+         * Return a list of files describing a crash report contained in a directory
+         * @param reportDirName directory contained crash reports
+         * @return a list of files describing a crash report contained in a directory
+         */
 	public static Set<String> getReportNames(String reportDirName) {
 		Set<String> reports = new HashSet<>();
 		for (File file : getReportFiles(reportDirName)) {
@@ -40,6 +49,12 @@ public class Report extends Node {
 		return reports;
 	}
 	
+        /**
+         * Constructed a report from a file
+         * @param filename file path contained crash report
+         * @return the crash report
+         * @throws IOException 
+         */
 	public static Report openReport(String filename) throws IOException {
 		File file = new File(filename);
 		return ReportParse.parse(Files.readAllBytes(file.toPath()));

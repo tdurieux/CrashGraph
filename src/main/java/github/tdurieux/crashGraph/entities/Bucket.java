@@ -16,71 +16,99 @@ import github.tdurieux.graph.Graph;
  * This saves up on memory in the context of BIG data. 
  */
 public class Bucket extends Graph<Method> {
-	Set<Integer> reportIds;
 
-	public Bucket(Report initialReport) {
-		this.graph = initialReport.getLastTrace().getEdges();
-		this.reportIds = new HashSet<Integer>();
-		this.reportIds.add(initialReport.getBugId());
-	}
+    /**
+     * Set of crash reports
+     */
+    Set<Integer> reportIds;
 
-	public static Set<Bucket> createBuckets(String reportDir,
-			double similarityTreshold) throws IOException {
-		Set<Bucket> buckets = new HashSet<>();
-		for (String reportName : Report.getReportNames(reportDir)) {
-			System.out.println("Scanning report: " + reportName);
-			Report report = Report.openReport(reportName);
-			boolean reportBucketed = false;
-			for (Bucket bucket : buckets) {
-				if (bucket.fits(report, similarityTreshold)) {
-					bucket.add(report);
-					reportBucketed = true;
-					break;
-				}
-			}
-			if (!reportBucketed) {
-				System.out.println("Creating a new Bucket.");
-				buckets.add(new Bucket(report));
-			}
-		}
-		return buckets;
-	}
+    public Bucket(Report initialReport) {
+        this.graph = initialReport.getLastTrace().getEdges();
+        this.reportIds = new HashSet<Integer>();
+        this.reportIds.add(initialReport.getBugId());
+    }
 
-	public static int numReports(Set<Bucket> buckets) {
-		int numReports = 0;
-		for (Bucket bucket : buckets) {
-			numReports += bucket.reportIds.size();
-		}
-		return numReports;
-	}
+    /**
+     * Create buckets
+     * @param reportDir, directory which contains crash reports
+     * @param similarityTreshold, similarityTreshold accepted
+     * @return list of created buckets
+     * @throws IOException 
+     */
+    public static Set<Bucket> createBuckets(String reportDir,
+            double similarityTreshold) throws IOException {
+        Set<Bucket> buckets = new HashSet<>();
+        // for each crash report contained in directory
+        for (String reportName : Report.getReportNames(reportDir)) {
+            System.out.println("Scanning report: " + reportName);
+            // open the report
+            Report report = Report.openReport(reportName);
+            boolean reportBucketed = false;
+            for (Bucket bucket : buckets) {
+                if (bucket.fits(report, similarityTreshold)) {
+                    // similar tree
+                    bucket.add(report);
+                    reportBucketed = true;
+                    break;
+                }
+            }
+            if (!reportBucketed) {
+                // the report is not in a bucket
+                System.out.println("Creating a new Bucket.");
+                // create a new bucket
+                buckets.add(new Bucket(report));
+            }
+        }
+        return buckets;
+    }
 
-	public static void printBuckets(Set<Bucket> buckets, String fileName)
-			throws FileNotFoundException, UnsupportedEncodingException {
-		PrintWriter writer = new PrintWriter(fileName, "UTF-8");
-		for (Bucket bucket : buckets) {
-			writer.println(bucket.toString());
-		}
-		writer.close();
-	}
+    public static int numReports(Set<Bucket> buckets) {
+        int numReports = 0;
+        for (Bucket bucket : buckets) {
+            numReports += bucket.reportIds.size();
+        }
+        return numReports;
+    }
 
-	public Set<Integer> getReportIds() {
-		return reportIds;
-	}
+    public static void printBuckets(Set<Bucket> buckets, String fileName)
+            throws FileNotFoundException, UnsupportedEncodingException {
+        PrintWriter writer = new PrintWriter(fileName, "UTF-8");
+        for (Bucket bucket : buckets) {
+            writer.println(bucket.toString());
+        }
+        writer.close();
+    }
 
-	public boolean fits(Report report, double similarityTreshold) {
-		return similarity(report.getLastTrace()) >= similarityTreshold;
-	}
+    public Set<Integer> getReportIds() {
+        return reportIds;
+    }
 
-	public void add(Report report) {
-		reportIds.add(report.getBugId());
-		union(report.getLastTrace());
-	}
+    /**
+     * Indicate if a crash report is to be inserted into a bucket
+     * @param report The report to be analyzed
+     * @param similarityTreshold similarity treshold accepted
+     * @return Boolean indicating if the report should be inserted into the bucket.
+     */
+    public boolean fits(Report report, double similarityTreshold) {
+        return similarity(report.getLastTrace()) >= similarityTreshold;
+    }
 
-	public String toString() {
-		String output = "";
-		for (Integer integer : reportIds) {
-			output += integer.toString() + ".json ";
-		}
-		return output;
-	}
+    /**
+     * Add a report in a bucket
+     * @param report 
+     */
+    public void add(Report report) {
+        // Add bugId is list of report Id
+        reportIds.add(report.getBugId());
+        // construct the new bucket graph
+        this.graph = this.union(report.getLastTrace()).getEdges();
+    }
+
+    public String toString() {
+        String output = "";
+        for (Integer integer : reportIds) {
+            output += integer.toString() + ".json ";
+        }
+        return output;
+    }
 }

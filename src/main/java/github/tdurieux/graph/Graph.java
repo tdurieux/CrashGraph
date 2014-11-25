@@ -9,123 +9,127 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 /**
- * is an abstract representation of a graph
- * 
+ * A abstract graph representation
+ *
  * @author Thomas Durieux
- * 
- * @param <T>
- *            the node type
+ *
+ * @param <T> le type d'un noeud
  */
 public abstract class Graph<T extends Node> {
-	protected Multimap<T, T> graph;
 
-	public Graph() {
-		this.graph = HashMultimap.create();
-	}
+    protected Multimap<T, T> graph;
 
-	/**
-	 * performs the intersection between two graph
-	 * 
-	 * @param g2
-	 *            the second graph
-	 * @return the intersection graph
-	 */
-	public Graph<T> intersection(Graph<T> g2) {
-		Graph<T> output = new Graph<T>() {
-		};
-		if (g2 == null) {
-			return output;
-		}
-		for (Entry<T, T> edge : graph.entries()) {
-			if (g2.graph.containsEntry(edge.getKey(), edge.getValue())) {
-				output.addEdge(edge.getKey(), edge.getValue());
-			}
-		}
-		return output;
-	}
-	
-	/**
-	 * performs the union between two graph
-	 * 
-	 * @param g2
-	 *            the second graph
-	 * @return the union graph
-	 */
-	public Graph<T> union(Graph<T> g2) {
-		Graph<T> output = this;
-		if (g2 == null) {
-			return output;
-		}
-		for (Entry<T, T> edgesG2 : g2.graph.entries()) {
-			if (!graph.containsEntry(edgesG2.getKey(), edgesG2.getValue())) {
-				output.addEdge(edgesG2.getKey(), edgesG2.getValue());
-			}
-		}
-		return output;
-	}
+    public Graph() {
+        this.graph = HashMultimap.create();
+    }
 
-	public double similarity(Graph<T> g2) {
-		double output = this.intersection(g2).numberOfEdges();
-		double minEdgeSize = Math.min(this.numberOfEdges(), g2.numberOfEdges());
-		if (minEdgeSize == 0) {
-			return 0;
-		}
-		output /= minEdgeSize;
-		return output;
-	}
+    /**
+     * Constructed the intersection between 2 graphs
+     *
+     * @param g2 2nd graph
+     * @return intersection graph between 2 graphs
+     */
+    public Graph<T> intersection(Graph<T> g2) {
+        Graph<T> output = new Graph<T>() {
+        };
+        if (g2 == null) {
+            return output;
+        }
+        for (Entry<T, T> edge : graph.entries()) {
+            if (g2.graph.containsEntry(edge.getKey(), edge.getValue())) {
+                output.addEdge(edge.getKey(), edge.getValue());
+            }
+        }
+        return output;
+    }
 
-	public boolean isEmpty() {
-		return this.graph.size() == 0;
-	}
+    /**
+     * performs the union between two graph
+     *
+     * @param g2 the second graph
+     * @return the union graph
+     */
+    public Graph<T> union(Graph<T> g2) {
+        Graph<T> output = this;
+        if (g2 == null) {
+            return output;
+        }
+        for (Entry<T, T> edgesG2 : g2.graph.entries()) {
+            if (!graph.containsEntry(edgesG2.getKey(), edgesG2.getValue())) {
+                output.addEdge(edgesG2.getKey(), edgesG2.getValue());
+            }
+        }
+        return output;
+    }
 
-	/**
-	 * gets the number of edges
-	 * 
-	 * @return the number of edges
-	 */
-	public int numberOfEdges() {
-		return graph.size();
-	}
+    /**
+     * Indicate the similarity between two graphs
+     *
+     * @param g2 a graph
+     * @return similarity between two graphs
+     */
+    public double similarity(Graph<T> g2) {
+        // Number of edges of the graphs intersection
+        double output = this.intersection(g2).numberOfEdges();
+        double minEdgeSize = Math.min(this.numberOfEdges(), g2.numberOfEdges());
+        if (minEdgeSize == 0) {
+            return 0;
+        }
+        output /= minEdgeSize;
+        return output;
+    }
 
-	/**
-	 * add a new node in the graph
-	 * 
-	 * @param node
-	 *            the node
-	 */
-	public void addEdge(T node1, T node2) {
-		graph.put(node1, node2);
-	}
+    public boolean isEmpty() {
+        return this.graph.size() == 0;
+    }
 
-	/**
-	 * remove a node in the graph
-	 * 
-	 * @param node
-	 */
-	public void removeEdge(T node1, T node2) {
-		graph.remove(node1, node2);
-	}
+    /**
+     * gets the number of edges
+     *
+     * @return the number of edges
+     */
+    public int numberOfEdges() {
+        return graph.size();
+    }
 
-	public Set<T> getNodes() {
-		Set<T> Nodes = new HashSet<T>(graph.keySet());
-		Nodes.addAll(graph.values());
-		return Nodes;
-	}
+    /**
+     * add a new node in the graph
+     *
+     * @param node the node
+     */
+    public void addEdge(T node1, T node2) {
+        graph.put(node1, node2);
+    }
 
-	public Collection<T> getEdges(T node) {
-		return graph.get(node);
-	}
+    /**
+     * remove a node in the graph
+     *
+     * @param node
+     */
+    public void removeEdge(T node1, T node2) {
+        graph.remove(node1, node2);
+    }
 
-	public Multimap<T, T> getEdges() {
-		return graph;
-	}
+    public Set<T> getNodes() {
+        Set<T> Nodes = new HashSet<T>(graph.keySet());
+        Nodes.addAll(graph.values());
+        return Nodes;
+    }
 
-	public String toDot() {
-		String output = "digraph G {\n";
-		for (Entry<T, T> edge : graph.entries()) {
-			output += "\t\"" + edge.getKey().getName() + "\" -> \""
-					+ edge.getValue().getName() + "\";\n";
-		}
-		return output + "}\n";
-	}
+    public Collection<T> getEdges(T node) {
+        return graph.get(node);
+    }
+
+    public Multimap<T, T> getEdges() {
+        return graph;
+    }
+
+    public String toDot() {
+        String output = "digraph G {\n";
+        for (Entry<T, T> edge : graph.entries()) {
+            output += "\t\"" + edge.getKey().getName() + "\" -> \""
+                    + edge.getValue().getName() + "\";\n";
+        }
+        return output + "}\n";
+    }
 }
