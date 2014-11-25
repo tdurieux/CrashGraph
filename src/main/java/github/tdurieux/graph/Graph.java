@@ -22,7 +22,7 @@ public abstract class Graph<T extends Node> {
     public Graph() {
         this.graph = HashMultimap.create();
     }
-
+    
     /**
      * Constructed the intersection between 2 graphs
      *
@@ -49,17 +49,15 @@ public abstract class Graph<T extends Node> {
      * @param g2 the second graph
      * @return the union graph
      */
-    public Graph<T> union(Graph<T> g2) {
-        Graph<T> output = this;
+    public void union(Graph<T> g2) {
         if (g2 == null) {
-            return output;
+            return;
         }
         for (Entry<T, T> edgesG2 : g2.graph.entries()) {
             if (!graph.containsEntry(edgesG2.getKey(), edgesG2.getValue())) {
-                output.addEdge(edgesG2.getKey(), edgesG2.getValue());
+                this.addEdge(edgesG2.getKey(), edgesG2.getValue());
             }
         }
-        return output;
     }
 
     /**
