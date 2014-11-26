@@ -26,8 +26,9 @@ public class Bucket extends Graph<Method> {
 	public Bucket(Report initialReport) {
 		this.graph = initialReport.getLastTrace().getEdges();
 		this.reportIds = new HashSet<Integer>();
-		this.groupIds = new HashSet<Integer>();
 		this.reportIds.add(initialReport.getBugId());
+		this.groupIds = new HashSet<Integer>();
+		this.groupIds.add(initialReport.getGroupId());
 	}
 
 	public Set<Integer> getReportIds() {

@@ -31,9 +31,9 @@ public class BucketsParser {
 			boolean reportBucketed = false;
 			for (Bucket bucket : buckets) {
 				if (classifier.isSameBucket(bucket, report.getLastTrace())) {
-					valReport.validate(true, bucket, report);
 					bucket.add(report);
 					reportBucketed = true;
+					valReport.validate(true, bucket, report);
 					break;
 				}
 				valReport.validate(false, bucket, report);
