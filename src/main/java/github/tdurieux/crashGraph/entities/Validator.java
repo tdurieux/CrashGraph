@@ -14,28 +14,41 @@ public class Validator {
 		numValidated = 0;
 	}
 
-	public void validate(Set<Bucket> allBuckets, Set<Bucket> potentialBuckets,
+	public void validate(Set<Bucket> allBuckets, Set<Bucket> actuallyMatched,
 			Report report) {
-		Set<Bucket> shouldBeMatched = new HashSet<Bucket>();
-		for (Bucket bucket : allBuckets) {
-			if (bucket.getGroupIds().contains(report.getGroupId())) {
-				shouldBeMatched.add(bucket);
-			}
-		}
-		int numShouldBeMatched = shouldBeMatched.size();
-		shouldBeMatched.retainAll(potentialBuckets);
-		double correctMatching = shouldBeMatched.size();
-		if (potentialBuckets.size() != 0) {
-			precision += correctMatching / potentialBuckets.size();
+		Set<Bucket> shouldBeMatched = findBuckets(report.getGroupId(),
+				allBuckets);
+		Set<Bucket> correctlyMatched = intersect(actuallyMatched, shouldBeMatched);
+		if (actuallyMatched.size() != 0) {
+			precision += ((double)correctlyMatched.size()) / actuallyMatched.size();
 		} else {
 			precision += 1;
 		}
-		if (numShouldBeMatched != 0) {
-			recall += correctMatching / numShouldBeMatched;
+		if (shouldBeMatched.size() != 0) {
+			recall += ((double)correctlyMatched.size()) / shouldBeMatched.size();
 		} else {
 			recall += 1;
 		}
 		numValidated++;
+	}
+
+	private Set<Bucket> findBuckets(int groupId, Set<Bucket> allBuckets) {
+		Set<Bucket> groupBuckets = new HashSet<Bucket>();
+		for (Bucket bucket : allBuckets) {
+			if (bucket.containsBug(groupId))
+				groupBuckets.add(bucket);
+		}
+		return groupBuckets;
+	}
+
+	private Set<Bucket> intersect(Set<Bucket> set1, Set<Bucket> set2) {
+		Set<Bucket> intersection = new HashSet<Bucket>();
+		for (Bucket bucket : set1) {
+			if (set2.contains(bucket)) {
+				intersection.add(bucket);
+			}
+		}
+		return intersection;
 	}
 
 	public double getMeanPrecision() {
