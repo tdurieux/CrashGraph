@@ -25,12 +25,6 @@ public class Main {
 			Validator valReport = new Validator();
 			Buckets buckets = BucketsParser.parse(args[0], classifier,
 					valReport);
-
-			System.out.println(buckets.size() + " buckets where created from: "
-					+ buckets.numReports() + " reports. There where "
-					+ valReport.getNumFalseNegatives()
-					+ " false negatives and "
-					+ valReport.getNumFalsePositives() + " false positives.");
 			System.out.println("FALSE NEGATIVES");
 			for (Bucket bucket : valReport.getFalseNegatives().keySet()) {
 				System.out.println(bucket.getReportIds());
@@ -45,6 +39,12 @@ public class Main {
 					System.out.println("\t" + report.getBugId());
 				}
 			}
+
+			System.out.println(buckets.size() + "CONCLUSION: buckets where created from: "
+					+ buckets.numReports() + " reports. There where "
+					+ valReport.getNumFalseNegatives()
+					+ " false negatives and "
+					+ valReport.getNumFalsePositives() + " false positives.");
 			buckets.printBuckets("buckets.txt");
 		} catch (NumberFormatException e) {
 			System.out
