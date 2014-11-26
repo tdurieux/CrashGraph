@@ -2,7 +2,9 @@ package github.tdurieux.crashGraph.main;
 
 import github.tdurieux.crashGraph.classifier.Classifier;
 import github.tdurieux.crashGraph.classifier.GraphViewClassifier;
+import github.tdurieux.crashGraph.entities.Bucket;
 import github.tdurieux.crashGraph.entities.Buckets;
+import github.tdurieux.crashGraph.entities.Report;
 import github.tdurieux.crashGraph.entities.Validator;
 import github.tdurieux.crashGraph.parser.BucketsParser;
 
@@ -28,8 +30,21 @@ public class Main {
 					+ buckets.numReports() + " reports. There where "
 					+ valReport.getNumFalseNegatives()
 					+ " false negatives and "
-					+ valReport.getNumFalsePositives()
-					+ " false positives.");
+					+ valReport.getNumFalsePositives() + " false positives.");
+			System.out.println("FALSE NEGATIVES");
+			for (Bucket bucket : valReport.getFalseNegatives().keySet()) {
+				System.out.println(bucket.getReportIds());
+				for (Report report : valReport.getFalseNegatives().get(bucket)) {
+					System.out.println("\t" + report.getBugId());
+				}
+			}
+			System.out.println("FALSE POSITIVE");
+			for (Bucket bucket : valReport.getFalsePositives().keySet()) {
+				System.out.println(bucket.getReportIds());
+				for (Report report : valReport.getFalsePositives().get(bucket)) {
+					System.out.println("\t" + report.getBugId());
+				}
+			}
 			buckets.printBuckets("buckets.txt");
 		} catch (NumberFormatException e) {
 			System.out
