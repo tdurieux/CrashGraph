@@ -21,7 +21,8 @@ public class ValidatorTest {
 	Bucket bucketGroup2;
 	Bucket bucketGroup12;
 	
-	Set<Bucket> allBuckets;
+	Buckets allBuckets;
+	Buckets potentialBuckets;
 	
 	Validator validator;
 	
@@ -32,10 +33,12 @@ public class ValidatorTest {
 		bucketGroup12 = dummyBucket(1);
 		bucketGroup12.add(dummyReport(2));
 		
-		allBuckets = new HashSet<Bucket>();
+		allBuckets = new Buckets();
 		allBuckets.add(bucketGroup1);
 		allBuckets.add(bucketGroup2);
 		allBuckets.add(bucketGroup12);
+		
+		potentialBuckets = new Buckets();
 		
 		reportGroup1 = dummyReport(1);
 		reportGroup2 = dummyReport(2);
@@ -61,7 +64,6 @@ public class ValidatorTest {
 	
 	@Test
 	public void validateFullCorrectMatch() {
-		Set<Bucket> potentialBuckets = new HashSet<Bucket>();
 		potentialBuckets.add(bucketGroup1);
 		potentialBuckets.add(bucketGroup12);
 		validator.validate(allBuckets, potentialBuckets, reportGroup1);
@@ -71,7 +73,6 @@ public class ValidatorTest {
 	
 	@Test
 	public void validatePartialCorrectMatch() {
-		Set<Bucket> potentialBuckets = new HashSet<Bucket>();
 		potentialBuckets.add(bucketGroup1);
 		validator.validate(allBuckets, potentialBuckets, reportGroup1);
 		assertEquals(1.0,validator.getMeanPrecision(),0.0001);
@@ -80,7 +81,6 @@ public class ValidatorTest {
 	
 	@Test
 	public void validateEmptyCorrectMatch() {
-		Set<Bucket> potentialBuckets = new HashSet<Bucket>();
 		validator.validate(allBuckets, potentialBuckets, reportGroup3);
 		assertEquals(1.0,validator.getMeanPrecision(),0.0001);
 		assertEquals(1.0,validator.getMeanRecall(),0.0001);
@@ -88,7 +88,6 @@ public class ValidatorTest {
 	
 	@Test
 	public void validateFullUncorrectMatch() {
-		Set<Bucket> potentialBuckets = new HashSet<Bucket>();
 		potentialBuckets.add(bucketGroup1);
 		validator.validate(allBuckets, potentialBuckets, reportGroup2);
 		assertEquals(0.0,validator.getMeanPrecision(),0.0001);
@@ -97,7 +96,6 @@ public class ValidatorTest {
 	
 	@Test
 	public void validatePartialUncorrectMatch() {
-		Set<Bucket> potentialBuckets = new HashSet<Bucket>();
 		potentialBuckets.add(bucketGroup1);
 		potentialBuckets.add(bucketGroup2);
 		validator.validate(allBuckets, potentialBuckets, reportGroup2);
@@ -107,7 +105,6 @@ public class ValidatorTest {
 	
 	@Test
 	public void validateEmptyUncorrectMatch() {
-		Set<Bucket> potentialBuckets = new HashSet<Bucket>();
 		validator.validate(allBuckets, potentialBuckets, reportGroup2);
 		assertEquals(1.0,validator.getMeanPrecision(),0.0001);
 		assertEquals(0.0,validator.getMeanRecall(),0.0001);
@@ -115,7 +112,7 @@ public class ValidatorTest {
 	
 	@Test
 	public void validateEmptyEmptyMatch() {
-		Set<Bucket> emptyBuckets = new HashSet<Bucket>();
+		Buckets emptyBuckets = new Buckets();
 		validator.validate(emptyBuckets, emptyBuckets, reportGroup1);
 		assertEquals(1.0,validator.getMeanPrecision(),0.0001);
 		assertEquals(1.0,validator.getMeanRecall(),0.0001);

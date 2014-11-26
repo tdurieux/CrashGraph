@@ -28,7 +28,7 @@ public class BucketsParser {
 			Report report = ReportParse.parseFile(file);
 			Trace reportTraceToAnalyse = report.getLastTrace().getLastCausedBy();
 			
-			Set<Bucket> potentialBuckets = new HashSet<Bucket>();
+			Buckets potentialBuckets = new Buckets();
 			for (Bucket bucket : buckets) {
 				if (classifier.isSameBucket(bucket, reportTraceToAnalyse)) {
 					potentialBuckets.add(bucket);

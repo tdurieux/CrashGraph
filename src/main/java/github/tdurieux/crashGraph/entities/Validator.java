@@ -14,7 +14,7 @@ public class Validator {
 		numValidated = 0;
 	}
 
-	public void validate(Set<Bucket> allBuckets, Set<Bucket> actuallyMatched,
+	public void validate(Buckets allBuckets, Buckets actuallyMatched,
 			Report report) {
 		Set<Bucket> shouldBeMatched = findBuckets(report.getGroupId(),
 				allBuckets);
