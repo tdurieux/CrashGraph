@@ -2,10 +2,9 @@ package github.tdurieux.crashGraph.main;
 
 import github.tdurieux.crashGraph.classifier.Classifier;
 import github.tdurieux.crashGraph.classifier.GraphViewClassifier;
-import github.tdurieux.crashGraph.entities.Bucket;
 import github.tdurieux.crashGraph.entities.Buckets;
-import github.tdurieux.crashGraph.entities.Report;
 import github.tdurieux.crashGraph.entities.Validator;
+import github.tdurieux.crashGraph.entities.matchReport;
 import github.tdurieux.crashGraph.parser.BucketsParser;
 
 import java.io.IOException;
@@ -24,6 +23,12 @@ public class Main {
 			Buckets buckets = BucketsParser.parse(args[0], classifier,
 					valReport);
 
+			System.out.println("The following unperfected matches where found:");
+			
+			for (matchReport unperfectMatch : valReport.getAllMismatches()) {
+				System.out.println(unperfectMatch);
+			}
+			
 			System.out.println("Creating buckets for the reports in: "
 					+ args[0] + "\nwith similarity threshold: " + args[1]);
 

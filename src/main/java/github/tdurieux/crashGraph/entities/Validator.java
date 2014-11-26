@@ -1,6 +1,8 @@
 package github.tdurieux.crashGraph.entities;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class Validator {
@@ -8,32 +10,51 @@ public class Validator {
 	private double recall;
 	private int numValidated;
 
+	private List<matchReport> notedMismatches;
+
 	public Validator() {
 		precision = 0;
 		recall = 0;
 		numValidated = 0;
+
+		notedMismatches = new ArrayList<matchReport>();
 	}
 
 	public void validate(Buckets allBuckets, Buckets actuallyMatched,
 			Report report) {
-		Set<Bucket> shouldBeMatched = findBuckets(report.getGroupId(),
+		Buckets shouldBeMatched = findBuckets(report.getGroupId(),
 				allBuckets);
-		Set<Bucket> correctlyMatched = intersect(actuallyMatched, shouldBeMatched);
+		Buckets correctlyMatched = intersect(actuallyMatched,
+				shouldBeMatched);
+
+		double localPrecision;
 		if (actuallyMatched.size() != 0) {
-			precision += ((double)correctlyMatched.size()) / actuallyMatched.size();
+			localPrecision = ((double) correctlyMatched.size())
+					/ actuallyMatched.size();
 		} else {
-			precision += 1;
+			localPrecision = 1;
 		}
+		precision += localPrecision;
+
+		double localRecall;
 		if (shouldBeMatched.size() != 0) {
-			recall += ((double)correctlyMatched.size()) / shouldBeMatched.size();
+			localRecall = ((double) correctlyMatched.size())
+					/ shouldBeMatched.size();
 		} else {
-			recall += 1;
+			localRecall = 1;
 		}
+		recall += localRecall;
+
 		numValidated++;
+
+		if (localPrecision != 1.0 || localRecall != 1.0) {
+			notedMismatches.add(new matchReport(report.getBugId(), shouldBeMatched,
+					actuallyMatched, localPrecision, localRecall));
+		}
 	}
 
-	private Set<Bucket> findBuckets(int groupId, Set<Bucket> allBuckets) {
-		Set<Bucket> groupBuckets = new HashSet<Bucket>();
+	private Buckets findBuckets(int groupId, Set<Bucket> allBuckets) {
+		Buckets groupBuckets = new Buckets();
 		for (Bucket bucket : allBuckets) {
 			if (bucket.containsBug(groupId))
 				groupBuckets.add(bucket);
@@ -41,8 +62,8 @@ public class Validator {
 		return groupBuckets;
 	}
 
-	private Set<Bucket> intersect(Set<Bucket> set1, Set<Bucket> set2) {
-		Set<Bucket> intersection = new HashSet<Bucket>();
+	private Buckets intersect(Set<Bucket> set1, Set<Bucket> set2) {
+		Buckets intersection = new Buckets();
 		for (Bucket bucket : set1) {
 			if (set2.contains(bucket)) {
 				intersection.add(bucket);
@@ -57,5 +78,9 @@ public class Validator {
 
 	public double getMeanRecall() {
 		return recall / numValidated;
+	}
+
+	public List<matchReport> getAllMismatches() {
+		return notedMismatches;
 	}
 }
