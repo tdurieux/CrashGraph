@@ -16,15 +16,19 @@ public class Bucket extends Graph<Method> {
 	/**
 	 * Set of crash reports
 	 */
-	Set<Integer> reportIds;
+	private Set<Integer> reportIds;
 	
 	/**
 	 * Set of group Id's, which denote the manually sorted buckets
 	 */
-	Set<Integer> groupIds;
+	private Set<Integer> groupIds;
+
+	public Set<Integer> getGroupIds() {
+		return groupIds;
+	}
 
 	public Bucket(Report initialReport) {
-		this.graph = initialReport.getLastTrace().getEdges();
+		this.graph = initialReport.getLastTrace().getLastCausedBy().getEdges();
 		this.reportIds = new HashSet<Integer>();
 		this.reportIds.add(initialReport.getBugId());
 		this.groupIds = new HashSet<Integer>();
@@ -46,7 +50,7 @@ public class Bucket extends Graph<Method> {
 		// Add groupId to identify how many different bugs end up in the buckets
 		groupIds.add(report.getGroupId());
 		// construct the new bucket graph
-		this.union(report.getLastTrace());
+		this.union(report.getLastTrace().getLastCausedBy());
 	}
 
 	public int numBugs() {

@@ -17,34 +17,23 @@ public class Main {
 			usage();
 			return;
 		}
-		System.out.println("Creating buckets for the reports in: " + args[0]
-				+ "\nwith similarity threshold: " + args[1]);
 		try {
 			Classifier classifier = new GraphViewClassifier(
 					Double.parseDouble(args[1]));
 			Validator valReport = new Validator();
 			Buckets buckets = BucketsParser.parse(args[0], classifier,
 					valReport);
-			System.out.println("FALSE NEGATIVES");
-			for (Bucket bucket : valReport.getFalseNegatives().keySet()) {
-				System.out.println(bucket.getReportIds());
-				for (Report report : valReport.getFalseNegatives().get(bucket)) {
-					System.out.println("\t" + report.getBugId());
-				}
-			}
-			System.out.println("FALSE POSITIVE");
-			for (Bucket bucket : valReport.getFalsePositives().keySet()) {
-				System.out.println(bucket.getReportIds());
-				for (Report report : valReport.getFalsePositives().get(bucket)) {
-					System.out.println("\t" + report.getBugId());
-				}
-			}
 
-			System.out.println("\nCONCLUSION: " + buckets.size() + " buckets where created from: "
-					+ buckets.numReports() + " reports. There where "
-					+ valReport.getNumFalseNegatives()
-					+ " false negatives and "
-					+ valReport.getNumFalsePositives() + " false positives.");
+			System.out.println("Creating buckets for the reports in: "
+					+ args[0] + "\nwith similarity threshold: " + args[1]);
+
+			System.out.println("\nCONCLUSION: "
+					+ buckets.size()
+					+ " buckets where created from: "
+					+ buckets.numReports()
+					+ " reports.\n There was \n"
+					+ " a precision of: " + valReport.getMeanPrecision()
+					+ "\n and a recall of: " + valReport.getMeanRecall());
 			buckets.printBuckets("buckets.txt");
 		} catch (NumberFormatException e) {
 			System.out

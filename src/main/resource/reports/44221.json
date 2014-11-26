@@ -1,0 +1,77 @@
+{
+  "comments": [
+    "Hi,\n\nI just downloaded version 2.1.1, and i received the following at startup:\n\n!SESSION ----------------------------------------------------------------------\n!ENTRY org.eclipse.core.launcher 4 0 Oct 06, 2003 15:03:47.603\n!MESSAGE Exception launching the Eclipse Platform:\n!STACK\njava.lang.reflect.InvocationTargetException\n\tat sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat sun.reflect.NativeMethodAccessorImpl.invoke\n(NativeMethodAccessorImpl.java:39)\n\tat sun.reflect.DelegatingMethodAccessorImpl.invoke\n(DelegatingMethodAccessorImpl.java:25)\n\tat java.lang.reflect.Method.invoke(Method.java:324)\n\tat org.eclipse.core.launcher.Main.basicRun(Main.java:291)\n\tat org.eclipse.core.launcher.Main.run(Main.java:747)\n\tat org.eclipse.core.launcher.Main.main(Main.java:583)\nCaused by: java.lang.reflect.InvocationTargetException\n\tat org.eclipse.core.internal.boot.InternalBootLoader.run\n(InternalBootLoader.java:861)\n\tat org.eclipse.core.boot.BootLoader.run(BootLoader.java:461)\n\t... 7 more\nCaused by: java.lang.NullPointerException\n\t... 7 more\n\n\nI have jdk1.4.1_01.\n\nThanks for help,\n\nFabrice Claes",
+    "Please see bug 37996 (and duplicate 38661) to see if that is the problem you are\nseeing.",
+    "No more info from the originator. Closing as duplicate. Please reopen if you\nhave reasons to believe that your problem is different.\n\n*** This bug has been marked as a duplicate of 37996 ***"
+  ],
+  "commentCreationDates": [
+    "2003-10-06T15:22:37+02:00",
+    "2003-10-06T15:34:17+02:00",
+    "2003-10-07T15:03:49+02:00"
+  ],
+  "traces": [
+    {
+      "exceptionType": "java.lang.reflect.InvocationTargetException",
+      "elements": [
+        {
+          "method": "sun.reflect.NativeMethodAccessorImpl.invoke0",
+          "source": "Native Method"
+        },
+        {
+          "method": "sun.reflect.NativeMethodAccessorImpl.invoke",
+          "source": "NativeMethodAccessorImpl.java:39"
+        },
+        {
+          "method": "sun.reflect.DelegatingMethodAccessorImpl.invoke",
+          "source": "DelegatingMethodAccessorImpl.java:25"
+        },
+        {
+          "method": "java.lang.reflect.Method.invoke",
+          "source": "Method.java:324"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.basicRun",
+          "source": "Main.java:291"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.run",
+          "source": "Main.java:747"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.main",
+          "source": "Main.java:583"
+        }
+      ],
+      "causedBy": {
+        "exceptionType": "java.lang.reflect.InvocationTargetException",
+        "elements": [
+          {
+            "method": "org.eclipse.core.internal.boot.InternalBootLoader.run",
+            "source": "InternalBootLoader.java:861"
+          },
+          {
+            "method": "org.eclipse.core.boot.BootLoader.run",
+            "source": "BootLoader.java:461"
+          }
+        ],
+        "number": 0,
+        "commentIndex": 0
+      },
+      "number": 0,
+      "commentIndex": 0,
+      "bugId": "44221",
+      "duplicateId": "37996",
+      "date": "2003-10-06T15:22:37+02:00",
+      "product": "Platform",
+      "component": "Resources",
+      "severity": "normal"
+    }
+  ],
+  "groupId": "37996",
+  "bugId": "44221",
+  "duplicateId": "37996",
+  "date": "2003-10-06T15:22:37+02:00",
+  "product": "Platform",
+  "component": "Resources",
+  "severity": "normal"
+}

@@ -26,7 +26,7 @@ public class Buckets extends HashSet<Bucket> implements Set<Bucket> {
 			log.log(Level.FINER, "Scanning report: " + report.getBugId());
 			boolean reportBucketed = false;
 			for (Bucket bucket : this) {
-				if (classifier.isSameBucket(bucket, report.getLastTrace())) {
+				if (classifier.isSameBucket(bucket, report.getLastTrace().getLastCausedBy())) {
 					bucket.add(report);
 					reportBucketed = true;
 					break;
@@ -42,7 +42,7 @@ public class Buckets extends HashSet<Bucket> implements Set<Bucket> {
 	public int numReports() {
 		int numReports = 0;
 		for (Bucket bucket : this) {
-			numReports += bucket.reportIds.size();
+			numReports += bucket.getReportIds().size();
 		}
 		return numReports;
 	}

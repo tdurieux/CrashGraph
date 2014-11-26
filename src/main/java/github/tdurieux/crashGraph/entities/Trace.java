@@ -6,6 +6,15 @@ import github.tdurieux.graph.Graph;
 
 public class Trace extends Graph<Method> {
 	private String exceptionType;
+	private Trace causedBy;
+
+	public Trace getCausedBy() {
+		return causedBy;
+	}
+
+	public void setCausedBy(Trace causedBy) {
+		this.causedBy = causedBy;
+	}
 
 	public String getExceptionType() {
 		return exceptionType;
@@ -22,10 +31,17 @@ public class Trace extends Graph<Method> {
 		}
 		Method method1 = elements.get(0);
 
-		for (int i = 1; i < size - 1; i++) {
+		for (int i = 1; i < size; i++) {
 			Method method2 = elements.get(i);
 			this.addEdge(method1, method2);
 			method1 = method2;
 		}
+	}
+	
+	public Trace getLastCausedBy() {
+		if(causedBy == null) {
+			return this;
+		}
+		return causedBy.getLastCausedBy();
 	}
 }

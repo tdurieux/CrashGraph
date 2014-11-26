@@ -1,0 +1,79 @@
+{
+  "comments": [
+    "when I start eclipse with \"... -vm c:/j2sdk1.4.1_02/bin/javaw.exe\" ie: with the \nsun 1.4.1_02 sdk (or the 1.4.1_01 sdk) the splash screen displays and I get a \npopup window saying:\n\nProblems during startup.  Check the \".log\" file in the \".metadata\" directory of \nyour workspace.\n\nthe contents of the .log file are...\n\n\n!SESSION ----------------------------------------------------------------------\n!ENTRY org.eclipse.core.launcher 4 0 Jun 12, 2003 14:18:53.617\n!MESSAGE Exception launching the Eclipse Platform:\n!STACK\njava.lang.reflect.InvocationTargetException\n\tat sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat sun.reflect.NativeMethodAccessorImpl.invoke\n(NativeMethodAccessorImpl.java:39)\n\tat sun.reflect.DelegatingMethodAccessorImpl.invoke\n(DelegatingMethodAccessorImpl.java:25)\n\tat java.lang.reflect.Method.invoke(Method.java:324)\n\tat org.eclipse.core.launcher.Main.basicRun(Main.java:291)\n\tat org.eclipse.core.launcher.Main.run(Main.java:747)\n\tat org.eclipse.core.launcher.Main.main(Main.java:583)\nCaused by: java.lang.reflect.InvocationTargetException\n\tat org.eclipse.core.internal.boot.InternalBootLoader.run\n(InternalBootLoader.java:861)\n\tat org.eclipse.core.boot.BootLoader.run(BootLoader.java:461)\n\t... 7 more\nCaused by: java.lang.NullPointerException\n\t... 7 more\n\nI noticed this is simmilar to bug # 21222 but I have not installed over top of \nan older version of eclipse.\nI have tried on 2 separate machines with same setup.\n\nI also have jdeveloper 9.0.3 installed, but only have sdk java executable on \nsystem path.  no system classpath is specified.  java_home set to \nc:\\j2sdk1.4.1_02\n\nwindows 2000 sp3\n\neclipse 3.0 m1\nalso happened with eclipse 2.1",
+    "Does JDeveloper have its own VM?\n\nIf so, search the Windows registry for \"javasoft\" (no quotes) and see if there\nis any entry saying where the Java RE is installed. Does it point to the VM you\nare trying to run Eclipse with? If not, this may be the reason. There may be\nproblems if you install a Sun JRE (with a Windows installer) that adds these\nkeys to the registry and the try to run a newer version by just unpacking it.\n\nPlease have a look at bug 37996, and let us know whether you believe it is the\nsame problem.",
+    "all fixed.\n\nthe windows registry had a key under HKEY_LOCAL_MACHINE/SOFTWARE/javasoft/Java \nRuntime Environment that pointed to program \nfiles/java/j2re1.4.1_02/bin/client/jvm.dll.  I was trying to run eclipse with -\nvm c:/j2sdk1.4.1_02/bin/javaw.exe.  I changed it to -vm c:/program \nfiles/java/j2re1.4.1_02/bin/javaw.exe and eclipse opened correctly.\n\nI guess when you install the java sdk it puts the sdk in one directory and also \nadds the runtime environment under program files.  I should have remembered \nthis since they\u0027ve done it since 1.2.\n\nthanks for the speedy response!",
+    "Ok, closing as duplicate.\n\n*** This bug has been marked as a duplicate of 37996 ***"
+  ],
+  "commentCreationDates": [
+    "2003-06-12T23:26:17+02:00",
+    "2003-06-13T18:03:33+02:00",
+    "2003-06-13T18:17:23+02:00",
+    "2003-06-13T18:22:15+02:00"
+  ],
+  "traces": [
+    {
+      "exceptionType": "java.lang.reflect.InvocationTargetException",
+      "elements": [
+        {
+          "method": "sun.reflect.NativeMethodAccessorImpl.invoke0",
+          "source": "Native Method"
+        },
+        {
+          "method": "sun.reflect.NativeMethodAccessorImpl.invoke",
+          "source": "NativeMethodAccessorImpl.java:39"
+        },
+        {
+          "method": "sun.reflect.DelegatingMethodAccessorImpl.invoke",
+          "source": "DelegatingMethodAccessorImpl.java:25"
+        },
+        {
+          "method": "java.lang.reflect.Method.invoke",
+          "source": "Method.java:324"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.basicRun",
+          "source": "Main.java:291"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.run",
+          "source": "Main.java:747"
+        },
+        {
+          "method": "org.eclipse.core.launcher.Main.main",
+          "source": "Main.java:583"
+        }
+      ],
+      "causedBy": {
+        "exceptionType": "java.lang.reflect.InvocationTargetException",
+        "elements": [
+          {
+            "method": "org.eclipse.core.internal.boot.InternalBootLoader.run",
+            "source": "InternalBootLoader.java:861"
+          },
+          {
+            "method": "org.eclipse.core.boot.BootLoader.run",
+            "source": "BootLoader.java:461"
+          }
+        ],
+        "number": 0,
+        "commentIndex": 0
+      },
+      "number": 0,
+      "commentIndex": 0,
+      "bugId": "38861",
+      "duplicateId": "37996",
+      "date": "2003-06-12T23:26:17+02:00",
+      "product": "Platform",
+      "component": "Resources",
+      "severity": "normal"
+    }
+  ],
+  "groupId": "37996",
+  "bugId": "38861",
+  "duplicateId": "37996",
+  "date": "2003-06-12T23:26:17+02:00",
+  "product": "Platform",
+  "component": "Resources",
+  "severity": "normal"
+}

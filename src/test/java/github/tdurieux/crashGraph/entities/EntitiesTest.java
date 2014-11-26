@@ -32,28 +32,28 @@ public class EntitiesTest {
 		assertEquals(1524, report1524.getBugId());
 		assertEquals(1002766487000l, report1524.getDate().getTime());
 		assertEquals(1524, report1524.getGroupId());
-		assertEquals(13, report1524.getLastTrace().numberOfEdges());
+		assertEquals(14, report1524.getLastTrace().getLastCausedBy().numberOfEdges());
 	}
 
 	@Test
 	public void comparing_reports_1755_and_1759() {
 		assertEquals(
-				0.55,
-				report1755.getLastTrace().similarity(report1759.getLastTrace()),
+				0.56,
+				report1755.getLastTrace().getLastCausedBy().similarity(report1759.getLastTrace().getLastCausedBy()),
 				0.01);
 	}
 
 	@Test
 	public void get_all_report_Files() {
 		Set<File> reports = Report.getReportFiles("src/main/resource/reports/");
-		assertEquals(20, reports.size());
+		assertEquals(22, reports.size());
 	}
 
 	@Test
 	public void get_all_report_Names() {
 		Set<String> reports = Report
 				.getReportNames("src/main/resource/reports/");
-		assertEquals(20, reports.size());
+		assertEquals(22, reports.size());
 		assertTrue("The file 1524.json is not found in the report name list",
 				reports.contains("src/main/resource/reports/1524.json"));
 	}
@@ -72,36 +72,36 @@ public class EntitiesTest {
 	@Test
 	public void fit_bucket_1524() {
 		Bucket bucket1524 = new Bucket(report1524);
-		double similarityTreshold = 0.5;
+		double similarityTreshold = 0.9;
 		Classifier classifier = new GraphViewClassifier(similarityTreshold);
 		assertTrue(
 				"The report 1524 does not fit the bucket made from this same report"
 						+ " with a threshold of " + similarityTreshold,
-				classifier.isSameBucket(bucket1524, report1524.getLastTrace()));
+				classifier.isSameBucket(bucket1524, report1524.getLastTrace().getLastCausedBy()));
 		assertFalse("The report 1755 fits the bucket made from report 1524"
 				+ " with a threshold of " + similarityTreshold,
-				classifier.isSameBucket(bucket1524, report1755.getLastTrace()));
+				classifier.isSameBucket(bucket1524, report1755.getLastTrace().getLastCausedBy()));
 		assertFalse("The report 1759 fits the bucket made from report 1524"
 				+ " with a threshold of " + similarityTreshold,
-				classifier.isSameBucket(bucket1524, report1759.getLastTrace()));
+				classifier.isSameBucket(bucket1524, report1759.getLastTrace().getLastCausedBy()));
 	}
 
 	@Test
 	public void fit_bucket_1755() {
 		Bucket bucket1755 = new Bucket(report1755);
-		double similarityTreshold = 0.5;
+		double similarityTreshold = 0.55;
 		Classifier classifier = new GraphViewClassifier(similarityTreshold);
 		assertFalse("The report 1524 fits the bucket made from report 1755"
 				+ " with a threshold of " + similarityTreshold,
-				classifier.isSameBucket(bucket1755, report1524.getLastTrace()));
+				classifier.isSameBucket(bucket1755, report1524.getLastTrace().getLastCausedBy()));
 		assertTrue(
 				"The report 1755 does not fit the bucket made from this same report"
 						+ " with a threshold of " + similarityTreshold,
-				classifier.isSameBucket(bucket1755, report1755.getLastTrace()));
+				classifier.isSameBucket(bucket1755, report1755.getLastTrace().getLastCausedBy()));
 		assertTrue(
 				"The report 1759 does not fit the bucket made from report 1755"
 						+ " with a threshold of " + similarityTreshold,
-				classifier.isSameBucket(bucket1755, report1759.getLastTrace()));
+				classifier.isSameBucket(bucket1755, report1759.getLastTrace().getLastCausedBy()));
 	}
 
 	@Test
@@ -113,15 +113,15 @@ public class EntitiesTest {
 		assertFalse(
 				"The report 1524 fits the bucket made from report 1755 and 1759"
 						+ " with a threshold of " + similarityTreshold,
-				classifier.isSameBucket(bucket1755, report1524.getLastTrace()));
+				classifier.isSameBucket(bucket1755, report1524.getLastTrace().getLastCausedBy()));
 		assertTrue(
 				"The report 1755 does not fit the bucket made from report 1755 and 1759"
 						+ " with a threshold of " + similarityTreshold,
-				classifier.isSameBucket(bucket1755, report1755.getLastTrace()));
+				classifier.isSameBucket(bucket1755, report1755.getLastTrace().getLastCausedBy()));
 		assertTrue(
 				"The report 1759 does not fit the bucket made from report 1755 and 1759"
 						+ " with a threshold of " + similarityTreshold,
-				classifier.isSameBucket(bucket1755, report1759.getLastTrace()));
+				classifier.isSameBucket(bucket1755, report1759.getLastTrace().getLastCausedBy()));
 	}
 
 	@Test
@@ -147,16 +147,6 @@ public class EntitiesTest {
 		Validator valReport = new Validator();
 		Buckets buckets = BucketsParser.parse("src/main/resource/reports/",
 				classifier, valReport);
-		assertEquals(19, buckets.size());
-	}
-
-	@Test
-	public void validationTester() {
-		Validator valReport = new Validator();
-		valReport.increaseNumFalseNegatives();
-		valReport.increaseNumFalseNegatives();
-		valReport.increaseNumFalsePositives();
-		assertEquals(2, valReport.getNumFalseNegatives());
-		assertEquals(1, valReport.getNumFalsePositives());
+		assertEquals(11, buckets.size());
 	}
 }

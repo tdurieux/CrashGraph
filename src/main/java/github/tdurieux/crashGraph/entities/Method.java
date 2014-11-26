@@ -101,14 +101,6 @@ public class Method extends Node {
 		}
 		Method m2 = (Method) obj;
 
-		if (m2.isCompiled || this.isCompiled) {
-			return this.getQualifiedName().equals(m2.getQualifiedName())
-					&& m2.file.equals(this.file);
-		}
-
-		if (this.line != m2.line) {
-			return false;
-		}
 		return this.getQualifiedName().equals(m2.getQualifiedName());
 	}
 }

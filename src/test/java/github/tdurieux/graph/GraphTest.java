@@ -4,6 +4,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
+import github.tdurieux.crashGraph.entities.Bucket;
+import github.tdurieux.crashGraph.entities.Report;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -196,6 +201,14 @@ public class GraphTest {
 		assertEquals(1 / 2.0, value, 0);
 	}
 
+	@Test
+	public void similarity_38861_44221() throws IOException {
+		Report report38861 = Report.openReport("src/main/resource/reports/38861.json");
+		Bucket bucket38861 = new Bucket(report38861);
+		Report report44221 = Report.openReport("src/main/resource/reports/44221.json");
+		assertEquals(1.0, bucket38861.similarity(report44221.getLastTrace().getLastCausedBy()),0.001);
+	}
+	
 	private class NodeElement extends Node {
 	}
 
