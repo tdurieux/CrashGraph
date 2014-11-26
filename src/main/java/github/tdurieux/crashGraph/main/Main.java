@@ -40,7 +40,7 @@ public class Main {
 				}
 			}
 
-			System.out.println(buckets.size() + "CONCLUSION: buckets where created from: "
+			System.out.println("\nCONCLUSION: " + buckets.size() + " buckets where created from: "
 					+ buckets.numReports() + " reports. There where "
 					+ valReport.getNumFalseNegatives()
 					+ " false negatives and "
