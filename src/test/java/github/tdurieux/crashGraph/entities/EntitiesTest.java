@@ -62,6 +62,8 @@ public class EntitiesTest {
 	public void creation_bucket_with_1524() {
 		Bucket bucket1524 = new Bucket(report1524);
 		assertEquals(1, bucket1524.getReportIds().size());
+		assertTrue("Bucket 1524 does not contain group id of report 1524",
+				bucket1524.containsBug(report1524.getGroupId()));
 		assertTrue(
 				"The bucket made from report 1524 does not contain the report id of 1524",
 				bucket1524.getReportIds().contains(1524));
@@ -121,7 +123,7 @@ public class EntitiesTest {
 						+ " with a threshold of " + similarityTreshold,
 				classifier.isSameBucket(bucket1755, report1759.getLastTrace()));
 	}
-	
+
 	@Test
 	public void count_bugs_in_bucket() {
 		Bucket bucket1755 = new Bucket(report1755);
@@ -147,7 +149,7 @@ public class EntitiesTest {
 				classifier, valReport);
 		assertEquals(19, buckets.size());
 	}
-	
+
 	@Test
 	public void validationTester() {
 		Validator valReport = new Validator();
