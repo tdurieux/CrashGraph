@@ -26,7 +26,7 @@ public class Main {
 			System.out.println("The following unperfected matches where found:");
 			
 			for (matchReport unperfectMatch : valReport.getAllMismatches()) {
-				System.out.println(unperfectMatch);
+				System.out.println(unperfectMatch + "\n");
 			}
 			
 			System.out.println("Creating buckets for the reports in: "
