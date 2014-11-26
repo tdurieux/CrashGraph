@@ -30,9 +30,11 @@
                 <configuration>
                     <targetClasses>
                         <param>github.tdurieux.crashGraph*</param>
+                        <param>github.tdurieux.graph*</param>
                     </targetClasses>
                     <targetTests>
                         <param>github.tdurieux.crashGraph*</param>
+                        <param>github.tdurieux.graph*</param>
                     </targetTests>
                 </configuration>
             </plugin>
