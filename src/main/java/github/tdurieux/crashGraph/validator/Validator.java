@@ -1,4 +1,9 @@
-package github.tdurieux.crashGraph.entities;
+package github.tdurieux.crashGraph.validator;
+
+import github.tdurieux.crashGraph.entities.Bucket;
+import github.tdurieux.crashGraph.entities.Buckets;
+import github.tdurieux.crashGraph.entities.Report;
+import github.tdurieux.crashGraph.generator.MatchReport;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -10,14 +15,14 @@ public class Validator {
 	private double recall;
 	private int numValidated;
 
-	private List<matchReport> notedMismatches;
+	private List<MatchReport> notedMismatches;
 
 	public Validator() {
 		precision = 0;
 		recall = 0;
 		numValidated = 0;
 
-		notedMismatches = new ArrayList<matchReport>();
+		notedMismatches = new ArrayList<MatchReport>();
 	}
 
 	public void validate(Buckets allBuckets, Buckets actuallyMatched,
@@ -48,7 +53,7 @@ public class Validator {
 		numValidated++;
 
 		if (localPrecision != 1.0 || localRecall != 1.0) {
-			notedMismatches.add(new matchReport(report.getBugId(), shouldBeMatched,
+			notedMismatches.add(new MatchReport(report.getBugId(), shouldBeMatched,
 					actuallyMatched, localPrecision, localRecall));
 		}
 	}
@@ -80,7 +85,7 @@ public class Validator {
 		return recall / numValidated;
 	}
 
-	public List<matchReport> getAllMismatches() {
+	public List<MatchReport> getAllMismatches() {
 		return notedMismatches;
 	}
 }

@@ -5,7 +5,7 @@ import github.tdurieux.crashGraph.entities.Bucket;
 import github.tdurieux.crashGraph.entities.Buckets;
 import github.tdurieux.crashGraph.entities.Report;
 import github.tdurieux.crashGraph.entities.Trace;
-import github.tdurieux.crashGraph.entities.Validator;
+import github.tdurieux.crashGraph.validator.Validator;
 
 import java.io.File;
 import java.util.ArrayList;

@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import github.tdurieux.crashGraph.classifier.Classifier;
 import github.tdurieux.crashGraph.classifier.GraphViewClassifier;
 import github.tdurieux.crashGraph.parser.BucketsParser;
+import github.tdurieux.crashGraph.validator.Validator;
 
 import java.io.File;
 import java.io.IOException;

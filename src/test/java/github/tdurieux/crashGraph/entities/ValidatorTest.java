@@ -1,6 +1,7 @@
 package github.tdurieux.crashGraph.entities;
 
 import static org.junit.Assert.assertEquals;
+import github.tdurieux.crashGraph.validator.Validator;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -3,9 +3,9 @@ package github.tdurieux.crashGraph.main;
 import github.tdurieux.crashGraph.classifier.Classifier;
 import github.tdurieux.crashGraph.classifier.GraphViewClassifier;
 import github.tdurieux.crashGraph.entities.Buckets;
-import github.tdurieux.crashGraph.entities.Validator;
-import github.tdurieux.crashGraph.entities.matchReport;
+import github.tdurieux.crashGraph.generator.MatchReport;
 import github.tdurieux.crashGraph.parser.BucketsParser;
+import github.tdurieux.crashGraph.validator.Validator;
 
 import java.io.IOException;
 
@@ -25,7 +25,7 @@ public class Main {
 
 			System.out.println("The following unperfected matches where found:");
 			
-			for (matchReport unperfectMatch : valReport.getAllMismatches()) {
+			for (MatchReport unperfectMatch : valReport.getAllMismatches()) {
 				System.out.println(unperfectMatch + "\n");
 			}
 			
