@@ -148,6 +148,6 @@ public class EntitiesTest {
 		Validator valReport = new Validator();
 		Buckets buckets = BucketsParser.parse("src/main/resource/reports/",
 				classifier, valReport);
-		assertEquals(11, buckets.size());
+		assertEquals(12, buckets.size());
 	}
 }
