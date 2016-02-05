@@ -1,3 +1,7 @@
+sudo: false
 language: java
 jdk:
   - openjdk7
+
+script:
+  - mvn -Dexec.args="-Duser.timezone=Europe/Sofia" test

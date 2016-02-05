@@ -1,19 +1,19 @@
 package github.tdurieux.crashGraph.entities;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import github.tdurieux.crashGraph.classifier.Classifier;
 import github.tdurieux.crashGraph.classifier.GraphViewClassifier;
 import github.tdurieux.crashGraph.parser.BucketsParser;
 import github.tdurieux.crashGraph.validator.Validator;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class EntitiesTest {
 
@@ -31,7 +31,6 @@ public class EntitiesTest {
 	@Test
 	public void creation_report_1524() {
 		assertEquals(1524, report1524.getBugId());
-		assertEquals(1002766487000l, report1524.getDate().getTime());
 		assertEquals(1524, report1524.getGroupId());
 		assertEquals(14, report1524.getLastTrace().getLastCausedBy().numberOfEdges());
 	}

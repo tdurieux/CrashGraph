@@ -8,10 +8,7 @@ import github.tdurieux.crashGraph.entities.Trace;
 import github.tdurieux.crashGraph.validator.Validator;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,7 +21,7 @@ public class BucketsParser {
 		File[] files = getFiles(foldername);
 		for (int i = 0; i < files.length; i++) {
 			File file = files[i];
-			outputLog(files, i, file);
+			outputLog(files, i + 1, file);
 			Report report = ReportParse.parseFile(file);
 			Trace reportTraceToAnalyse = report.getLastTrace().getLastCausedBy();
 			
@@ -57,12 +54,13 @@ public class BucketsParser {
 		}
 
 		File[] files = folder.listFiles();
+		Arrays.sort(files);
 		return files;
 	}
 
 	private static void outputLog(File[] files, int i, File file) {
 		log.log(Level.INFO, i + "/" + files.length + " ("
 				+ ((int) ((double) i / (double) files.length * 100)) + "%)");
-		log.log(Level.FINER, "Scanning report: " + file.getAbsolutePath());
+		log.log(Level.INFO, "Scanning report: " + file.getAbsolutePath());
 	}
 }
